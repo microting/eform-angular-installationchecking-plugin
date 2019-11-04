@@ -9,6 +9,7 @@ using Microting.InstallationCheckingBase.Infrastructure.Const;
 namespace InstallationChecking.Pn.Controllers
 {
     [Authorize(Policy = InstallationCheckingClaims.AccessInstallationCheckingPlugin)]
+    [Route("api/installationchecking-pn/installations")]
     public class InstallationsController : Controller
     {
         private readonly IInstallationsService _installationsService;
@@ -18,40 +19,40 @@ namespace InstallationChecking.Pn.Controllers
             _installationsService = installationsService;
         }
 
-        [HttpGet("api/installationchecking-pn/installations")]
+        [HttpGet()]
         public async Task<OperationDataResult<InstallationsListModel>> GetInstallationsList(InstallationsRequestModel requestModel)
         {
             return await _installationsService.GetInstallationsList(requestModel);
         }
 
-        [HttpGet("api/installationchecking-pn/installations/{id}")]
+        [HttpGet("{id}")]
         public async Task<OperationDataResult<InstallationModel>> GetInstallation(int id)
         {
             return await _installationsService.GetInstallation(id);
         }
 
-        [HttpPost("api/installationchecking-pn/installations/create")]
+        [HttpPost("create")]
         [Authorize(Policy = InstallationCheckingClaims.CreateInstallations)]
         public async Task<OperationResult> CreateInstallation([FromBody] int customerId)
         {
             return await _installationsService.CreateInstallation(customerId);
         }
 
-        [HttpPost("api/installationchecking-pn/installations/assign")]
+        [HttpPost("assign")]
         [Authorize(Policy = InstallationCheckingClaims.AssignInstallations)]
         public async Task<OperationResult> AssignInstallation([FromBody] InstallationsAssignModel installationsAssignModel)
         {
             return await _installationsService.AssignInstallations(installationsAssignModel);
         }
 
-        [HttpPost("api/installationchecking-pn/installations/retract")]
+        [HttpPost("retract")]
         [Authorize(Policy = InstallationCheckingClaims.AssignInstallations)]
         public async Task<OperationResult> RetractInstallation([FromBody] int installationId)
         {
             return await _installationsService.RetractInstallation(installationId);
         }
 
-        [HttpPost("api/installationchecking-pn/installations/archive")]
+        [HttpPost("archive")]
         [Authorize(Policy = InstallationCheckingClaims.ArchiveInstallations)]
         public async Task<OperationResult> ArchiveInstallation([FromBody] int installationId)
         {

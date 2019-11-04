@@ -18,6 +18,10 @@ import localeDa from '@angular/common/locales/da';
 import {CasesModule} from '../../../modules';
 import {InstallationCheckingSettingsComponent} from './components/installationchecking-settings';
 import {InstallationCheckingPnSettingsService, InstallationsService} from './services';
+import {InstallationAssignComponent} from './components/installation-assign/installation-asign.component';
+import {InstallationNewComponent} from './components/installation-new/installation-new.component';
+import {InstallationRetractComponent} from './components/installation-retract/installation-retract.component';
+import {InstallationsPageComponent} from './components/installations-page';
 
 registerLocaleData(localeDa);
 
@@ -41,6 +45,10 @@ registerLocaleData(localeDa);
     CasesModule
   ],
   declarations: [
+    InstallationAssignComponent,
+    InstallationNewComponent,
+    InstallationRetractComponent,
+    InstallationsPageComponent,
     InstallationCheckingPnLayoutComponent,
     InstallationCheckingSettingsComponent
   ],

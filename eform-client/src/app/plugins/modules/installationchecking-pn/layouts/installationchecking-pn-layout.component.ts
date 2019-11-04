@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {LocaleService} from '../../../../common/services/auth';
 import {TranslateService} from '@ngx-translate/core';
 import {SharedPnService} from '../../shared/services';
+import {InstallationCheckingPnLocalSettings} from '../const';
 declare var require: any;
 
 @Component({
@@ -15,6 +16,7 @@ export class InstallationCheckingPnLayoutComponent implements  AfterViewInit, On
   }
 
   ngOnInit(): void {
+    this.sharedPnService.initLocalPageSettings('installationCheckingPnSettings', InstallationCheckingPnLocalSettings);
   }
 
   ngAfterViewInit() {
