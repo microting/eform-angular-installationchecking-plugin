@@ -11,25 +11,31 @@ using Microting.InstallationCheckingBase.Infrastructure.Data;
 using Microting.eFormApi.BasePn.Abstractions;
 using Microting.eFormApi.BasePn.Infrastructure.Models.API;
 using Microting.eForm.Infrastructure.Constants;
+using Microting.eFormBaseCustomerBase.Infrastructure.Data;
+using Microting.InstallationCheckingBase.Infrastructure.Data.Entities;
+using Microting.InstallationCheckingBase.Infrastructure.Enums;
 
 namespace InstallationChecking.Pn.Services
 {
     public class InstallationsService : IInstallationsService
     {
-        private readonly IInstallationCheckingLocalizationService _installationcheckingLocalizationService;
-        private readonly InstallationCheckingPnDbContext _dbContext;
+        private readonly IInstallationCheckingLocalizationService _installationCheckingLocalizationService;
+        private readonly InstallationCheckingPnDbContext _installationCheckingContext;
+        private readonly CustomersPnDbAnySql _customersContext;
         private readonly IEFormCoreService _coreHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public InstallationsService(
-            InstallationCheckingPnDbContext dbContext,
+            InstallationCheckingPnDbContext installationCheckingContext,
+            CustomersPnDbAnySql customersContext,
             IInstallationCheckingLocalizationService installationcheckingLocalizationService,
             IHttpContextAccessor httpContextAccessor,
             IEFormCoreService coreHelper
         )
         {
-            _dbContext = dbContext;
-            _installationcheckingLocalizationService = installationcheckingLocalizationService;
+            _installationCheckingContext = installationCheckingContext;
+            _customersContext = customersContext;
+            _installationCheckingLocalizationService = installationcheckingLocalizationService;
             _httpContextAccessor = httpContextAccessor;
             _coreHelper = coreHelper;
         }
@@ -38,18 +44,33 @@ namespace InstallationChecking.Pn.Services
         {
             try
             {
-                var installationModel = await _dbContext.Installations
+                var installationModel = await _installationCheckingContext.Installations.AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed && x.Id == id)
-                    .Select(x => new InstallationModel
-                    {
-                        // TODO
-                    }).FirstOrDefaultAsync();
+                    .Select(x =>  new InstallationModel
+                        {
+                            Id = x.Id,
+                            CompanyName = x.CompanyName,
+                            CompanyAddress = x.CompanyAddress,
+                            CompanyAddress2 = x.CompanyAddress2,
+                            CityName = x.CityName,
+                            CountryCode = x.CountryCode,
+                            ZipCode = x.ZipCode,
+                            State = x.State,
+                            Type = x.Type,
+                            DateInstall = x.DateInstall,
+                            DateRemove = x.DateRemove,
+                            DateActRemove = x.DateActRemove,
+                            EmployeeId = x.EmployeeId,
+                            CustomerId = x.CustomerId,
+                            SdkCaseId = x.SdkCaseId
+                        }
+                    ).FirstOrDefaultAsync();
 
                 if (installationModel == null)
                 {
                     return new OperationDataResult<InstallationModel>(
                         false,
-                        _installationcheckingLocalizationService.GetString("InstallationNotFound"));
+                        _installationCheckingLocalizationService.GetString("InstallationNotFound"));
                 }
 
                 return new OperationDataResult<InstallationModel>(true, installationModel);
@@ -58,7 +79,7 @@ namespace InstallationChecking.Pn.Services
             {
                 Trace.TraceError(e.Message);
                 return new OperationDataResult<InstallationModel>(false,
-                    _installationcheckingLocalizationService.GetString("ErrorGettingInstallation"));
+                    _installationCheckingLocalizationService.GetString("ErrorGettingInstallation"));
             }
         }
 
@@ -66,14 +87,45 @@ namespace InstallationChecking.Pn.Services
         {
             try
             {
-                // TODO Sort and filtering
-                var list = await _dbContext.Installations
-                    .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed)
-                    .Select(x => new InstallationModel()
+                var listQuery = _installationCheckingContext.Installations.AsNoTracking()
+                    .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed);
+
+                if (requestModel.State != null)
+                {
+                    listQuery = listQuery.Where(x => x.State == requestModel.State);
+                }
+
+                if (requestModel.Type != null)
+                {
+                    listQuery = listQuery.Where(x => x.Type == requestModel.Type);
+                }
+
+                if (!string.IsNullOrWhiteSpace(requestModel.SearchString))
+                {
+                    listQuery = listQuery.Where(x => x.CityName.Contains(requestModel.SearchString));
+                }
+
+                // TODO: Sorting and pagination
+                var list = await listQuery
+                .Select(x => new InstallationModel()
                     {
-                        // TODO
+                        Id = x.Id,
+                        CompanyName = x.CompanyName,
+                        CompanyAddress = x.CompanyAddress,
+                        CompanyAddress2 = x.CompanyAddress2,
+                        CityName = x.CityName,
+                        CountryCode = x.CountryCode,
+                        ZipCode = x.ZipCode,
+                        State = x.State,
+                        Type = x.Type,
+                        DateInstall = x.DateInstall,
+                        DateRemove = x.DateRemove,
+                        DateActRemove = x.DateActRemove,
+                        EmployeeId = x.EmployeeId,
+                        CustomerId = x.CustomerId,
+                        SdkCaseId = x.SdkCaseId
                     }
-                    ).ToListAsync();
+                ).ToListAsync();
 
                 var listModel = new InstallationsListModel { Total = list.Count(), Installations = list };
 
@@ -83,36 +135,56 @@ namespace InstallationChecking.Pn.Services
             {
                 Trace.TraceError(e.Message);
                 return new OperationDataResult<InstallationsListModel>(false,
-                    _installationcheckingLocalizationService.GetString("ErrorGettingInstallationsList"));
+                    _installationCheckingLocalizationService.GetString("ErrorGettingInstallationsList"));
             }
         }
 
         public async Task<OperationResult> CreateInstallation(int customerId)
         {
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            using (var transaction = await _installationCheckingContext.Database.BeginTransactionAsync())
             {
                 try
                 {
-                    // TODO
+                    var customer = await _customersContext.Customers.FirstOrDefaultAsync(c => c.Id == customerId);
+
+                    if (customer == null)
+                    {
+                        return new OperationDataResult<InstallationModel>(
+                            false,
+                            _installationCheckingLocalizationService.GetString("CustomerNotFound"));
+                    }
+
+                    var installation = new Installation()
+                    {
+                        CompanyName = customer.CompanyName,
+                        CompanyAddress = customer.CompanyAddress,
+                        CompanyAddress2 = customer.CompanyAddress2,
+                        CityName = customer.CityName,
+                        CountryCode = customer.CountryCode,
+                        ZipCode = customer.ZipCode,
+                        State = InstallationState.NotAssigned,
+                        Type = InstallationType.Installation,
+                        CustomerId = customer.Id
+                    };
 
                     transaction.Commit();
                     return new OperationResult(
                         true,
-                        _installationcheckingLocalizationService.GetString("InstallationCreatedSuccessfully"));
+                        _installationCheckingLocalizationService.GetString("InstallationCreatedSuccessfully"));
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
                     Trace.TraceError(e.Message);
                     return new OperationResult(false,
-                        _installationcheckingLocalizationService.GetString("ErrorWhileCreatingInstallation"));
+                        _installationCheckingLocalizationService.GetString("ErrorWhileCreatingInstallation"));
                 }
             }
         }
 
         public async Task<OperationResult> AssignInstallations(InstallationsAssignModel installationsAssignModel)
         {
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            using (var transaction = await _installationCheckingContext.Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -121,21 +193,21 @@ namespace InstallationChecking.Pn.Services
                     transaction.Commit();
                     return new OperationResult(
                         true,
-                        _installationcheckingLocalizationService.GetString("InstallationAssignedSuccessfully"));
+                        _installationCheckingLocalizationService.GetString("InstallationAssignedSuccessfully"));
                 }
                 catch (Exception e)
                 {
                     transaction.Rollback();
                     Trace.TraceError(e.Message);
                     return new OperationResult(false,
-                        _installationcheckingLocalizationService.GetString("ErrorWhileAssigningInstallation"));
+                        _installationCheckingLocalizationService.GetString("ErrorWhileAssigningInstallation"));
                 }
             }
         }
 
         public async Task<OperationResult> RetractInstallation(int installationId)
         {
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            using (var transaction = await _installationCheckingContext.Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -144,7 +216,7 @@ namespace InstallationChecking.Pn.Services
                     transaction.Commit();
                     return new OperationResult(
                         true,
-                        _installationcheckingLocalizationService.GetString("InstallationRetractedSuccessfully"));
+                        _installationCheckingLocalizationService.GetString("InstallationRetractedSuccessfully"));
                 }
                 catch (Exception e)
                 {
@@ -152,14 +224,14 @@ namespace InstallationChecking.Pn.Services
                     transaction.Rollback();
                     return new OperationResult(
                         false,
-                        _installationcheckingLocalizationService.GetString("ErrorWhileRetractingInstallation"));
+                        _installationCheckingLocalizationService.GetString("ErrorWhileRetractingInstallation"));
                 }
             }
         }
 
         public async Task<OperationResult> ArchiveInstallation(int installationId)
         {
-            using (var transaction = await _dbContext.Database.BeginTransactionAsync())
+            using (var transaction = await _installationCheckingContext.Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -168,7 +240,7 @@ namespace InstallationChecking.Pn.Services
                     transaction.Commit();
                     return new OperationResult(
                         true,
-                        _installationcheckingLocalizationService.GetString("InstallationArchivedSuccessfully"));
+                        _installationCheckingLocalizationService.GetString("InstallationArchivedSuccessfully"));
                 }
                 catch (Exception e)
                 {
@@ -176,7 +248,7 @@ namespace InstallationChecking.Pn.Services
                     transaction.Rollback();
                     return new OperationResult(
                         false,
-                        _installationcheckingLocalizationService.GetString("ErrorWhileArchivingInstallation"));
+                        _installationCheckingLocalizationService.GetString("ErrorWhileArchivingInstallation"));
                 }
             }
         }
