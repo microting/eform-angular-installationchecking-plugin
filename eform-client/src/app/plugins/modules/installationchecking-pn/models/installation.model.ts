@@ -10,14 +10,19 @@ export class InstallationModel {
   cityName: string;
   countryCode: string;
 
-  type: InstallationTypeEnum;
-  state: InstallationStateEnum;
-
   dateInstall: Date;
   dateRemove: Date;
   dateActRemove: Date;
 
+  assignedTo: string;
+
+  type: InstallationTypeEnum;
+  state: InstallationStateEnum;
+
   employeeId: number;
   customerId: number;
   sdkCaseId: number;
+  sdkeFormId: number;
+
+  assign = false;
 }

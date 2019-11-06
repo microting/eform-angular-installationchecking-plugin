@@ -1,13 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {PluginClaimsHelper} from '../../../../../common/helpers';
 import {SharedPnService} from '../../../shared/services';
-import {InstallationCheckingPnClaims} from '../../const';
+import {InstallationCheckingPnClaims, InstallationsSortColumns, InstallationStateEnum, InstallationTypeEnum} from '../../const';
 import {PageSettingsModel} from '../../../../../common/models/settings';
 import {InstallationsService} from '../../services';
 import {InstallationModel, InstallationsListModel, InstallationsRequestModel} from '../../models';
-import {InstallationRetractComponent} from '../installation-retract/installation-retract.component';
-import {InstallationNewComponent} from '../installation-new/installation-new.component';
-import {InstallationAssignComponent} from '../installation-assign/installation-asign.component';
+import {InstallationAssignComponent, InstallationNewComponent, InstallationRetractComponent} from '..';
 
 @Component({
   selector: 'app-installations-page',
@@ -23,13 +21,20 @@ export class InstallationsPageComponent implements OnInit {
   installationsListModel: InstallationsListModel = new InstallationsListModel();
   spinnerStatus = false;
 
-
   get pluginClaimsHelper() {
     return PluginClaimsHelper;
   }
 
   get installationCheckingPnClaims() {
     return InstallationCheckingPnClaims;
+  }
+
+  get sortCols() {
+    return InstallationsSortColumns;
+  }
+
+  get installationStates() {
+    return InstallationStateEnum;
   }
 
   constructor(
@@ -52,7 +57,7 @@ export class InstallationsPageComponent implements OnInit {
     this.sharedPnService.updateLocalPageSettings(
       'installationCheckingPnSettings',
       this.localPageSettings,
-      'NotificationRules'
+      'Installations'
     );
     this.getInstallationsList();
   }
@@ -62,6 +67,7 @@ export class InstallationsPageComponent implements OnInit {
     this.installationsRequestModel.isSortDsc = this.localPageSettings.isSortDsc;
     this.installationsRequestModel.sort = this.localPageSettings.sort;
     this.installationsRequestModel.pageSize = this.localPageSettings.pageSize;
+    this.installationsRequestModel.type = InstallationTypeEnum.Installation;
 
     this.installationsService.getList(this.installationsRequestModel).subscribe((data) => {
       if (data && data.success) {
@@ -71,16 +77,17 @@ export class InstallationsPageComponent implements OnInit {
     });
   }
 
-  showNewInstallationModal(id?: number) {
-    this.newInstallationModal.show(id);
+  showNewInstallationModal() {
+    this.newInstallationModal.show();
   }
 
-  showAssignInstallationModal(id?: number) {
-    this.assignInstallationModal.show(id);
+  showAssignInstallationModal() {
+    const installationIds = this.installationsListModel.installations.filter(x => x.assign).map(x => x.id);
+    this.assignInstallationModal.show(installationIds);
   }
 
   showRetractInstallationModal(installationModel: InstallationModel) {
-    this.assignInstallationModal.show(installationModel);
+    this.retractInstallationModal.show(installationModel);
   }
 
   sortTable(sort: string) {
@@ -103,5 +110,13 @@ export class InstallationsPageComponent implements OnInit {
   onSearchInputChanged(e: any) {
     this.installationsRequestModel.searchString = e.target.value;
     this.getInstallationsList();
+  }
+
+  getSortIcon(sort: string): string {
+    if (this.installationsRequestModel.sort === sort) {
+      return this.installationsRequestModel.isSortDsc ? 'expand_more' : 'expand_less';
+    } else {
+      return 'unfold_more';
+    }
   }
 }

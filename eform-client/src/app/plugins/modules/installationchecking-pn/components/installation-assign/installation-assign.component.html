@@ -2,18 +2,17 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>{{ 'New installation' | translate }}</h3>
+        <h3>{{ 'Assign installation to:' | translate }}</h3>
       </div>
       <div class="modal-body">
         <div class="container-fluid">
           <div class="row">
             <div class="col-md-4">
-              <ng-select [items]="customersModel"
+              <ng-select [items]="sites"
                          bindLabel="label"
-                         [placeholder]="'Select customer' | translate"
+                         [placeholder]="'Select employee' | translate"
                          bindValue="id"
-                         [typeahead]="typeahead"
-                         [(ngModel)]="selectedCustomerId"
+                         [(ngModel)]="selectedSiteId"
                          id="selectCustomer">
               </ng-select>
             </div>
@@ -22,10 +21,10 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-success"
-                [disabled]="!selectedCustomerId" (click)="createInstallation()" id="createInstallationBtn">
-          {{ 'Create' | translate }}
+                [disabled]="!selectedSiteId" (click)="assignInstallation()" id="assignInstallationBtn">
+          {{ 'Assign' | translate }}
         </button>
-        <button class="btn btn-accent text-black-50" (click)="frame.hide()" id="cancelCreateBtn">
+        <button class="btn btn-accent text-black-50" (click)="frame.hide()" id="cancelAssignBtn">
           {{ 'Cancel' | translate }}
         </button>
       </div>

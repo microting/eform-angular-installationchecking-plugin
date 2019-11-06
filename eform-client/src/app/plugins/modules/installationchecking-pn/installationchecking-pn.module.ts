@@ -16,12 +16,15 @@ import {OwlDateTimeModule} from 'ng-pick-datetime';
 import {OwlMomentDateTimeModule} from 'ng-pick-datetime-moment';
 import localeDa from '@angular/common/locales/da';
 import {CasesModule} from '../../../modules';
-import {InstallationCheckingSettingsComponent} from './components/installationchecking-settings';
 import {InstallationCheckingPnSettingsService, InstallationsService} from './services';
-import {InstallationAssignComponent} from './components/installation-assign/installation-asign.component';
-import {InstallationNewComponent} from './components/installation-new/installation-new.component';
-import {InstallationRetractComponent} from './components/installation-retract/installation-retract.component';
-import {InstallationsPageComponent} from './components/installations-page';
+import {
+  InstallationAssignComponent,
+  InstallationCheckingSettingsComponent,
+  InstallationNewComponent,
+  InstallationRetractComponent,
+  InstallationsPageComponent,
+  RemovalPageComponent
+} from './components';
 
 registerLocaleData(localeDa);
 
@@ -45,12 +48,13 @@ registerLocaleData(localeDa);
     CasesModule
   ],
   declarations: [
+    InstallationCheckingPnLayoutComponent,
+    InstallationCheckingSettingsComponent,
     InstallationAssignComponent,
     InstallationNewComponent,
     InstallationRetractComponent,
     InstallationsPageComponent,
-    InstallationCheckingPnLayoutComponent,
-    InstallationCheckingSettingsComponent
+    RemovalPageComponent
   ],
   providers: [InstallationCheckingPnSettingsService, InstallationsService]
 })
