@@ -69,8 +69,8 @@ namespace InstallationChecking.Pn.Services
             {
                 await _options.UpdateDb(settings =>
                 {
-                    settings.LogLevel = installationcheckingBaseSettings.LogLevel;
-                    settings.LogLimit = installationcheckingBaseSettings.LogLimit;
+                    settings.MaxNumberOfWorkers = installationcheckingBaseSettings.MaxNumberOfWorkers;
+                    settings.MaxParallelism = installationcheckingBaseSettings.MaxParallelism;
                     settings.SdkConnectionString = installationcheckingBaseSettings.SdkConnectionString;
                 }, _dbContext, UserId);
 

@@ -14,6 +14,9 @@ using Microting.eForm.Infrastructure.Constants;
 using Microting.eFormBaseCustomerBase.Infrastructure.Data;
 using Microting.InstallationCheckingBase.Infrastructure.Data.Entities;
 using Microting.InstallationCheckingBase.Infrastructure.Enums;
+using InstallationChecking.Pn.Infrastructure.Extensions;
+using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
+using Microting.eForm.Infrastructure.Models;
 
 namespace InstallationChecking.Pn.Services
 {
@@ -22,12 +25,14 @@ namespace InstallationChecking.Pn.Services
         private readonly IInstallationCheckingLocalizationService _installationCheckingLocalizationService;
         private readonly InstallationCheckingPnDbContext _installationCheckingContext;
         private readonly CustomersPnDbAnySql _customersContext;
+        private readonly IPluginDbOptions<InstallationCheckingBaseSettings> _options;
         private readonly IEFormCoreService _coreHelper;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public InstallationsService(
             InstallationCheckingPnDbContext installationCheckingContext,
             CustomersPnDbAnySql customersContext,
+            IPluginDbOptions<InstallationCheckingBaseSettings> options,
             IInstallationCheckingLocalizationService installationcheckingLocalizationService,
             IHttpContextAccessor httpContextAccessor,
             IEFormCoreService coreHelper
@@ -35,6 +40,7 @@ namespace InstallationChecking.Pn.Services
         {
             _installationCheckingContext = installationCheckingContext;
             _customersContext = customersContext;
+            _options = options;
             _installationCheckingLocalizationService = installationcheckingLocalizationService;
             _httpContextAccessor = httpContextAccessor;
             _coreHelper = coreHelper;
@@ -87,6 +93,8 @@ namespace InstallationChecking.Pn.Services
         {
             try
             {
+                var core = await _coreHelper.GetCore();
+
                 var listQuery = _installationCheckingContext.Installations.AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed);
 
@@ -105,27 +113,51 @@ namespace InstallationChecking.Pn.Services
                     listQuery = listQuery.Where(x => x.CityName.Contains(requestModel.SearchString));
                 }
 
-                // TODO: Sorting and pagination
-                var list = await listQuery
-                .Select(x => new InstallationModel()
+                if (!string.IsNullOrEmpty(requestModel.Sort))
+                {
+                    if (requestModel.IsSortDsc)
                     {
-                        Id = x.Id,
-                        CompanyName = x.CompanyName,
-                        CompanyAddress = x.CompanyAddress,
-                        CompanyAddress2 = x.CompanyAddress2,
-                        CityName = x.CityName,
-                        CountryCode = x.CountryCode,
-                        ZipCode = x.ZipCode,
-                        State = x.State,
-                        Type = x.Type,
-                        DateInstall = x.DateInstall,
-                        DateRemove = x.DateRemove,
-                        DateActRemove = x.DateActRemove,
-                        EmployeeId = x.EmployeeId,
-                        CustomerId = x.CustomerId,
-                        SdkCaseId = x.SdkCaseId
+                        listQuery = listQuery.OrderByDescending(requestModel.Sort);
                     }
-                ).ToListAsync();
+                    else
+                    {
+                        listQuery = listQuery.OrderBy(requestModel.Sort);
+                    }
+                }
+                else
+                {
+                    listQuery = listQuery
+                        .OrderBy(x => x.Id);
+                }
+
+                var list = await listQuery
+                    .Skip(requestModel.Offset)
+                    .Take(requestModel.PageSize)
+                    .Select(x => new InstallationModel()
+                        {
+                            Id = x.Id,
+                            CompanyName = x.CompanyName,
+                            CompanyAddress = x.CompanyAddress,
+                            CompanyAddress2 = x.CompanyAddress2,
+                            CityName = x.CityName,
+                            CountryCode = x.CountryCode,
+                            ZipCode = x.ZipCode,
+                            State = x.State,
+                            Type = x.Type,
+                            DateInstall = x.DateInstall,
+                            DateRemove = x.DateRemove,
+                            DateActRemove = x.DateActRemove,
+                            EmployeeId = x.EmployeeId,
+                            CustomerId = x.CustomerId,
+                            SdkCaseId = x.SdkCaseId
+                        }
+                    ).ToListAsync();
+
+                foreach (var item in list.Where(x => x.EmployeeId != null))
+                {
+                    var site = await core.SiteRead(item.EmployeeId.GetValueOrDefault());
+                    item.AssignedTo = site.FirstName + " " + site.LastName;
+                }
 
                 var listModel = new InstallationsListModel { Total = list.Count(), Installations = list };
 
@@ -164,8 +196,12 @@ namespace InstallationChecking.Pn.Services
                         ZipCode = customer.ZipCode,
                         State = InstallationState.NotAssigned,
                         Type = InstallationType.Installation,
-                        CustomerId = customer.Id
+                        CustomerId = customer.Id,
+                        CreatedByUserId = UserId,
+                        UpdatedByUserId = UserId
                     };
+
+                    await installation.Create(_installationCheckingContext);
 
                     transaction.Commit();
                     return new OperationResult(
@@ -188,7 +224,37 @@ namespace InstallationChecking.Pn.Services
             {
                 try
                 {
-                    // TODO
+                    var core = await _coreHelper.GetCore();
+                    var options = _options.Value;
+
+                    foreach (var id in installationsAssignModel.InstallationIds)
+                    {
+                        MainElement mainElement;
+                        var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == id);
+
+                        if (installation.State != InstallationState.Assigned)
+                        {
+                            return new OperationResult(false,
+                                _installationCheckingLocalizationService.GetString("InstallationCannotBeAssigned"));
+                        }
+
+                        if (installation.Type == InstallationType.Installation)
+                        {
+                            mainElement = await core.TemplateRead(int.Parse(options.InstallationFormId));
+                        } 
+                        else
+                        {
+                            mainElement = await core.TemplateRead(int.Parse(options.RemovalFormId));
+                        }
+
+                        await core.CaseCreate(mainElement, "", installation.EmployeeId.GetValueOrDefault());
+
+                        installation.SdkCaseId = installationsAssignModel.EmployeeId;
+                        installation.EmployeeId = installationsAssignModel.EmployeeId;
+                        installation.State = InstallationState.Assigned;
+                        installation.UpdatedByUserId = UserId;
+                        await installation.Update(_installationCheckingContext);
+                    }
 
                     transaction.Commit();
                     return new OperationResult(
@@ -211,7 +277,31 @@ namespace InstallationChecking.Pn.Services
             {
                 try
                 {
-                    // TODO
+                    var core = await _coreHelper.GetCore();
+                    var options = _options.Value;
+
+                    var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == installationId);
+
+                    if (installation.State != InstallationState.Assigned)
+                    {
+                        return new OperationResult(false,
+                            _installationCheckingLocalizationService.GetString("InstallationCannotBeRetracted"));
+                    }
+
+                    if (installation.Type == InstallationType.Installation)
+                    {
+                        await core.CaseDelete(int.Parse(options.InstallationFormId), installation.EmployeeId.GetValueOrDefault());
+                    }
+                    else
+                    {
+                        await core.CaseDelete(int.Parse(options.RemovalFormId), installation.EmployeeId.GetValueOrDefault());
+                    }
+
+                    installation.SdkCaseId = null;
+                    installation.EmployeeId = null;
+                    installation.State = InstallationState.NotAssigned;
+                    installation.UpdatedByUserId = UserId;
+                    await installation.Update(_installationCheckingContext);
 
                     transaction.Commit();
                     return new OperationResult(
@@ -235,7 +325,17 @@ namespace InstallationChecking.Pn.Services
             {
                 try
                 {
-                    // TODO
+                    var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == installationId);
+
+                    if (installation.State != InstallationState.Completed || installation.Type != InstallationType.Removal)
+                    {
+                        return new OperationResult(false,
+                            _installationCheckingLocalizationService.GetString("InstallationCannotBeArchived"));
+                    }
+
+                    installation.State = InstallationState.Archived;
+                    installation.UpdatedByUserId = UserId;
+                    await installation.Update(_installationCheckingContext);
 
                     transaction.Commit();
                     return new OperationResult(

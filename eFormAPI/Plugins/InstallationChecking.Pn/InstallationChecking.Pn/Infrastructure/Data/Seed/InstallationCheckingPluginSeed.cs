@@ -51,7 +51,6 @@ namespace InstallationChecking.Pn.Infrastructure.Data.Seed
                         CreatedByUserId = 1
                     };
                     dbContext.PluginConfigurationValues.Add(newConfigValue);
-                    dbContext.SaveChanges();
                 }
             }
 

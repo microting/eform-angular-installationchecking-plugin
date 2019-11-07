@@ -42,6 +42,10 @@ using Microting.eFormApi.BasePn.Infrastructure.Models.Application;
 using Microting.eFormApi.BasePn.Infrastructure.Settings;
 using Microting.eFormApi.BasePn.Infrastructure.Helpers;
 using Microting.InstallationCheckingBase.Infrastructure.Const;
+using Microting.eFormApi.BasePn.Abstractions;
+using System.IO;
+using System.Text;
+using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
 
 namespace InstallationChecking.Pn
 {
@@ -94,6 +98,7 @@ namespace InstallationChecking.Pn
 
             // Seed database
             SeedDatabase(connectionString);
+            SeedInstallationForms(services, context);
         }
 
         public MenuModel HeaderMenu(IServiceProvider serviceProvider)
@@ -154,6 +159,42 @@ namespace InstallationChecking.Pn
             var context = contextFactory.CreateDbContext(new[] { connectionString });
 
             return new PluginPermissionsManager(context);
+        }
+
+        private async void SeedInstallationForms(IServiceCollection services, InstallationCheckingPnDbContext context)
+        {
+
+            var serviceProvider = services.BuildServiceProvider();
+            var pluginDbOptions = serviceProvider.GetService<IPluginDbOptions<InstallationCheckingBaseSettings>>();
+
+            if (string.IsNullOrEmpty(pluginDbOptions.Value.InstallationFormId) || string.IsNullOrEmpty(pluginDbOptions.Value.RemovalFormId))
+            {
+                var core = await serviceProvider.GetService<IEFormCoreService>().GetCore();
+
+                var assembly = Assembly.GetExecutingAssembly();
+                var assemblyName = assembly.GetName().Name;
+                int installationFormId, removalFormId;
+
+                var installationFormStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.installation_form.xml");
+                using (var reader = new StreamReader(installationFormStream, Encoding.UTF8))
+                {
+                    var installationForm = await core.TemplateFromXml(await reader.ReadToEndAsync());
+                    installationFormId = installationForm.Id;
+                }
+
+                var removalFormStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.removal_form.xml");
+                using (var reader = new StreamReader(removalFormStream, Encoding.UTF8))
+                {
+                    var removalForm = await core.TemplateFromXml(await reader.ReadToEndAsync());
+                    removalFormId = removalForm.Id;
+                }
+
+                await pluginDbOptions.UpdateDb(settings =>
+                {
+                    settings.InstallationFormId = installationFormId.ToString();
+                    settings.RemovalFormId = removalFormId.ToString();
+                }, context, 1);
+            }
         }
     }
 }

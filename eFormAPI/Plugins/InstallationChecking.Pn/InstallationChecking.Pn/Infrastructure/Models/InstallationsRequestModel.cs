@@ -9,7 +9,7 @@ namespace InstallationChecking.Pn.Infrastructure.Models
         public InstallationState? State { get; set; }
 
         public string Sort { get; set; }
-        public int PageIndex { get; set; }
+        public int Offset { get; set; }
         public bool IsSortDsc { get; set; }
         public int PageSize { get; set; }
     }

@@ -9,18 +9,28 @@ namespace InstallationChecking.Pn.Infrastructure.Data.Seed.Data
         {
             new PluginConfigurationValue()
             {
-                Name = "InstallationCheckingBaseSettings:LogLevel",
-                Value = "4"
+                Name = "InstallationCheckingBaseSettings:MaxNumberOfWorkers",
+                Value = "1"
             },
             new PluginConfigurationValue()
             {
-                Name = "InstallationCheckingBaseSettings:LogLimit",
-                Value = "25000"
+                Name = "InstallationCheckingBaseSettings:MaxParallelism",
+                Value = "1"
             },
             new PluginConfigurationValue()
             {
                 Name = "InstallationCheckingBaseSettings:SdkConnectionString",
                 Value = "..."
+            },
+            new PluginConfigurationValue()
+            {
+                Name = "InstallationCheckingBaseSettings:InstallationFormId",
+                Value = ""
+            },
+            new PluginConfigurationValue()
+            {
+                Name = "InstallationCheckingBaseSettings:RemovalFormId",
+                Value = ""
             }
         };
     }
