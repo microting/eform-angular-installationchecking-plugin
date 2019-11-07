@@ -6,6 +6,8 @@ import {ToastrService} from 'ngx-toastr';
 import {Observable} from 'rxjs';
 import {OperationDataResult, OperationResult} from '../../../../common/models';
 import {InstallationsAssignModel, InstallationsListModel, InstallationsRequestModel} from '../models';
+import {CustomersPnModel, CustomersPnRequestModel} from '../../customers-pn/models/customer';
+import {CustomerPnMethods} from '../../customers-pn/services';
 
 export let InstallationsMethods = {
   Get: 'api/installationchecking-pn/installations',
@@ -18,6 +20,10 @@ export let InstallationsMethods = {
 export class InstallationsService extends BaseService {
   constructor(private _http: HttpClient, router: Router, toastrService: ToastrService) {
     super(_http, router, toastrService);
+  }
+
+  getAllCustomers(model: CustomersPnRequestModel): Observable<OperationDataResult<CustomersPnModel>> {
+    return this.post(CustomerPnMethods.CustomerPn + '/get-all', model);
   }
 
   getList(request: InstallationsRequestModel): Observable<OperationDataResult<InstallationsListModel>> {

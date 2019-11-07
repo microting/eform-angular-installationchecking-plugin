@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {InstallationModel} from '../../models';
 import {InstallationsService} from '../../services';
 
@@ -9,7 +9,8 @@ import {InstallationsService} from '../../services';
 })
 export class InstallationRetractComponent implements OnInit {
   @ViewChild('frame') frame;
-  selectedModel: InstallationModel;
+  @Output() installationRetracted: EventEmitter<void> = new EventEmitter<void>();
+  selectedModel: InstallationModel = new InstallationModel();
 
   spinnerStatus = false;
 
@@ -29,6 +30,7 @@ export class InstallationRetractComponent implements OnInit {
     this.installationsService.retract(this.selectedModel.id).subscribe((data) => {
       if (data && data.success) {
         this.frame.hide();
+        this.installationRetracted.emit();
       }
       this.spinnerStatus = false;
     });

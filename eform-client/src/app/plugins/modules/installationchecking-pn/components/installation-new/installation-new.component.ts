@@ -1,5 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
-import {CustomersPnService} from '../../../customers-pn/services';
+import {ChangeDetectorRef, Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {debounceTime, switchMap} from 'rxjs/operators';
 import {CustomerPnModel, CustomersPnRequestModel} from '../../../customers-pn/models/customer';
 import {InstallationsService} from '../../services';
@@ -11,6 +10,7 @@ import {InstallationsService} from '../../services';
 })
 export class InstallationNewComponent implements OnInit {
   @ViewChild('frame') frame;
+  @Output() installationCreated: EventEmitter<void> = new EventEmitter<void>();
   customersRequestModel: CustomersPnRequestModel = new CustomersPnRequestModel();
   customersModel = [];
   selectedCustomerId: number;
@@ -20,14 +20,13 @@ export class InstallationNewComponent implements OnInit {
 
   constructor(
     private installationsService: InstallationsService,
-    private customersService: CustomersPnService,
     private cd: ChangeDetectorRef
   ) {
     this.typeahead.pipe(
         debounceTime(200),
         switchMap(term => {
           this.customersRequestModel.name = term;
-          return this.customersService.getAllCustomers(this.customersRequestModel);
+          return this.installationsService.getAllCustomers(this.customersRequestModel);
         })
       ).subscribe(items => {
         for (const customer of items.model.customers) {
@@ -53,6 +52,7 @@ export class InstallationNewComponent implements OnInit {
     this.installationsService.create(this.selectedCustomerId).subscribe((data) => {
       if (data && data.success) {
         this.frame.hide();
+        this.installationCreated.emit();
       }
       this.spinnerStatus = false;
     });

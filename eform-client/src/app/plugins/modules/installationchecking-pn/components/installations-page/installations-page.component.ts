@@ -6,6 +6,7 @@ import {PageSettingsModel} from '../../../../../common/models/settings';
 import {InstallationsService} from '../../services';
 import {InstallationModel, InstallationsListModel, InstallationsRequestModel} from '../../models';
 import {InstallationAssignComponent, InstallationNewComponent, InstallationRetractComponent} from '..';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-installations-page',
@@ -19,6 +20,7 @@ export class InstallationsPageComponent implements OnInit {
   localPageSettings: PageSettingsModel = new PageSettingsModel();
   installationsRequestModel: InstallationsRequestModel = new InstallationsRequestModel();
   installationsListModel: InstallationsListModel = new InstallationsListModel();
+  states = [];
   spinnerStatus = false;
 
   get pluginClaimsHelper() {
@@ -29,18 +31,25 @@ export class InstallationsPageComponent implements OnInit {
     return InstallationCheckingPnClaims;
   }
 
-  get sortCols() {
-    return InstallationsSortColumns;
-  }
-
   get installationStates() {
     return InstallationStateEnum;
   }
 
+  get sortCols() {
+    return InstallationsSortColumns;
+  }
+
   constructor(
     private sharedPnService: SharedPnService,
+    private translateService: TranslateService,
     private installationsService: InstallationsService
-  ) { }
+  ) {
+    this.states = [
+      { id: InstallationStateEnum.NotAssigned, label: translateService.instant('Not assigned') },
+      { id: InstallationStateEnum.Assigned, label: translateService.instant('Assigned') },
+      { id: InstallationStateEnum.Completed, label: translateService.instant('Completed') }
+    ];
+  }
 
   ngOnInit() {
     this.getLocalPageSettings();

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {InstallationsService} from '../../services';
 import {DeviceUserService} from '../../../../../common/services/device-users';
 import {InstallationsAssignModel} from '../../models';
@@ -10,6 +10,7 @@ import {InstallationsAssignModel} from '../../models';
 })
 export class InstallationAssignComponent implements OnInit {
   @ViewChild('frame') frame;
+  @Output() installationAssigned: EventEmitter<void> = new EventEmitter<void>();
   sites = [];
   installationIds: number[];
   selectedSiteId: number;
@@ -44,6 +45,7 @@ export class InstallationAssignComponent implements OnInit {
     this.installationsService.assign(assignModel).subscribe((data) => {
       if (data && data.success) {
         this.frame.hide();
+        this.installationAssigned.emit();
       }
       this.spinnerStatus = false;
     });

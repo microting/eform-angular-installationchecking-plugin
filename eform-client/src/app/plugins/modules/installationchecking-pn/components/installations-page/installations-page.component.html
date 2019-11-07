@@ -19,19 +19,16 @@
         <label for="searchInput">{{'Search' | translate}}</label>
       </div>
     </div>
-    <div class="col-md-2">
-      <div class="p-3">
-        <select id="stateFilter" [(ngModel)]="installationsRequestModel.state">
-          <option selected disabled>{{'Select state' | translate}}</option>
-          <option [value]="installationStates.NotAssigned">{{'Not assigned' | translate}}</option>
-          <option [value]="installationStates.Assigned">{{'Assigned' | translate}}</option>
-          <option [value]="installationStates.Completed">{{'Completed' | translate}}</option>
-        </select>
-        <label for="stateFilter">{{'Search' | translate}}</label>
-      </div>
+    <div class="col-md-2 ng-select-wrapper">
+      <ng-select [items]="states"
+                 bindLabel="label" bindValue="id"
+                 [placeholder]="'Select state' | translate"
+                 [(ngModel)]="installationsRequestModel.state"
+                 id="stateFilter">
+      </ng-select>
     </div>
   </div>
-  <div class="container-fluid">
+  <div class="container-fluid" *ngIf="installationsListModel.total > 0">
     <div class="row p-1 mt-4 table-responsive no-gutters">
       <table class="table table-sm table-striped text-center z-depth-1">
         <thead>
@@ -156,16 +153,19 @@
         </tbody>
       </table>
     </div>
-  </div>
-  <div class="row justify-content-end">
-    <div class="col-md-1">
-      <button *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)"
-              id="installationAssignBtn"
-              class="btn btn-success"
-              mdbTooltip="{{ 'Assign installation' | translate }}"
-              (click)="showAssignInstallationModal()">{{ 'Assign installation' | translate }}
-      </button>
+    <div class="row justify-content-end">
+      <div class="col-md-1">
+        <button *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)"
+                id="installationAssignBtn"
+                class="btn btn-success"
+                mdbTooltip="{{ 'Assign installation' | translate }}"
+                (click)="showAssignInstallationModal()">{{ 'Assign' | translate }}
+        </button>
+      </div>
     </div>
+  </div>
+  <div class="row p-1 my-4 mx-2" *ngIf="installationsListModel.total === 0">
+    <span>{{'No installations found' | translate}}</span>
   </div>
   <div class="row justify-content-between mr-2 ml-2">
     <div class="col-md-1">
@@ -187,3 +187,12 @@
 
 <spinner-pn [spinnerVisibility]="spinnerStatus"></spinner-pn>
 
+<app-installation-new
+    #newInstallationModal (installationCreated)="getInstallationsList()"
+></app-installation-new>
+<app-installation-assign
+    #assignInstallationModal (installationAssigned)="getInstallationsList()"
+></app-installation-assign>
+<app-installation-retract
+    #retractInstallationModal (installationRetracted)="getInstallationsList()"
+></app-installation-retract>

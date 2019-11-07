@@ -1,6 +1,6 @@
 import {InstallationModel} from './installation.model';
 
 export class InstallationsListModel {
-  total: number;
+  total = 0;
   installations: InstallationModel[];
 }

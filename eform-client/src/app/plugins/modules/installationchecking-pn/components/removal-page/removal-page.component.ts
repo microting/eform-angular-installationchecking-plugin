@@ -1,11 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {InstallationAssignComponent, InstallationNewComponent, InstallationRetractComponent} from '..';
+import {InstallationAssignComponent, InstallationRetractComponent} from '..';
 import {PageSettingsModel} from '../../../../../common/models/settings';
 import {InstallationModel, InstallationsListModel, InstallationsRequestModel} from '../../models';
 import {PluginClaimsHelper} from '../../../../../common/helpers';
 import {InstallationCheckingPnClaims, InstallationsSortColumns, InstallationStateEnum, InstallationTypeEnum} from '../../const';
 import {SharedPnService} from '../../../shared/services';
 import {InstallationsService} from '../../services';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-removal-page',
@@ -18,6 +19,7 @@ export class RemovalPageComponent implements OnInit {
   localPageSettings: PageSettingsModel = new PageSettingsModel();
   installationsRequestModel: InstallationsRequestModel = new InstallationsRequestModel();
   installationsListModel: InstallationsListModel = new InstallationsListModel();
+  states = [];
   spinnerStatus = false;
 
   get pluginClaimsHelper() {
@@ -38,8 +40,16 @@ export class RemovalPageComponent implements OnInit {
 
   constructor(
     private sharedPnService: SharedPnService,
+    private translateService: TranslateService,
     private installationsService: InstallationsService
-  ) { }
+  ) {
+    this.states = [
+      { id: InstallationStateEnum.NotAssigned, label: translateService.instant('Not assigned') },
+      { id: InstallationStateEnum.Assigned, label: translateService.instant('Assigned') },
+      { id: InstallationStateEnum.Completed, label: translateService.instant('Completed') },
+      { id: InstallationStateEnum.Archived, label: translateService.instant('Archived') }
+    ];
+  }
 
   ngOnInit() {
     this.getLocalPageSettings();
