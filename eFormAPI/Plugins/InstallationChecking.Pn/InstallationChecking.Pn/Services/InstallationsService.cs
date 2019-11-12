@@ -18,6 +18,9 @@ using InstallationChecking.Pn.Infrastructure.Extensions;
 using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System.Reflection;
+using System.IO;
+using Microting.eForm.Infrastructure.Models;
 
 namespace InstallationChecking.Pn.Services
 {
@@ -230,14 +233,17 @@ namespace InstallationChecking.Pn.Services
                             return new OperationResult(false, _localizationService.GetString("InstallationCannotBeAssigned"));
                         }
 
-                        var mainElement = installation.Type == InstallationType.Installation ? installationForm : removalForm;
+                        var formId = installation.Type == InstallationType.Installation ? options.InstallationFormId : options.RemovalFormId;
+                        var mainElement = await core.TemplateRead(int.Parse(formId));
+                        mainElement.Repeated = 0;
+                        mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
+                        mainElement.StartDate = DateTime.Now.ToUniversalTime();
 
-                        var sdkCaseId = await core.CaseCreate(mainElement, "", installation.EmployeeId.GetValueOrDefault());
-
-                        installation.SdkCaseId = sdkCaseId;
                         installation.EmployeeId = installationsAssignModel.EmployeeId;
+                        installation.SdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
                         installation.State = InstallationState.Assigned;
                         installation.UpdatedByUserId = UserId;
+
                         await installation.Update(_installationCheckingContext);
                     }
 
@@ -273,8 +279,8 @@ namespace InstallationChecking.Pn.Services
 
                     await core.CaseDelete(int.Parse(formId), installation.EmployeeId.GetValueOrDefault());
 
-                    installation.SdkCaseId = null;
                     installation.EmployeeId = null;
+                    installation.SdkCaseId = null;
                     installation.State = InstallationState.NotAssigned;
                     installation.UpdatedByUserId = UserId;
                     await installation.Update(_installationCheckingContext);
@@ -297,12 +303,19 @@ namespace InstallationChecking.Pn.Services
             {
                 try
                 {
+                    var core = await _coreHelper.GetCore();
+                    var options = _options.Value;
+
                     var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == installationId);
 
                     if (installation.State != InstallationState.Completed || installation.Type != InstallationType.Removal)
                     {
                         return new OperationResult(false, _localizationService.GetString("InstallationCannotBeArchived"));
                     }
+
+                    var formId = installation.Type == InstallationType.Installation ? options.InstallationFormId : options.RemovalFormId;
+
+                    await core.CaseDelete(int.Parse(formId), installation.EmployeeId.GetValueOrDefault());
 
                     installation.State = InstallationState.Archived;
                     installation.UpdatedByUserId = UserId;
@@ -324,6 +337,7 @@ namespace InstallationChecking.Pn.Services
         {
             try
             {
+                var core = await _coreHelper.GetCore();
                 var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == installationId);
 
                 if (installation.State != InstallationState.Completed || installation.Type != InstallationType.Removal)
@@ -331,9 +345,33 @@ namespace InstallationChecking.Pn.Services
                     return new OperationResult(false, _localizationService.GetString("InstallationCannotBeExported"));
                 }
 
-                // TODO
+                var caseDto = await core.CaseLookupCaseId(installation.SdkCaseId.GetValueOrDefault());
 
-                return new OperationResult(true);
+                if (caseDto == null)
+                {
+                    return new OperationResult(false, _localizationService.GetString("InstallationCaseNotFound"));
+                }
+
+                var reply = await core.CaseRead(caseDto.MicrotingUId.GetValueOrDefault(), caseDto.CheckUId.GetValueOrDefault());
+                var checkListValue = (CheckListValue)reply.ElementList[0];
+                var fields = checkListValue.DataItemList;
+
+                var assembly = Assembly.GetExecutingAssembly();
+                var assemblyName = assembly.GetName().Name;
+
+                using (var templateStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.template.xlsx"))
+                using (var stream = new MemoryStream())
+                using (var package = new ExcelPackage(stream, templateStream))
+                {
+                    var worksheet = package.Workbook.Worksheets[1];
+
+                    foreach (Field field in fields)
+                    {
+                        // TODO
+                    }
+
+                    return new OperationResult(true);
+                }
             }
             catch (Exception e)
             {

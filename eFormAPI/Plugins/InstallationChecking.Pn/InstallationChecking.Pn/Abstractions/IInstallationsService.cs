@@ -12,5 +12,6 @@ namespace InstallationChecking.Pn.Abstractions
         Task<OperationResult> AssignInstallations(InstallationsAssignModel installationsAssignModel);
         Task<OperationResult> RetractInstallation(int installationId);
         Task<OperationResult> ArchiveInstallation(int installationId);
+        Task<OperationResult> ExportExcel(int installationId);
     }
 }

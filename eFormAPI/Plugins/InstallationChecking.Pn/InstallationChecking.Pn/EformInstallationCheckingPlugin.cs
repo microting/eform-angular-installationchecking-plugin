@@ -187,16 +187,21 @@ namespace InstallationChecking.Pn
 
             if (string.IsNullOrEmpty(pluginDbOptions.Value.InstallationFormId))
             {
-                var installationFormStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.installation_form.xml");
-                var installationFormId = await CreateFormFromStream(installationFormStream, core);
-                await pluginDbOptions.UpdateDb(settings => settings.InstallationFormId = installationFormId.ToString(), context, 1);
+                using (var formStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.installation_form.xml"))
+                {
+                    var formId = await CreateFormFromStream(formStream, core);
+                    await pluginDbOptions.UpdateDb(settings => settings.InstallationFormId = formId.ToString(), context, 1);
+                }
             }
 
             if (string.IsNullOrEmpty(pluginDbOptions.Value.RemovalFormId))
             {
-                var removalFormStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.removal_form.xml");
-                var removalFormId = await CreateFormFromStream(removalFormStream, core);
-                await pluginDbOptions.UpdateDb(settings => settings.RemovalFormId = removalFormId.ToString(), context, 1);
+                // TODO Fix the removal_form.xml
+                using (var formStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.installation_form.xml"))
+                {
+                    var formId = await CreateFormFromStream(formStream, core);
+                    await pluginDbOptions.UpdateDb(settings => settings.RemovalFormId = formId.ToString(), context, 1);
+                }
             }
         }
 
