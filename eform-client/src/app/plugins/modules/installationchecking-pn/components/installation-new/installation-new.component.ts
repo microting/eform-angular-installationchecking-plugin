@@ -12,7 +12,7 @@ export class InstallationNewComponent implements OnInit {
   @ViewChild('frame') frame;
   @Output() installationCreated: EventEmitter<void> = new EventEmitter<void>();
   customersRequestModel: CustomersPnRequestModel = new CustomersPnRequestModel();
-  customersModel = [];
+  customers = [];
   selectedCustomerId: number;
   typeahead = new EventEmitter<string>();
 
@@ -29,12 +29,14 @@ export class InstallationNewComponent implements OnInit {
           return this.installationsService.getAllCustomers(this.customersRequestModel);
         })
       ).subscribe(items => {
+        const customers = [];
         for (const customer of items.model.customers) {
-          this.customersModel.push({
+          customers.push({
             id: customer.id,
             label: this.getCustomerLabel(customer)
           });
         }
+        this.customers = customers;
         this.cd.markForCheck();
       });
   }
@@ -59,18 +61,18 @@ export class InstallationNewComponent implements OnInit {
   }
 
   getCustomerLabel(customer: CustomerPnModel): string {
-    const companyName = customer.fields.find(f => f.name === 'CompanyName');
-    const companyAddress = customer.fields.find(f => f.name === 'CompanyAddress');
-    const companyAddress2 = customer.fields.find(f => f.name === 'CompanyAddress2');
-    const zipCode = customer.fields.find(f => f.name === 'ZipCode');
-    const cityName = customer.fields.find(f => f.name === 'CityName');
-    const countryCode = customer.fields.find(f => f.name === 'CountryCode');
+      const companyName = customer.fields.find(f => f.name === 'CompanyName');
+      const companyAddress = customer.fields.find(f => f.name === 'CompanyAddress');
+      const companyAddress2 = customer.fields.find(f => f.name === 'CompanyAddress2');
+      const zipCode = customer.fields.find(f => f.name === 'ZipCode');
+      const cityName = customer.fields.find(f => f.name === 'CityName');
+      const countryCode = customer.fields.find(f => f.name === 'CountryCode');
 
-    return companyName ? companyName.value + ' - ' : '' +
-      companyAddress ? companyAddress.value + ' - ' : '' +
-      companyAddress2 ? companyAddress2.value + ' - ' : '' +
-      zipCode ? zipCode.value + ' - ' : '' +
-      cityName ? cityName.value + ' - ' : '' +
-      countryCode ? countryCode.value + ' - ' : '';
+      return (companyName ? companyName.value + ' - ' : '') +
+        (companyAddress ? companyAddress.value + ' - ' : '') +
+        (companyAddress2 ? companyAddress2.value + ' - ' : '') +
+        (zipCode ? zipCode.value + ' - ' : '') +
+        (cityName ? cityName.value + ' - ' : '') +
+        (countryCode ? countryCode.value + ' - ' : '');
   }
 }

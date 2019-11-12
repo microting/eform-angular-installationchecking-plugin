@@ -8,6 +8,7 @@ import {OperationDataResult, OperationResult} from '../../../../common/models';
 import {InstallationsAssignModel, InstallationsListModel, InstallationsRequestModel} from '../models';
 import {CustomersPnModel, CustomersPnRequestModel} from '../../customers-pn/models/customer';
 import {CustomerPnMethods} from '../../customers-pn/services';
+import {ReportPnGenerateModel} from '../../items-planning-pn/models/report';
 
 export let InstallationsMethods = {
   Get: 'api/installationchecking-pn/installations',
@@ -15,6 +16,7 @@ export let InstallationsMethods = {
   Assign: 'api/installationchecking-pn/installations/assign',
   Retract: 'api/installationchecking-pn/installations/retract',
   Archive: 'api/installationchecking-pn/installations/archive',
+  Excel: 'api/installationchecking-pn/installations/excel',
 };
 @Injectable()
 export class InstallationsService extends BaseService {
@@ -48,5 +50,9 @@ export class InstallationsService extends BaseService {
 
   archive(id: number): Observable<OperationResult> {
     return this.post(InstallationsMethods.Archive, id);
+  }
+
+  excel(id: number): Observable<any> {
+    return this.getBlobData(InstallationsMethods.Excel, id);
   }
 }

@@ -1,5 +1,5 @@
 <div mdbModal class="modal fade" #frame="mdbModal">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
         <h3>{{ 'Assign installation to:' | translate }}</h3>
@@ -7,7 +7,7 @@
       <div class="modal-body">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col">
               <ng-select [items]="sites"
                          bindLabel="label"
                          [placeholder]="'Select employee' | translate"

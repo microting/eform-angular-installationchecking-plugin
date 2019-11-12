@@ -1,5 +1,5 @@
 <div mdbModal class="modal fade" #frame="mdbModal">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-md">
     <div class="modal-content">
       <div class="modal-header">
         <h3>{{ 'New installation' | translate }}</h3>
@@ -7,8 +7,8 @@
       <div class="modal-body">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-4">
-              <ng-select [items]="customersModel"
+            <div class="col">
+              <ng-select [items]="customers"
                          bindLabel="label"
                          [placeholder]="'Select customer' | translate"
                          bindValue="id"

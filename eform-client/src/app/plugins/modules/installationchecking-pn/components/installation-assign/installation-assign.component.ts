@@ -27,7 +27,7 @@ export class InstallationAssignComponent implements OnInit {
       if (data && data.success) {
         this.sites = data.model.map(x => ({
           id: x.siteId,
-          label: x.fullName
+          label: x.firstName + ' ' + x.lastName
         }));
       }
     });

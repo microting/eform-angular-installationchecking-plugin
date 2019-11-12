@@ -59,7 +59,7 @@ namespace InstallationChecking.Pn.Services
                 Trace.TraceError(e.Message);
                 _logger.LogError(e.Message);
                 return new OperationDataResult<InstallationCheckingBaseSettings>(false,
-                    _trashInspectionLocalizationService.GetString("ErrorWhileObtainingTrashInspectionSettings"));
+                    _trashInspectionLocalizationService.GetString("ErrorWhileObtainingPluginSettings"));
             }
         }
 

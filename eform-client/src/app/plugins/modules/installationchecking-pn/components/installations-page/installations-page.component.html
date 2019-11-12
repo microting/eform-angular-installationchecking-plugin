@@ -142,11 +142,6 @@
                       (click)="showRetractInstallationModal(installation)">
                 {{ 'Retract' | translate }}
               </button>
-              <a *ngIf="installation.state === installationStates.Completed"
-                 [routerLink]="['/cases/edit/' + installation.sdkCaseId + '/' + installation.sdkeFormId]"
-                 id="showCaseLink_{{i}}">
-                {{ 'Show case' | translate }}
-              </a>
             </div>
           </td>
         </tr>
@@ -159,6 +154,7 @@
                 id="installationAssignBtn"
                 class="btn btn-success"
                 mdbTooltip="{{ 'Assign installation' | translate }}"
+                [disabled]="!someAssign"
                 (click)="showAssignInstallationModal()">{{ 'Assign' | translate }}
         </button>
       </div>

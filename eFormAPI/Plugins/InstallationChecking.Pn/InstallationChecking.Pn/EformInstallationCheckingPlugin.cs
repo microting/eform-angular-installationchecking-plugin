@@ -48,6 +48,7 @@ using System.Text;
 using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
 using eFormCore;
 using System.Threading.Tasks;
+using Microting.eFormBaseCustomerBase.Infrastructure.Data;
 
 namespace InstallationChecking.Pn
 {
@@ -85,14 +86,23 @@ namespace InstallationChecking.Pn
 
         public void ConfigureDbContext(IServiceCollection services, string connectionString)
         {
+            string customersConnectionString = connectionString.Replace(
+                "eform-angular-installationchecking-plugin",
+                "eform-angular-basecustomer-plugin");
             if (connectionString.ToLower().Contains("convert zero datetime"))
             {
                 services.AddDbContext<InstallationCheckingPnDbContext>(o => o.UseMySql(connectionString,
+                    b => b.MigrationsAssembly(PluginAssembly().FullName)));
+
+                services.AddDbContext<CustomersPnDbAnySql>(o => o.UseMySql(customersConnectionString,
                     b => b.MigrationsAssembly(PluginAssembly().FullName)));
             }
             else
             {
                 services.AddDbContext<InstallationCheckingPnDbContext>(o => o.UseSqlServer(connectionString,
+                    b => b.MigrationsAssembly(PluginAssembly().FullName)));
+
+                services.AddDbContext<CustomersPnDbAnySql>(o => o.UseMySql(customersConnectionString,
                     b => b.MigrationsAssembly(PluginAssembly().FullName)));
             }
 

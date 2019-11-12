@@ -7,6 +7,9 @@ import {InstallationCheckingPnClaims, InstallationsSortColumns, InstallationStat
 import {SharedPnService} from '../../../shared/services';
 import {InstallationsService} from '../../services';
 import {TranslateService} from '@ngx-translate/core';
+import {saveAs} from 'file-saver';
+import * as moment from 'moment';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-removal-page',
@@ -41,6 +44,7 @@ export class RemovalPageComponent implements OnInit {
   constructor(
     private sharedPnService: SharedPnService,
     private translateService: TranslateService,
+    private toastrService: ToastrService,
     private installationsService: InstallationsService
   ) {
     this.states = [
@@ -125,6 +129,17 @@ export class RemovalPageComponent implements OnInit {
   onSearchInputChanged(e: any) {
     this.installationsRequestModel.searchString = e.target.value;
     this.getRemovalsList();
+  }
+
+  saveExcel(id: number) {
+    this.spinnerStatus = true;
+    this.installationsService.excel(id).subscribe(((data) => {
+      saveAs(data, moment().format('YYYY-MM-DD') + '_installation_' + id + '.xlsx');
+      this.spinnerStatus = false;
+    }), error => {
+      this.toastrService.error(error);
+      this.spinnerStatus = false;
+    });
   }
 
   getSortIcon(sort: string): string {

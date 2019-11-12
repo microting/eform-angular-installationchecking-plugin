@@ -39,6 +39,10 @@ export class InstallationsPageComponent implements OnInit {
     return InstallationsSortColumns;
   }
 
+  get someAssign() {
+    return this.installationsListModel.installations.some(x => x.assign);
+  }
+
   constructor(
     private sharedPnService: SharedPnService,
     private translateService: TranslateService,
