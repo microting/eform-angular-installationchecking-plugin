@@ -17,13 +17,13 @@ namespace InstallationChecking.Pn.Services
     public class InstallationCheckingPnSettingsService :IInstallationCheckingPnSettingsService
     {
         private readonly ILogger<InstallationCheckingPnSettingsService> _logger;
-        private readonly IInstallationCheckingLocalizationService _trashInspectionLocalizationService;
+        private readonly IInstallationCheckingLocalizationService _localizationService;
         private readonly InstallationCheckingPnDbContext _dbContext;
         private readonly IPluginDbOptions<InstallationCheckingBaseSettings> _options;
         private readonly IHttpContextAccessor _httpContextAccessor;
         
         public InstallationCheckingPnSettingsService(ILogger<InstallationCheckingPnSettingsService> logger,
-            IInstallationCheckingLocalizationService trashInspectionLocalizationService,
+            IInstallationCheckingLocalizationService localizationService,
             InstallationCheckingPnDbContext dbContext,
             IPluginDbOptions<InstallationCheckingBaseSettings> options,
             IHttpContextAccessor httpContextAccessor)
@@ -32,7 +32,7 @@ namespace InstallationChecking.Pn.Services
             _dbContext = dbContext;
             _options = options;
             _httpContextAccessor = httpContextAccessor;
-            _trashInspectionLocalizationService = trashInspectionLocalizationService;
+            _localizationService = localizationService;
         }
         
         public async Task<OperationDataResult<InstallationCheckingBaseSettings>> GetSettings()
@@ -59,7 +59,7 @@ namespace InstallationChecking.Pn.Services
                 Trace.TraceError(e.Message);
                 _logger.LogError(e.Message);
                 return new OperationDataResult<InstallationCheckingBaseSettings>(false,
-                    _trashInspectionLocalizationService.GetString("ErrorWhileObtainingPluginSettings"));
+                    _localizationService.GetString("ErrorWhileObtainingPluginSettings"));
             }
         }
 
@@ -75,13 +75,13 @@ namespace InstallationChecking.Pn.Services
                 }, _dbContext, UserId);
 
                 return new OperationResult(true,
-                    _trashInspectionLocalizationService.GetString("SettingsHaveBeenUpdatedSuccessfully"));
+                    _localizationService.GetString("SettingsHaveBeenUpdatedSuccessfully"));
             }
             catch(Exception e)
             {
                 Trace.TraceError(e.Message);
                 _logger.LogError(e.Message);
-                return new OperationResult(false, _trashInspectionLocalizationService.GetString("ErrorWhileUpdatingSettings"));
+                return new OperationResult(false, _localizationService.GetString("ErrorWhileUpdatingSettings"));
             }
         }
         
