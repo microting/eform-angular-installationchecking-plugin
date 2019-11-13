@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using InstallationChecking.Pn.Abstractions;
-using InstallationChecking.Pn.Infrastructure.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microting.eFormApi.BasePn.Infrastructure.Database.Entities;
 using Microting.eFormApi.BasePn.Infrastructure.Models.API;
+using Microting.InstallationCheckingBase.Infrastructure.Models;
 
 namespace InstallationChecking.Pn.Controllers
 {

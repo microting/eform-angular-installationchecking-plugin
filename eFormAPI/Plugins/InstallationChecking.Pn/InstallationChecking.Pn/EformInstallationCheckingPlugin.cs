@@ -49,6 +49,7 @@ using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
 using eFormCore;
 using System.Threading.Tasks;
 using Microting.eFormBaseCustomerBase.Infrastructure.Data;
+using Microting.InstallationCheckingBase.Infrastructure.Models;
 
 namespace InstallationChecking.Pn
 {

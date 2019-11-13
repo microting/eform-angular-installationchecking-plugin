@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using InstallationChecking.Pn.Infrastructure.Models;
 using Microting.eFormApi.BasePn.Infrastructure.Models.API;
+using Microting.InstallationCheckingBase.Infrastructure.Models;
 
 namespace InstallationChecking.Pn.Abstractions
 {

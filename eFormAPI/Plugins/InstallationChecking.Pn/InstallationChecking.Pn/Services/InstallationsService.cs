@@ -21,6 +21,7 @@ using OfficeOpenXml.Style;
 using System.Reflection;
 using System.IO;
 using Microting.eForm.Infrastructure.Models;
+using Microting.InstallationCheckingBase.Infrastructure.Models;
 
 namespace InstallationChecking.Pn.Services
 {
@@ -275,9 +276,12 @@ namespace InstallationChecking.Pn.Services
                         return new OperationResult(false, _localizationService.GetString("InstallationCannotBeRetracted"));
                     }
 
-                    var formId = installation.Type == InstallationType.Installation ? options.InstallationFormId : options.RemovalFormId;
+                    var caseDto = await core.CaseReadByCaseId(installation.SdkCaseId.GetValueOrDefault());
 
-                    await core.CaseDelete(int.Parse(formId), installation.EmployeeId.GetValueOrDefault());
+                    if (caseDto != null)
+                    {
+                        await core.CaseDelete(caseDto.MicrotingUId.GetValueOrDefault());
+                    }
 
                     installation.EmployeeId = null;
                     installation.SdkCaseId = null;
@@ -303,19 +307,12 @@ namespace InstallationChecking.Pn.Services
             {
                 try
                 {
-                    var core = await _coreHelper.GetCore();
-                    var options = _options.Value;
-
                     var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == installationId);
 
                     if (installation.State != InstallationState.Completed || installation.Type != InstallationType.Removal)
                     {
                         return new OperationResult(false, _localizationService.GetString("InstallationCannotBeArchived"));
                     }
-
-                    var formId = installation.Type == InstallationType.Installation ? options.InstallationFormId : options.RemovalFormId;
-
-                    await core.CaseDelete(int.Parse(formId), installation.EmployeeId.GetValueOrDefault());
 
                     installation.State = InstallationState.Archived;
                     installation.UpdatedByUserId = UserId;
