@@ -124,6 +124,12 @@
           <td id="dateInstallCol_{{i}}">
             {{installation.dateInstall}}
           </td>
+          <td id="dateRemoveCol_{{i}}">
+            {{installation.dateRemove}}
+          </td>
+          <td id="dateActRemoveCol_{{i}}">
+            {{installation.dateActRemove}}
+          </td>
           <td id="assignedToCol_{{i}}">
             {{installation.assignedTo}}
           </td>
@@ -139,8 +145,8 @@
           <td>
             <div class="d-flex flex-row justify-content-center">
               <a class="btn btn-success btn-icon mb-2"
-                 *ngIf="installation.state === installationStates.Completed"
-                 [routerLink]="['/cases/edit/' + installation.sdkCaseId + '/' + installation.sdkeFormId]"
+                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseId && removalFormId"
+                 [routerLink]="['/cases/edit/' + installation.sdkCaseId + '/' + removalFormId]"
                  id="showCaseLink_{{i}}">
                 {{ 'Show case' | translate }}
               </a>

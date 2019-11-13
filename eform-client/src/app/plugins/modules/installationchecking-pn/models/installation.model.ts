@@ -22,7 +22,6 @@ export class InstallationModel {
   employeeId: number;
   customerId: number;
   sdkCaseId: number;
-  sdkeFormId: number;
 
   assign = false;
 }

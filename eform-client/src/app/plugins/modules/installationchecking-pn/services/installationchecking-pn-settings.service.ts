@@ -16,7 +16,7 @@ export class InstallationCheckingPnSettingsService extends BaseService {
     super(_http, router, toastrService);
   }
 
-  getAllSettings(): Observable<OperationDataResult<InstallationCheckingBaseSettingsModel>> {
+  getAllSettings(): Observable<OperationDataResult<any>> {
     return this.get(InstallationCheckingSettingsMethods.InstallationCheckingSettings);
   }
 

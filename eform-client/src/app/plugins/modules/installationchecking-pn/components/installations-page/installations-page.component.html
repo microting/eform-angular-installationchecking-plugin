@@ -135,6 +135,12 @@
           </td>
           <td>
             <div class="d-flex flex-row justify-content-center">
+              <a class="btn btn-success btn-icon mb-2"
+                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseId && installationFormId"
+                 [routerLink]="['/cases/edit/' + installation.sdkCaseId + '/' + installationFormId]"
+                 id="showCaseLink_{{i}}">
+                {{ 'Show case' | translate }}
+              </a>
               <button class="btn btn-accent text-black-50 btn-icon mb-2"
                       mdbTooltip="{{ 'Retract installation' | translate }}"
                       id="installationRetractBtn_{{i}}"

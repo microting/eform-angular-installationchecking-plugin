@@ -3,7 +3,7 @@ import {PluginClaimsHelper} from '../../../../../common/helpers';
 import {SharedPnService} from '../../../shared/services';
 import {InstallationCheckingPnClaims, InstallationsSortColumns, InstallationStateEnum, InstallationTypeEnum} from '../../const';
 import {PageSettingsModel} from '../../../../../common/models/settings';
-import {InstallationsService} from '../../services';
+import {InstallationCheckingPnSettingsService, InstallationsService} from '../../services';
 import {InstallationModel, InstallationsListModel, InstallationsRequestModel} from '../../models';
 import {InstallationAssignComponent, InstallationNewComponent, InstallationRetractComponent} from '..';
 import {TranslateService} from '@ngx-translate/core';
@@ -21,6 +21,7 @@ export class InstallationsPageComponent implements OnInit {
   installationsRequestModel: InstallationsRequestModel = new InstallationsRequestModel();
   installationsListModel: InstallationsListModel = new InstallationsListModel();
   states = [];
+  installationFormId: number;
   spinnerStatus = false;
 
   get pluginClaimsHelper() {
@@ -46,7 +47,8 @@ export class InstallationsPageComponent implements OnInit {
   constructor(
     private sharedPnService: SharedPnService,
     private translateService: TranslateService,
-    private installationsService: InstallationsService
+    private installationsService: InstallationsService,
+    private settingsService: InstallationCheckingPnSettingsService
   ) {
     this.states = [
       { id: InstallationStateEnum.NotAssigned, label: translateService.instant('Not assigned') },
@@ -57,6 +59,12 @@ export class InstallationsPageComponent implements OnInit {
 
   ngOnInit() {
     this.getLocalPageSettings();
+
+    this.settingsService.getAllSettings().subscribe((data) => {
+      if (data && data.success) {
+        this.installationFormId = data.model.installationFormId;
+      }
+    });
   }
 
   getLocalPageSettings() {

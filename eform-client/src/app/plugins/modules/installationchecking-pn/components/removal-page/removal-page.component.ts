@@ -5,7 +5,7 @@ import {InstallationModel, InstallationsListModel, InstallationsRequestModel} fr
 import {PluginClaimsHelper} from '../../../../../common/helpers';
 import {InstallationCheckingPnClaims, InstallationsSortColumns, InstallationStateEnum, InstallationTypeEnum} from '../../const';
 import {SharedPnService} from '../../../shared/services';
-import {InstallationsService} from '../../services';
+import {InstallationCheckingPnSettingsService, InstallationsService} from '../../services';
 import {TranslateService} from '@ngx-translate/core';
 import {saveAs} from 'file-saver';
 import * as moment from 'moment';
@@ -23,6 +23,7 @@ export class RemovalPageComponent implements OnInit {
   installationsRequestModel: InstallationsRequestModel = new InstallationsRequestModel();
   installationsListModel: InstallationsListModel = new InstallationsListModel();
   states = [];
+  removalFormId: number;
   spinnerStatus = false;
 
   get pluginClaimsHelper() {
@@ -45,7 +46,8 @@ export class RemovalPageComponent implements OnInit {
     private sharedPnService: SharedPnService,
     private translateService: TranslateService,
     private toastrService: ToastrService,
-    private installationsService: InstallationsService
+    private installationsService: InstallationsService,
+    private settingsService: InstallationCheckingPnSettingsService
   ) {
     this.states = [
       { id: InstallationStateEnum.NotAssigned, label: translateService.instant('Not assigned') },
@@ -57,6 +59,12 @@ export class RemovalPageComponent implements OnInit {
 
   ngOnInit() {
     this.getLocalPageSettings();
+
+    this.settingsService.getAllSettings().subscribe((data) => {
+      if (data && data.success) {
+        this.removalFormId = data.model.removalFormId;
+      }
+    });
   }
 
   getLocalPageSettings() {
