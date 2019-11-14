@@ -189,31 +189,14 @@ namespace InstallationChecking.Pn
             if (string.IsNullOrEmpty(pluginDbOptions.Value.InstallationFormId))
             {
                 using (var formStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.installation_form.xml"))
+                using (var reader = new StreamReader(formStream, Encoding.UTF8))
                 {
-                    var formId = await CreateFormFromStream(formStream, core);
+                    var formString = await reader.ReadToEndAsync();
+                    var eForm = await core.TemplateFromXml(formString);
+                    eForm = await core.TemplateUploadData(eForm);
+                    var formId = await core.TemplateCreate(eForm);
                     await pluginDbOptions.UpdateDb(settings => settings.InstallationFormId = formId.ToString(), context, 1);
                 }
-            }
-
-            if (string.IsNullOrEmpty(pluginDbOptions.Value.RemovalFormId))
-            {
-                // TODO Fix the removal_form.xml
-                using (var formStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.installation_form.xml"))
-                {
-                    var formId = await CreateFormFromStream(formStream, core);
-                    await pluginDbOptions.UpdateDb(settings => settings.RemovalFormId = formId.ToString(), context, 1);
-                }
-            }
-        }
-
-        private async Task<int> CreateFormFromStream(Stream stream, Core core)
-        {
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                var formString = await reader.ReadToEndAsync();
-                var eForm = await core.TemplateFromXml(formString);
-                eForm = await core.TemplateUploadData(eForm);
-                return await core.TemplateCreate(eForm);
             }
         }
     }

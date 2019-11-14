@@ -17,10 +17,8 @@ using Microting.InstallationCheckingBase.Infrastructure.Enums;
 using InstallationChecking.Pn.Infrastructure.Extensions;
 using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
 using System.Reflection;
 using System.IO;
-using Microting.eForm.Infrastructure.Models;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
 
 namespace InstallationChecking.Pn.Services
@@ -58,23 +56,24 @@ namespace InstallationChecking.Pn.Services
                 var installationModel = await _installationCheckingContext.Installations.AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed && x.Id == id)
                     .Select(x => new InstallationModel
-                    {
-                        Id = x.Id,
-                        CompanyName = x.CompanyName,
-                        CompanyAddress = x.CompanyAddress,
-                        CompanyAddress2 = x.CompanyAddress2,
-                        CityName = x.CityName,
-                        CountryCode = x.CountryCode,
-                        ZipCode = x.ZipCode,
-                        State = x.State,
-                        Type = x.Type,
-                        DateInstall = x.DateInstall,
-                        DateRemove = x.DateRemove,
-                        DateActRemove = x.DateActRemove,
-                        EmployeeId = x.EmployeeId,
-                        CustomerId = x.CustomerId,
-                        SdkCaseId = x.SdkCaseId
-                    }
+                        {
+                            Id = x.Id,
+                            CompanyName = x.CompanyName,
+                            CompanyAddress = x.CompanyAddress,
+                            CompanyAddress2 = x.CompanyAddress2,
+                            CityName = x.CityName,
+                            CountryCode = x.CountryCode,
+                            ZipCode = x.ZipCode,
+                            State = x.State,
+                            Type = x.Type,
+                            DateInstall = x.DateInstall,
+                            DateRemove = x.DateRemove,
+                            DateActRemove = x.DateActRemove,
+                            EmployeeId = x.EmployeeId,
+                            CustomerId = x.CustomerId,
+                            SdkCaseId = x.SdkCaseId,
+                            RemovalFormId = x.RemovalFormId
+                        }
                     ).FirstOrDefaultAsync();
 
                 if (installationModel == null)
@@ -135,23 +134,24 @@ namespace InstallationChecking.Pn.Services
                     .Skip(requestModel.Offset)
                     .Take(requestModel.PageSize)
                     .Select(x => new InstallationModel()
-                    {
-                        Id = x.Id,
-                        CompanyName = x.CompanyName,
-                        CompanyAddress = x.CompanyAddress,
-                        CompanyAddress2 = x.CompanyAddress2,
-                        CityName = x.CityName,
-                        CountryCode = x.CountryCode,
-                        ZipCode = x.ZipCode,
-                        State = x.State,
-                        Type = x.Type,
-                        DateInstall = x.DateInstall,
-                        DateRemove = x.DateRemove,
-                        DateActRemove = x.DateActRemove,
-                        EmployeeId = x.EmployeeId,
-                        CustomerId = x.CustomerId,
-                        SdkCaseId = x.SdkCaseId
-                    }
+                        {
+                            Id = x.Id,
+                            CompanyName = x.CompanyName,
+                            CompanyAddress = x.CompanyAddress,
+                            CompanyAddress2 = x.CompanyAddress2,
+                            CityName = x.CityName,
+                            CountryCode = x.CountryCode,
+                            ZipCode = x.ZipCode,
+                            State = x.State,
+                            Type = x.Type,
+                            DateInstall = x.DateInstall,
+                            DateRemove = x.DateRemove,
+                            DateActRemove = x.DateActRemove,
+                            EmployeeId = x.EmployeeId,
+                            CustomerId = x.CustomerId,
+                            SdkCaseId = x.SdkCaseId,
+                            RemovalFormId = x.RemovalFormId
+                        }
                     ).ToListAsync();
 
                 foreach (var item in list.Where(x => x.EmployeeId != null))
@@ -222,9 +222,6 @@ namespace InstallationChecking.Pn.Services
                     var core = await _coreHelper.GetCore();
                     var options = _options.Value;
 
-                    var installationForm = await core.TemplateRead(int.Parse(options.InstallationFormId));
-                    var removalForm = await core.TemplateRead(int.Parse(options.RemovalFormId));
-
                     foreach (var id in installationsAssignModel.InstallationIds)
                     {
                         var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == id);
@@ -234,8 +231,10 @@ namespace InstallationChecking.Pn.Services
                             return new OperationResult(false, _localizationService.GetString("InstallationCannotBeAssigned"));
                         }
 
-                        var formId = installation.Type == InstallationType.Installation ? options.InstallationFormId : options.RemovalFormId;
-                        var mainElement = await core.TemplateRead(int.Parse(formId));
+                        var formId = installation.Type == InstallationType.Installation 
+                            ? int.Parse(options.InstallationFormId) 
+                            : installation.RemovalFormId.GetValueOrDefault();
+                        var mainElement = await core.TemplateRead(formId);
                         mainElement.Repeated = 0;
                         mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
                         mainElement.StartDate = DateTime.Now.ToUniversalTime();
@@ -276,12 +275,7 @@ namespace InstallationChecking.Pn.Services
                         return new OperationResult(false, _localizationService.GetString("InstallationCannotBeRetracted"));
                     }
 
-                    var caseDto = await core.CaseReadByCaseId(installation.SdkCaseId.GetValueOrDefault());
-
-                    if (caseDto != null)
-                    {
-                        await core.CaseDelete(caseDto.MicrotingUId.GetValueOrDefault());
-                    }
+                    await core.CaseDelete(installation.SdkCaseId.GetValueOrDefault());
 
                     installation.EmployeeId = null;
                     installation.SdkCaseId = null;
@@ -330,7 +324,7 @@ namespace InstallationChecking.Pn.Services
             }
         }
 
-        public async Task<OperationResult> ExportExcel(int installationId)
+        public async Task<OperationDataResult<byte[]>> ExportExcel(int installationId)
         {
             try
             {
@@ -339,19 +333,15 @@ namespace InstallationChecking.Pn.Services
 
                 if (installation.State != InstallationState.Completed || installation.Type != InstallationType.Removal)
                 {
-                    return new OperationResult(false, _localizationService.GetString("InstallationCannotBeExported"));
+                    return new OperationDataResult<byte[]>(false, _localizationService.GetString("InstallationCannotBeExported"));
                 }
 
                 var caseDto = await core.CaseLookupCaseId(installation.SdkCaseId.GetValueOrDefault());
 
                 if (caseDto == null)
                 {
-                    return new OperationResult(false, _localizationService.GetString("InstallationCaseNotFound"));
+                    return new OperationDataResult<byte[]>(false, _localizationService.GetString("InstallationCaseNotFound"));
                 }
-
-                var reply = await core.CaseRead(caseDto.MicrotingUId.GetValueOrDefault(), caseDto.CheckUId.GetValueOrDefault());
-                var checkListValue = (CheckListValue)reply.ElementList[0];
-                var fields = checkListValue.DataItemList;
 
                 var assembly = Assembly.GetExecutingAssembly();
                 var assemblyName = assembly.GetName().Name;
@@ -361,19 +351,48 @@ namespace InstallationChecking.Pn.Services
                 using (var package = new ExcelPackage(stream, templateStream))
                 {
                     var worksheet = package.Workbook.Worksheets[1];
+                    var row = 12;
 
-                    foreach (Field field in fields)
+                    foreach (var meter in installation.Meters)
                     {
-                        // TODO
+                        worksheet.Cells[row, 1].Value = installation.CadastralNumber;
+                        worksheet.Cells[row, 2].Value = installation.PropertyNumber;
+                        worksheet.Cells[row, 3].Value = installation.CompanyName;
+                        worksheet.Cells[row, 4].Value = installation.ApartmentNumber;
+                        worksheet.Cells[row, 5].Value = installation.CompanyAddress;
+                        worksheet.Cells[row, 6].Value = installation.CompanyAddress2;
+                        worksheet.Cells[row, 7].Value = installation.ZipCode;
+                        worksheet.Cells[row, 8].Value = installation.CityName;
+                        worksheet.Cells[row, 9].Value = installation.CountryCode;
+                        worksheet.Cells[row, 10].Value = installation.CadastralType;
+                        worksheet.Cells[row, 11].Value = ""; // Foundation type
+                        worksheet.Cells[row, 12].Value = ""; // Ventilation
+                        worksheet.Cells[row, 13].Value = ""; // Household water
+                        worksheet.Cells[row, 14].Value = installation.YearBuilt;
+                        worksheet.Cells[row, 15].Value = ""; // Renovated
+                        worksheet.Cells[row, 16].Value = ""; // Swedish "blue concrete"
+                        worksheet.Cells[row, 17].Value = ""; // Visit by a professional
+                        worksheet.Cells[row, 18].Value = installation.LivingFloorsNumber;
+                        worksheet.Cells[row, 19].Value = meter.QR;
+                        worksheet.Cells[row, 20].Value = meter.RoomType; 
+                        worksheet.Cells[row, 21].Value = meter.Floor;
+                        worksheet.Cells[row, 22].Value = meter.RoomName;
+                        worksheet.Cells[row, 23].Value = installation.DateInstall;
+                        worksheet.Cells[row, 24].Value = installation.DateActRemove;
+
+                        var site = await core.SiteRead(installation.EmployeeId.GetValueOrDefault());
+                        worksheet.Cells[row, 25].Value = site.FirstName + " " + site.LastName;
+
+                        row++;
                     }
 
-                    return new OperationResult(true);
+                    return new OperationDataResult<byte[]>(true, package.GetAsByteArray());
                 }
             }
             catch (Exception e)
             {
                 Trace.TraceError(e.Message);
-                return new OperationResult(false, _localizationService.GetString("ErrorWhileExportingExcel"));
+                return new OperationDataResult<byte[]>(false, _localizationService.GetString("ErrorWhileExportingExcel"));
             }
         }
 

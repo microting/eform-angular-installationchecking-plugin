@@ -58,5 +58,20 @@ namespace InstallationChecking.Pn.Controllers
         {
             return await _installationsService.ArchiveInstallation(installationId);
         }
+
+        [HttpGet("excel/{id}")]
+        public async Task<IActionResult> ExportExcel(int id)
+        {
+            var result = await _installationsService.ExportExcel(id);
+
+            if (result.Success)
+            {
+                return File(result.Model, "application/pdf");
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
+        }
     }
 }

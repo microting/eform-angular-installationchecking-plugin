@@ -29,7 +29,6 @@
     <ItemGroup>
       <EmbeddedResource Include="Resources\localization.json" />
       <EmbeddedResource Include="Resources\installation_form.xml" />
-      <EmbeddedResource Include="Resources\removal_form.xml" />
       <EmbeddedResource Include="Resources\template.xlsx" />
     </ItemGroup>
 

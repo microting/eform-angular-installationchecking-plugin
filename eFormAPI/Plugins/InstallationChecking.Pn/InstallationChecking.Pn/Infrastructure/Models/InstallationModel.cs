@@ -26,5 +26,6 @@ namespace InstallationChecking.Pn.Infrastructure.Models
         public int? EmployeeId { get; set; }
         public int? CustomerId { get; set; }
         public int? SdkCaseId { get; set; }
+        public int? RemovalFormId { get; set; }
     }
 }
