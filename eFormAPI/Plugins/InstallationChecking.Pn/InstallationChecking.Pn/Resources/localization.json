@@ -1,0 +1,170 @@
+[
+  {
+    "Key": "CustomerNotFound",
+    "LocalizedValue": {
+      "da": "Kunde ikke fundet",
+      "en-US": "Customer not found"
+    }
+  },
+  {
+    "Key": "ErrorGettingInstallation",
+    "LocalizedValue": {
+      "da": "Fejl ved installation af installationen",
+      "en-US": "Error getting installation"
+    }
+  },
+  {
+    "Key": "ErrorGettingInstallationsList",
+    "LocalizedValue": {
+      "da": "Fejl ved installation af installationenslisten",
+      "en-US": "Error getting installation list"
+    }
+  },
+  {
+    "Key": "ErrorWhileArchivingInstallation",
+    "LocalizedValue": {
+      "da": "Fejl under arkivering af installation",
+      "en-US": "Error while archiving installation"
+    }
+  },
+  {
+    "Key": "ErrorWhileAssigningInstallation",
+    "LocalizedValue": {
+      "da": "Fejl under tildelingen af installationen",
+      "en-US": "Error while assigning installation"
+    }
+  },
+  {
+    "Key": "ErrorWhileCreatingInstallation",
+    "LocalizedValue": {
+      "da": "Fejl under oprettelse af installation",
+      "en-US": "Error while creating installation"
+    }
+  },
+  {
+    "Key": "ErrorWhileExportingExcel",
+    "LocalizedValue": {
+      "da": "Fejl under eksport af excel",
+      "en-US": "Error while exporting excel"
+    }
+  },
+  {
+    "Key": "ErrorWhileObtainingPluginSettings",
+    "LocalizedValue": {
+      "da": "Fejl under hentning af plugin-indstillinger",
+      "en-US": "Error while obtaining plugin settings"
+    }
+  },
+  {
+    "Key": "ErrorWhileRetractingInstallation",
+    "LocalizedValue": {
+      "da": "Fejl under tilbagetrækning af installationen",
+      "en-US": "Error while retracting installation"
+    }
+  },
+  {
+    "Key": "ErrorWhileUpdatingSettings",
+    "LocalizedValue": {
+      "da": "Fejl under opdatering af indstillinger",
+      "en-US": "Error while updating settings"
+    }
+  },
+  {
+    "Key": "Installation",
+    "LocalizedValue": {
+      "da": "Installation",
+      "en-US": "Installation"
+    }
+  },
+  {
+    "Key": "InstallationArchivedSuccessfully",
+    "LocalizedValue": {
+      "da": "Installation arkiveret med succes",
+      "en-US": "Installation archived successfully"
+    }
+  },
+  {
+    "Key": "InstallationAssignedSuccessfully",
+    "LocalizedValue": {
+      "da": "Installation tildelt med succes",
+      "en-US": "Installation assigned successfully"
+    }
+  },
+  {
+    "Key": "InstallationCannotBeArchived",
+    "LocalizedValue": {
+      "da": "Installation kan ikke arkiveres",
+      "en-US": "Installation cannot be archived"
+    }
+  },
+  {
+    "Key": "InstallationCannotBeAssigned",
+    "LocalizedValue": {
+      "da": "Installation kan ikke tildeles",
+      "en-US": "Installation cannot be assigned"
+    }
+  },
+  {
+    "Key": "InstallationCannotBeExported",
+    "LocalizedValue": {
+      "da": "Installation kan ikke eksporteres",
+      "en-US": "Installation cannot be exported"
+    }
+  },
+  {
+    "Key": "InstallationCannotBeRetracted",
+    "LocalizedValue": {
+      "da": "Installation kan ikke trækkes tilbage",
+      "en-US": "Installation cannot be retracted"
+    }
+  },
+  {
+    "Key": "InstallationCaseNotFound",
+    "LocalizedValue": {
+      "da": "Installation sag ikke fundet",
+      "en-US": "Installation case not found"
+    }
+  },
+  {
+    "Key": "InstallationCreatedSuccessfully",
+    "LocalizedValue": {
+      "da": "Installation oprettet med succes",
+      "en-US": "Installation created successfully"
+    }
+  },
+  {
+    "Key": "InstallationNotFound",
+    "LocalizedValue": {
+      "da": "Installation ikke fundet",
+      "en-US": "Installation not found"
+    }
+  },
+  {
+    "Key": "InstallationRetractedSuccessfully",
+    "LocalizedValue": {
+      "da": "Installation blev trukket tilbage",
+      "en-US": "Installation retracted successfully"
+    }
+  },
+  {
+    "Key": "Planning",
+    "LocalizedValue": {
+      "da": "Planlægning",
+      "en-US": "Planning"
+    }
+  },
+  {
+    "Key": "Removal",
+    "LocalizedValue": {
+      "da": "Fjernelse",
+      "en-US": "Removal"
+    }
+  },
+  {
+    "Key": "SettingsHaveBeenUpdatedSuccessfully",
+    "LocalizedValue": {
+      "da": "Indstillingerne er blevet opdateret",
+      "en-US": "Settings have been updated successfully"
+    }
+  }
+]

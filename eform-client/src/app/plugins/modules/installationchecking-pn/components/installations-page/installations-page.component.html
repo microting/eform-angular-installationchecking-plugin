@@ -1,0 +1,200 @@
+<subheader-pn [title]="'Installations' | translate">
+  <div class="p-3">
+    <button *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.createInstallations)"
+            id="installationNewBtn"
+            class="btn btn-success"
+            mdbTooltip="{{ 'New installation' | translate }}"
+            (click)="showNewInstallationModal()">{{ 'New installation' | translate }}
+    </button>
+  </div>
+</subheader-pn>
+
+<div class="container-fluid">
+  <div class="row pl-1">
+    <div class="col-md-2">
+      <div class="md-form">
+        <input mdbInputDirective [mdbValidate]="false"
+               type="text" (input)="onSearchInputChanged($event)"
+               class="form-control input-sm" id="searchInput">
+        <label for="searchInput">{{'Search' | translate}}</label>
+      </div>
+    </div>
+    <div class="col-md-2 ng-select-wrapper">
+      <ng-select [items]="states"
+                 bindLabel="label" bindValue="id"
+                 [placeholder]="'Select state' | translate"
+                 [(ngModel)]="installationsRequestModel.state"
+                 id="stateFilter">
+      </ng-select>
+    </div>
+  </div>
+  <div class="container-fluid" *ngIf="installationsListModel.total > 0">
+    <div class="row p-1 mt-4 table-responsive no-gutters">
+      <table class="table table-sm table-striped text-center z-depth-1">
+        <thead>
+        <tr>
+          <th scope="col" class="table-header-sortable" id="idSort" (click)="sortTable(sortCols.id)">
+            <div class="d-flex align-items-center justify-content-center">
+              ID
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.id)}}</i>
+            </div>
+          </th>
+          <th scope="col" class="table-header-sortable" id="companyNameSort" (click)="sortTable(sortCols.companyName)">
+            <div class="d-flex align-items-center justify-content-center">
+              {{ 'Company name' | translate }}
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.companyName)}}</i>
+            </div>
+          </th>
+          <th scope="col" class="table-header-sortable" id="companyAddressSort" (click)="sortTable(sortCols.companyAddress)">
+            <div class="d-flex align-items-center justify-content-center">
+              {{ 'Company address' | translate }}
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.companyAddress)}}</i>
+            </div>
+          </th>
+          <th scope="col" class="table-header-sortable" id="companyAddress2Sort" (click)="sortTable(sortCols.companyAddress2)">
+            <div class="d-flex align-items-center justify-content-center">
+              {{ 'Company address 2' | translate }}
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.companyAddress2)}}</i>
+            </div>
+          </th>
+          <th scope="col" class="table-header-sortable" id="zipCodeSort" (click)="sortTable(sortCols.zipCode)">
+            <div class="d-flex align-items-center justify-content-center">
+              {{ 'Zip code' | translate }}
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.zipCode)}}</i>
+            </div>
+          </th>
+          <th scope="col" class="table-header-sortable" id="cityNameSort" (click)="sortTable(sortCols.cityName)">
+            <div class="d-flex align-items-center justify-content-center">
+              {{ 'City name' | translate }}
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.cityName)}}</i>
+            </div>
+          </th>
+          <th scope="col" class="table-header-sortable" id="countryCodeSort" (click)="sortTable(sortCols.countryCode)">
+            <div class="d-flex align-items-center justify-content-center">
+              {{ 'Country code' | translate }}
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.countryCode)}}</i>
+            </div>
+          </th>
+          <th scope="col" class="table-header-sortable" id="dateInstallSort" (click)="sortTable(sortCols.dateInstall)">
+            <div class="d-flex align-items-center justify-content-center">
+              {{ 'Date install' | translate }}
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.dateInstall)}}</i>
+            </div>
+          </th>
+          <th scope="col" class="table-header-sortable" id="assignedToSort" (click)="sortTable(sortCols.assignedTo)">
+            <div class="d-flex align-items-center justify-content-center">
+              {{ 'Assigned to' | translate }}
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.assignedTo)}}</i>
+            </div>
+          </th>
+          <th scope="col" *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
+            {{ 'Assign' | translate }}
+          </th>
+          <th scope="col">
+            {{ 'Actions' | translate }}
+          </th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <tr *ngFor="let installation of installationsListModel?.installations; let i = index">
+          <td id="idCol_{{i}}">
+            {{installation.id}}
+          </td>
+          <td id="companyNameCol_{{i}}">
+            {{installation.companyName}}
+          </td>
+          <td id="companyAddressCol_{{i}}">
+            {{installation.companyAddress}}
+          </td>
+          <td id="companyAddress2Col_{{i}}">
+            {{installation.companyAddress2}}
+          </td>
+          <td id="zipCodeCol_{{i}}">
+            {{installation.zipCode}}
+          </td>
+          <td id="cityNameCol_{{i}}">
+            {{installation.cityName}}
+          </td>
+          <td id="countryCodeCol_{{i}}">
+            {{installation.countryCode}}
+          </td>
+          <td id="dateInstallCol_{{i}}">
+            {{installation.dateInstall}}
+          </td>
+          <td id="assignedToCol_{{i}}">
+            {{installation.assignedTo}}
+          </td>
+          <td *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
+            <div class="col" *ngIf="!installation.employeeId">
+              <div class="mat-checkbox">
+                <input id="assignCheckbox_{{i}}" name="assignCheckbox_{{i}}" type="checkbox"
+                       [(ngModel)]="installation.assign">
+                <label for="assignCheckbox_{{i}}"></label>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex flex-row justify-content-center">
+              <a class="btn btn-success btn-icon mb-2"
+                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseId && installationFormId"
+                 [routerLink]="['/cases/edit/' + installation.sdkCaseId + '/' + installationFormId]"
+                 id="showCaseLink_{{i}}">
+                {{ 'Show case' | translate }}
+              </a>
+              <button class="btn btn-accent text-black-50 btn-icon mb-2"
+                      mdbTooltip="{{ 'Retract installation' | translate }}"
+                      id="installationRetractBtn_{{i}}"
+                      *ngIf="installation.state === installationStates.Assigned && pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)"
+                      (click)="showRetractInstallationModal(installation)">
+                {{ 'Retract' | translate }}
+              </button>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row justify-content-end">
+      <div class="col-md-1">
+        <button *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)"
+                id="installationAssignBtn"
+                class="btn btn-success"
+                mdbTooltip="{{ 'Assign installation' | translate }}"
+                [disabled]="!someAssign"
+                (click)="showAssignInstallationModal()">{{ 'Assign' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="row p-1 my-4 mx-2" *ngIf="installationsListModel.total === 0">
+    <span>{{'No installations found' | translate}}</span>
+  </div>
+  <div class="row justify-content-between mr-2 ml-2">
+    <div class="col-md-1">
+      <page-size-pn
+        [pageSize]="localPageSettings.pageSize"
+        (onPageSizeChanged)="localPageSettings.pageSize = $event; installationsRequestModel.offset = 0;
+        updateLocalPageSettings()"
+      ></page-size-pn>
+    </div>
+    <pagination-pn
+      *ngIf="installationsListModel?.total > installationsRequestModel.pageSize"
+       [limit]="installationsRequestModel.pageSize"
+       [size]="installationsListModel.total"
+       [offset]="installationsRequestModel.offset"
+       (onPageChanged)="changePage($event)"
+    ></pagination-pn>
+  </div>
+</div>
+
+<spinner-pn [spinnerVisibility]="spinnerStatus"></spinner-pn>
+
+<app-installation-new
+    #newInstallationModal (installationCreated)="getInstallationsList()"
+></app-installation-new>
+<app-installation-assign
+    #assignInstallationModal (installationAssigned)="getInstallationsList()"
+></app-installation-assign>
+<app-installation-retract
+    #retractInstallationModal (installationRetracted)="getInstallationsList()"
+></app-installation-retract>
