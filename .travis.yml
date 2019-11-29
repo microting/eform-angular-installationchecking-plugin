@@ -25,21 +25,27 @@ script:
   - dotnet test -v n eFormAPI/Plugins/InstallationChecking.Pn/InstallationChecking.Pn.Test/InstallationChecking.Pn.Test.csproj
   - cd ../..
   - git clone --depth=50 --branch=stable https://github.com/microting/eform-angular-frontend.git microting/eform-angular-frontend
+  - git clone --depth=50 --branch=stable https://github.com/microting/eform-angular-basecustomer-plugin.git microting/eform-angular-basecustomer-plugin
+  - dotnet restore eform-angular-basecustomer-plugin/eFormAPI/Plugins/Customers.Pn/Customers.Pn.sln
+  - dotnet build eform-angular-basecustomer-plugin/eFormAPI/Plugins/Customers.Pn/Customers.Pn.sln
   - cp -av microting/eform-angular-installationchecking-plugin/eform-client/src/app/plugins/modules/installationchecking-pn microting/eform-angular-frontend/eform-client/src/app/plugins/modules/installationchecking-pn
   - cp -av microting/eform-angular-installationchecking-plugin/eform-client/e2e/Tests/installationchecking-settings microting/eform-angular-frontend/eform-client/e2e/Tests/installationchecking-settings
   - cp -av microting/eform-angular-installationchecking-plugin/eform-client/e2e/Tests/installationchecking-general microting/eform-angular-frontend/eform-client/e2e/Tests/installationchecking-general
   - cp -av microting/eform-angular-installationchecking-plugin/eform-client/e2e/Page\ objects/InstallationChecking microting/eform-angular-frontend/eform-client/e2e/Page\ objects/InstallationChecking
   - cp -av microting/eform-angular-installationchecking-plugin/eform-client/wdio-headless-plugin-step2.conf.js microting/eform-angular-frontend/eform-client/wdio-headless-plugin-step2.conf.js
   - cp -av microting/eform-angular-installationchecking-plugin/eform-client/wdio-plugin-step2.conf.js microting/eform-angular-frontend/eform-client/wdio-plugin-step2.conf.js
+  - cp -av microting/eform-angular-basecustomer-plugin/eform-client/src/app/plugins/modules/customers-pn microting/eform-angular-frontend/eform-client/src/app/plugins/modules/customers-pn
   - cd microting/eform-angular-frontend
   - dotnet restore -v q eFormAPI/eFormAPI.sln > dotnet_log 2>&1 &
   - dotnet build eFormAPI/eFormAPI.sln > dotnet_log 2>&1 &
   - cd ../..
   - mkdir -p microting/eform-angular-frontend/eFormAPI/eFormAPI.Web/Plugins
   - cp -av microting/eform-angular-installationchecking-plugin/eFormAPI/eFormAPI.Web/Plugins/InstallationChecking microting/eform-angular-frontend/eFormAPI/eFormAPI.Web/Plugins/InstallationChecking
+  - cp -av microting/eform-angular-basecustomer-plugin/eFormAPI/eFormAPI.Web/Plugins/Customers microting/eform-angular-frontend/eFormAPI/eFormAPI.Web/Plugins/Customers  
   - cd microting/eform-angular-frontend
   - cd eform-client && npm install
   - ../../eform-angular-installationchecking-plugin/testinginstallpn.sh
+  - ../../eform-angular-basecustomer-plugin/testinginstallpn.sh
   - npm start &
   - sleep 40
   - dotnet run --project ../eFormAPI/eFormAPI.Web/eFormAPI.Web.csproj > dotnet_log 2>&1 &
