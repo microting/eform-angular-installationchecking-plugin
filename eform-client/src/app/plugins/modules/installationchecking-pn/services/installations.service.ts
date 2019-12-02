@@ -8,7 +8,6 @@ import {OperationDataResult, OperationResult} from '../../../../common/models';
 import {InstallationsAssignModel, InstallationsListModel, InstallationsRequestModel} from '../models';
 import {CustomersPnModel, CustomersPnRequestModel} from '../../customers-pn/models/customer';
 import {CustomerPnMethods} from '../../customers-pn/services';
-import {ReportPnGenerateModel} from '../../items-planning-pn/models/report';
 
 export let InstallationsMethods = {
   Get: 'api/installationchecking-pn/installations',
