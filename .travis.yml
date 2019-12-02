@@ -26,8 +26,8 @@ script:
   - cd ../..
   - git clone --depth=50 --branch=stable https://github.com/microting/eform-angular-frontend.git microting/eform-angular-frontend
   - git clone --depth=50 --branch=stable https://github.com/microting/eform-angular-basecustomer-plugin.git microting/eform-angular-basecustomer-plugin
-  - dotnet restore eform-angular-basecustomer-plugin/eFormAPI/Plugins/Customers.Pn/Customers.Pn.sln
-  - dotnet build eform-angular-basecustomer-plugin/eFormAPI/Plugins/Customers.Pn/Customers.Pn.sln
+  - dotnet restore microting/eform-angular-basecustomer-plugin/eFormAPI/Plugins/Customers.Pn/Customers.Pn.sln
+  - dotnet microting/build eform-angular-basecustomer-plugin/eFormAPI/Plugins/Customers.Pn/Customers.Pn.sln
   - cp -av microting/eform-angular-installationchecking-plugin/eform-client/src/app/plugins/modules/installationchecking-pn microting/eform-angular-frontend/eform-client/src/app/plugins/modules/installationchecking-pn
   - cp -av microting/eform-angular-installationchecking-plugin/eform-client/e2e/Tests/installationchecking-settings microting/eform-angular-frontend/eform-client/e2e/Tests/installationchecking-settings
   - cp -av microting/eform-angular-installationchecking-plugin/eform-client/e2e/Tests/installationchecking-general microting/eform-angular-frontend/eform-client/e2e/Tests/installationchecking-general
