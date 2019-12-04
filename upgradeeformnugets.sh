@@ -8,7 +8,7 @@ if (( "$GIT_STATUS" > 0 )); then
 	dotnet add InstallationChecking.Pn.csproj package Microting.eForm
 	dotnet add InstallationChecking.Pn.csproj package Microting.eFormApi.BasePn
 	dotnet add InstallationChecking.Pn.csproj package Microting.InstallationCheckingBase
-  dotnet add Customers.Pn.csproj package Microting.eFormBaseCustomerBase
+  dotnet add InstallationChecking.Pn.csproj package Microting.eFormBaseCustomerBase
 
 	EFORM_VERSION=`dotnet list package | grep 'Microting.eForm ' | cut -c64-71`
 	EFORM_BASEPN_VERSION=`dotnet list package | grep 'Microting.eFormApi.BasePn' | cut -c64-71`
