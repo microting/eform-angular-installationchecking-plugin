@@ -26,9 +26,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using InstallationChecking.Pn.Abstractions;
+using InstallationChecking.Pn.Helpers;
 using InstallationChecking.Pn.Infrastructure.Data.Seed;
 using InstallationChecking.Pn.Infrastructure.Data.Seed.Data;
-using InstallationChecking.Pn.Infrastructure.Models;
 using InstallationChecking.Pn.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -43,11 +43,7 @@ using Microting.eFormApi.BasePn.Infrastructure.Settings;
 using Microting.eFormApi.BasePn.Infrastructure.Helpers;
 using Microting.InstallationCheckingBase.Infrastructure.Const;
 using Microting.eFormApi.BasePn.Abstractions;
-using System.IO;
-using System.Text;
 using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
-using eFormCore;
-using System.Threading.Tasks;
 using Microting.eFormBaseCustomerBase.Infrastructure.Data;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
 
@@ -183,20 +179,16 @@ namespace InstallationChecking.Pn
             var core = await serviceProvider.GetRequiredService<IEFormCoreService>().GetCore();
             var context = serviceProvider.GetRequiredService<InstallationCheckingPnDbContext>();
 
-            var assembly = Assembly.GetExecutingAssembly();
-            var assemblyName = assembly.GetName().Name;
-
             if (string.IsNullOrEmpty(pluginDbOptions.Value.InstallationFormId))
             {
-                using (var formStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.installation_form.xml"))
-                using (var reader = new StreamReader(formStream, Encoding.UTF8))
-                {
-                    var formString = await reader.ReadToEndAsync();
-                    var eForm = await core.TemplateFromXml(formString);
-                    eForm = await core.TemplateUploadData(eForm);
-                    var formId = await core.TemplateCreate(eForm);
-                    await pluginDbOptions.UpdateDb(settings => settings.InstallationFormId = formId.ToString(), context, 1);
-                }
+                var installationFormId = await SeedHelper.CreateInstallationForm(core);
+                await pluginDbOptions.UpdateDb(settings => settings.InstallationFormId = installationFormId.ToString(), context, 1);
+            }
+
+            if (string.IsNullOrEmpty(pluginDbOptions.Value.RemovalFormId))
+            {
+                var removalFormId = await SeedHelper.CreateRemovalForm(core);
+                await pluginDbOptions.UpdateDb(settings => settings.RemovalFormId = removalFormId.ToString(), context, 1);
             }
         }
     }

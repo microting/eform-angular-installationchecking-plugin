@@ -122,13 +122,13 @@
             {{installation.countryCode}}
           </td>
           <td id="dateInstallCol_{{i}}">
-            {{installation.dateInstall}}
+            {{installation.dateInstall | date : 'dd.MM.y HH:mm:ss'}}
           </td>
           <td id="dateRemoveCol_{{i}}">
-            {{installation.dateRemove}}
+            {{installation.dateRemove | date : 'dd.MM.y HH:mm:ss'}}
           </td>
           <td id="dateActRemoveCol_{{i}}">
-            {{installation.dateActRemove}}
+            {{installation.dateActRemove | date : 'dd.MM.y HH:mm:ss'}}
           </td>
           <td id="assignedToCol_{{i}}">
             {{installation.assignedTo}}
