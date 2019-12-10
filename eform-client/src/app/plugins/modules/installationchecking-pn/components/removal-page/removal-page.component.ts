@@ -101,7 +101,7 @@ export class RemovalPageComponent implements OnInit {
   }
 
   showAssignInstallationModal() {
-    const installationIds = this.installationsListModel.installations.map(x => x.id);
+    const installationIds = this.installationsListModel.installations.filter(x => x.assign).map(x => x.id);
     this.assignInstallationModal.show(installationIds);
   }
 
