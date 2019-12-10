@@ -403,7 +403,7 @@ namespace InstallationChecking.Pn.Services
                 var assembly = Assembly.GetExecutingAssembly();
                 var assemblyName = assembly.GetName().Name;
 
-                using (var templateStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.template.xlsx"))
+                using (var templateStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.export-template.xlsx"))
                 using (var stream = new MemoryStream())
                 using (var package = new ExcelPackage(stream, templateStream))
                 {
