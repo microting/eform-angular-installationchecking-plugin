@@ -119,7 +119,7 @@
             {{installation.countryCode}}
           </td>
           <td id="dateInstallCol_{{i}}">
-            {{installation.dateInstall}}
+            {{installation.dateInstall | date : 'dd.MM.y HH:mm:ss'}}
           </td>
           <td id="assignedToCol_{{i}}">
             {{installation.assignedTo}}

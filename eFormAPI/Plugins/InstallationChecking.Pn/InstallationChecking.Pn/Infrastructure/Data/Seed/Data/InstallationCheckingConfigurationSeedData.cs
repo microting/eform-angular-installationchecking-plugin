@@ -26,6 +26,11 @@ namespace InstallationChecking.Pn.Infrastructure.Data.Seed.Data
             {
                 Name = "InstallationCheckingBaseSettings:InstallationFormId",
                 Value = ""
+            },
+            new PluginConfigurationValue()
+            {
+                Name = "InstallationCheckingBaseSettings:RemovalFormId",
+                Value = ""
             }
         };
     }

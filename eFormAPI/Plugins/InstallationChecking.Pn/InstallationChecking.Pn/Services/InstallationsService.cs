@@ -266,7 +266,6 @@ namespace InstallationChecking.Pn.Services
                 try
                 {
                     var core = await _coreHelper.GetCore();
-                    var options = _options.Value;
 
                     var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == installationId);
 
