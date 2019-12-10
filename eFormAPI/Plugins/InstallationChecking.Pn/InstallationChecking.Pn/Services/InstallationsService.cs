@@ -163,7 +163,10 @@ namespace InstallationChecking.Pn.Services
                     {
                         var sdkCaseId = (int) item.SdkCaseId;
                         var caseLookup = await core.CaseLookupMUId(sdkCaseId);
-                        item.SdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                        if (caseLookup?.CheckUId != null)
+                        {
+                            item.SdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                        }
                     }
                 }
 
