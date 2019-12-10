@@ -19,7 +19,6 @@ using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
 using OfficeOpenXml;
 using System.Reflection;
 using System.IO;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microting.eForm.Infrastructure.Models;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
 
@@ -160,6 +159,12 @@ namespace InstallationChecking.Pn.Services
                 {
                     var site = await core.SiteRead(item.EmployeeId.GetValueOrDefault());
                     item.AssignedTo = site.FirstName + " " + site.LastName;
+                    if (item.SdkCaseId != null)
+                    {
+                        var sdkCaseId = (int) item.SdkCaseId;
+                        var caseItem = await core.CaseLookupMUId(sdkCaseId);
+                        item.SdkCaseMId = caseItem.MicrotingUId;
+                    }
                 }
 
                 var listModel = new InstallationsListModel { Total = list.Count(), Installations = list };
@@ -233,7 +238,6 @@ namespace InstallationChecking.Pn.Services
                         {
                             return new OperationResult(false, _localizationService.GetString("InstallationCannotBeAssigned"));
                         }
-                        System.Diagnostics.Debugger.Break();
 
                         MainElement mainElement;
 
