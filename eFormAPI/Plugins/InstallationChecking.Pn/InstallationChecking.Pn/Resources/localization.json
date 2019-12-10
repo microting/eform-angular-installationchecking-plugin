@@ -58,7 +58,7 @@
   {
     "Key": "ErrorWhileRetractingInstallation",
     "LocalizedValue": {
-      "da": "Fejl under tilbagetrækning af installationen",
+      "da": "Fejl under tilbagetrï¿½kning af installationen",
       "en-US": "Error while retracting installation"
     }
   },
@@ -114,7 +114,7 @@
   {
     "Key": "InstallationCannotBeRetracted",
     "LocalizedValue": {
-      "da": "Installation kan ikke trækkes tilbage",
+      "da": "Installation kan ikke trï¿½kkes tilbage",
       "en-US": "Installation cannot be retracted"
     }
   },
@@ -149,7 +149,7 @@
   {
     "Key": "Planning",
     "LocalizedValue": {
-      "da": "Planlægning",
+      "da": "PlanlÃ¦gning",
       "en-US": "Planning"
     }
   },

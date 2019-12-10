@@ -8,11 +8,13 @@ if (( "$GIT_STATUS" > 0 )); then
 	dotnet add InstallationChecking.Pn.csproj package Microting.eForm
 	dotnet add InstallationChecking.Pn.csproj package Microting.eFormApi.BasePn
 	dotnet add InstallationChecking.Pn.csproj package Microting.InstallationCheckingBase
+  dotnet add InstallationChecking.Pn.csproj package Microting.eFormBaseCustomerBase
 
 	EFORM_VERSION=`dotnet list package | grep 'Microting.eForm ' | cut -c64-71`
 	EFORM_BASEPN_VERSION=`dotnet list package | grep 'Microting.eFormApi.BasePn' | cut -c64-71`
-	EFORM_PLUGINBASE_VERSION=`dotnet list package | grep 'Microting.InstallationCheckingBase' | cut -c64-71`
-	COMMIT_MESSAGE="Updating"$'\n'"- Microting.eForm to ${EFORM_VERSION}"$'\n'"- Microting.eFormApi.BasePn to ${EFORM_BASEPN_VERSION}"$'\n'"- Microting.InstallationCheckingBase to ${EFORM_PLUGINBASE_VERSION}"
+	EFORM_PLUGINBASE1_VERSION=`dotnet list package | grep 'Microting.InstallationCheckingBase' | cut -c64-71`
+	EFORM_PLUGINBASE2_VERSION=`dotnet list package | grep 'Microting.eFormBaseCustomerBase' | cut -c64-71`
+	COMMIT_MESSAGE="Updating"$'\n'"- Microting.eForm to ${EFORM_VERSION}"$'\n'"- Microting.eFormApi.BasePn to ${EFORM_BASEPN_VERSION}"$'\n'"- Microting.InstallationCheckingBase to ${EFORM_PLUGINBASE1_VERSION}"$'\n'"- Microting.eFormBaseCustomerBase to ${EFORM_PLUGINBASE2_VERSION}"
 
 	GIT_STATUS=`git status | grep "nothing to commit, working tree clean" | wc -l`
 

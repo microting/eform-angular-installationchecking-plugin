@@ -44,6 +44,9 @@ using Microting.eFormApi.BasePn.Infrastructure.Helpers;
 using Microting.InstallationCheckingBase.Infrastructure.Const;
 using Microting.eFormApi.BasePn.Abstractions;
 using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
+using eFormCore;
+using System.Threading.Tasks;
+using Microting.eForm.Infrastructure.Models;
 using Microting.eFormBaseCustomerBase.Infrastructure.Data;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
 
@@ -190,6 +193,27 @@ namespace InstallationChecking.Pn
                 var removalFormId = await SeedHelper.CreateRemovalForm(core);
                 await pluginDbOptions.UpdateDb(settings => settings.RemovalFormId = removalFormId.ToString(), context, 1);
             }
+            
+            // TODO add removal eForm here.
+//            if (string.IsNullOrEmpty(pluginDbOptions.Value.InstallationFormId))
+//            {
+//                MainElement eForm = new MainElement()
+//                {
+//                    Id = 141699,
+//                    Repeated = 1,
+//                    Label = "Radonmålinger Nedtagning",
+//                    StartDate = DateTime.UtcNow,
+//                    EndDate = DateTime.UtcNow.AddDays(2),
+//                    Language = "da",
+//                    MultiApproval = false,
+//                    FastNavigation = false
+//                };
+//                eForm.ElementList = new List<Element>();
+//            
+//                eForm = await core.TemplateUploadData(eForm);
+//                var formId = await core.TemplateCreate(eForm);
+//                await pluginDbOptions.UpdateDb(settings => settings.InstallationFormId = formId.ToString(), context, 1);
+//            }
         }
     }
 }
