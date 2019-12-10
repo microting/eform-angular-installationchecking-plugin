@@ -19,6 +19,8 @@ using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
 using OfficeOpenXml;
 using System.Reflection;
 using System.IO;
+using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microting.eForm.Infrastructure.Models;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
 
 namespace InstallationChecking.Pn.Services
@@ -224,20 +226,70 @@ namespace InstallationChecking.Pn.Services
 
                     foreach (var id in installationsAssignModel.InstallationIds)
                     {
-                        var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == id);
+                        var installation = await _installationCheckingContext.Installations
+                            .Include(i => i.Meters).FirstOrDefaultAsync(x => x.Id == id);
 
                         if (installation.State != InstallationState.NotAssigned)
                         {
                             return new OperationResult(false, _localizationService.GetString("InstallationCannotBeAssigned"));
                         }
+                        System.Diagnostics.Debugger.Break();
 
-                        var formId = installation.Type == InstallationType.Installation 
-                            ? int.Parse(options.InstallationFormId) 
-                            : installation.RemovalFormId.GetValueOrDefault();
-                        var mainElement = await core.TemplateRead(formId);
+                        MainElement mainElement;
+
+                        if (installation.Type == InstallationType.Installation)
+                        {
+                            mainElement = await core.TemplateRead(int.Parse(options.InstallationFormId));
+                        }
+                        else
+                        {
+                            mainElement = await core.TemplateRead(int.Parse(options.RemovalFormId));
+
+                            var dataElement = (DataElement) mainElement.ElementList[0];
+                            var removalDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+                            dataElement.Description.InderValue = 
+                                $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br><b>Nedtagningsdato: {removalDate}</b>";
+
+                            var entityGroup = await core.EntityGroupCreate(
+                                Constants.FieldTypes.EntitySearch,
+                                "Removal devices " + installation.Id
+                            );
+
+                            var i = 0;
+                            foreach (var meter in installation.Meters)
+                            {
+                                await core.EntitySearchItemCreate(
+                                    entityGroup.Id,
+                                    meter.QR,
+                                    "",
+                                    i++.ToString()
+                                );
+
+                                dataElement.DataItemList.Add(new EntitySearch(
+                                    3 + i,
+                                    false,
+                                    false,
+                                    $"Måler {i} - QR",
+                                    "",
+                                    "e8eaf6",
+                                    i,
+                                    false,
+                                    0,
+                                    int.Parse(entityGroup.MicrotingUUID),
+                                    false,
+                                    "",
+                                    3,
+                                    false,
+                                    "")
+                                );
+                            }
+                            
+                            installation.RemovalFormId = int.Parse(options.RemovalFormId);
+                        }
+                        
                         mainElement.Repeated = 0;
-                        mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
-                        mainElement.StartDate = DateTime.Now.ToUniversalTime();
+                        mainElement.EndDate = DateTime.UtcNow.AddYears(10);
+                        mainElement.StartDate = DateTime.UtcNow;
 
                         installation.EmployeeId = installationsAssignModel.EmployeeId;
                         installation.SdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
@@ -328,14 +380,16 @@ namespace InstallationChecking.Pn.Services
             try
             {
                 var core = await _coreHelper.GetCore();
-                var installation = await _installationCheckingContext.Installations.FirstOrDefaultAsync(x => x.Id == installationId);
+                var installation = await _installationCheckingContext.Installations
+                    .Include(i => i.Meters)
+                    .FirstOrDefaultAsync(x => x.Id == installationId);
 
                 if (installation.State != InstallationState.Completed || installation.Type != InstallationType.Removal)
                 {
                     return new OperationDataResult<byte[]>(false, _localizationService.GetString("InstallationCannotBeExported"));
                 }
 
-                var caseDto = await core.CaseLookupCaseId(installation.SdkCaseId.GetValueOrDefault());
+                var caseDto = await core.CaseLookupMUId(installation.SdkCaseId.GetValueOrDefault());
 
                 if (caseDto == null)
                 {
@@ -349,7 +403,7 @@ namespace InstallationChecking.Pn.Services
                 using (var stream = new MemoryStream())
                 using (var package = new ExcelPackage(stream, templateStream))
                 {
-                    var worksheet = package.Workbook.Worksheets[1];
+                    var worksheet = package.Workbook.Worksheets[0];
                     var row = 12;
 
                     foreach (var meter in installation.Meters)
@@ -384,8 +438,11 @@ namespace InstallationChecking.Pn.Services
 
                         row++;
                     }
+                    
+                    package.Save();
+                    var bytes = package.GetAsByteArray();
 
-                    return new OperationDataResult<byte[]>(true, package.GetAsByteArray());
+                    return new OperationDataResult<byte[]>(true, bytes);
                 }
             }
             catch (Exception e)
