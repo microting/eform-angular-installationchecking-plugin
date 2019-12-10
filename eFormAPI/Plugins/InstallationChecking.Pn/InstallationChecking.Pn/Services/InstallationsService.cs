@@ -162,8 +162,8 @@ namespace InstallationChecking.Pn.Services
                     if (item.SdkCaseId != null)
                     {
                         var sdkCaseId = (int) item.SdkCaseId;
-                        var caseItem = await core.CaseLookupMUId(sdkCaseId);
-                        item.SdkCaseMId = caseItem.MicrotingUId;
+                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                        item.SdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
                     }
                 }
 
@@ -294,7 +294,6 @@ namespace InstallationChecking.Pn.Services
                         mainElement.Repeated = 0;
                         mainElement.EndDate = DateTime.UtcNow.AddYears(10);
                         mainElement.StartDate = DateTime.UtcNow;
-
                         installation.EmployeeId = installationsAssignModel.EmployeeId;
                         installation.SdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
                         installation.State = InstallationState.Assigned;
