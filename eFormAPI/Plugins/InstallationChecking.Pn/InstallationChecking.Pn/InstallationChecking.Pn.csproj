@@ -27,7 +27,6 @@
     <ItemGroup>
       <EmbeddedResource Include="Resources\export-template.xlsx" />
       <EmbeddedResource Include="Resources\localization.json" />
-      <EmbeddedResource Include="Resources\template.xlsx" />
     </ItemGroup>
 
 </Project>
