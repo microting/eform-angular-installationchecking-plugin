@@ -133,6 +133,11 @@ export class InstallationsPageComponent implements OnInit {
     this.getInstallationsList();
   }
 
+  onSelectStateChanged(e: number) {
+    this.installationsRequestModel.state = e;
+    this.getInstallationsList();
+  }
+
   getSortIcon(sort: string): string {
     if (this.installationsRequestModel.sort === sort) {
       return this.installationsRequestModel.isSortDsc ? 'expand_more' : 'expand_less';

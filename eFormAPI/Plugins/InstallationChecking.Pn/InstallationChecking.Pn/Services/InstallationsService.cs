@@ -73,13 +73,29 @@ namespace InstallationChecking.Pn.Services
                             EmployeeId = x.EmployeeId,
                             CustomerId = x.CustomerId,
                             SdkCaseId = x.SdkCaseId,
-                            RemovalFormId = x.RemovalFormId
+                            RemovalFormId = x.RemovalFormId,
                         }
                     ).FirstOrDefaultAsync();
 
                 if (installationModel == null)
                 {
                     return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("InstallationNotFound"));
+                }
+
+                if (installationModel.EmployeeId != null)
+                {
+                    var core = await _coreHelper.GetCore();
+                    var site = await core.SiteRead(installationModel.EmployeeId.GetValueOrDefault());
+                    installationModel.AssignedTo = site.FirstName + " " + site.LastName;
+                    if (installationModel.SdkCaseId != null)
+                    {
+                        var sdkCaseId = (int)installationModel.SdkCaseId;
+                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                        if (caseLookup?.CheckUId != null)
+                        {
+                            installationModel.SdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                        }
+                    }
                 }
 
                 return new OperationDataResult<InstallationModel>(true, installationModel);
@@ -206,7 +222,7 @@ namespace InstallationChecking.Pn.Services
                         Type = InstallationType.Installation,
                         CustomerId = customer.Id,
                         CreatedByUserId = UserId,
-                        UpdatedByUserId = UserId
+                        UpdatedByUserId = UserId,
                     };
 
                     await installation.Create(_installationCheckingContext);
@@ -259,7 +275,7 @@ namespace InstallationChecking.Pn.Services
 
                             var entityGroup = await core.EntityGroupCreate(
                                 Constants.FieldTypes.EntitySearch,
-                                "Removal devices " + installation.Id
+                                $"eform-angular-installationchecking-plugin_{installation.Id}"
                             );
 
                             var i = 0;
