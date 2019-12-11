@@ -33,7 +33,7 @@ describe('Application settings page - site header section', function () {
     plugin.activateBtn.click();
     browser.waitForVisible('#pluginOKBtn', 40000);
     pluginPage.pluginOKBtn.click();
-    browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
+    browser.pause(120000); // We need to wait 50 seconds for the plugin to create db etc.
     browser.refresh();
 
     loginPage.login();
@@ -48,7 +48,6 @@ describe('Application settings page - site header section', function () {
     pluginPage.pluginOKBtn.click();
     browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
     browser.refresh();
-    browser.pause(10000);
 
     loginPage.login();
     myEformsPage.Navbar.advancedDropdown();
