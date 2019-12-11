@@ -84,11 +84,8 @@
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.dateActRemove)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="assignedToSort" (click)="sortTable(sortCols.assignedTo)">
-            <div class="d-flex align-items-center justify-content-center">
-              {{ 'Assigned to' | translate }}
-              <i class="material-icons text-black-50">{{getSortIcon(sortCols.assignedTo)}}</i>
-            </div>
+          <th scope="col">
+            {{ 'Assigned to' | translate }}
           </th>
           <th scope="col" *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
             {{ 'Assign' | translate }}
