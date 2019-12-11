@@ -171,9 +171,9 @@ namespace InstallationChecking.Pn
             return new PluginPermissionsManager(context);
         }
 
-        private async void SeedInstallationForms(IServiceCollection services)
+        private async void SeedInstallationForms(IServiceCollection serviceCollection)
         {
-            var serviceProvider = services.BuildServiceProvider();
+            var serviceProvider = serviceCollection.BuildServiceProvider();
             var pluginDbOptions = serviceProvider.GetRequiredService<IPluginDbOptions<InstallationCheckingBaseSettings>>();
 
             var core = await serviceProvider.GetRequiredService<IEFormCoreService>().GetCore();
