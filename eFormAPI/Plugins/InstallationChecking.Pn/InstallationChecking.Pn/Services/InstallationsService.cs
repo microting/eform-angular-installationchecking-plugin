@@ -116,7 +116,6 @@ namespace InstallationChecking.Pn.Services
                 var listQuery = _installationCheckingContext.Installations.AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed);
 
-                Debugger.Break();
                 if (requestModel.State != null)
                 {
                     listQuery = listQuery.Where(x => x.State == requestModel.State);
