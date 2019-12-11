@@ -22,7 +22,7 @@ export class InstallationModel {
   employeeId: number;
   customerId: number;
   sdkCaseId: number;
-  sdkCaseDbId: number;
+  sdkCaseMId: number;
   removalFormId: number;
 
   assign = false;

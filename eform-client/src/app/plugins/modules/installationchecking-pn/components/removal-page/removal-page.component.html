@@ -14,7 +14,8 @@
       <ng-select [items]="states"
                  bindLabel="label" bindValue="id"
                  [placeholder]="'Select state' | translate"
-                 [(ngModel)]="installationsRequestModel.state"
+                 (ngModelChange)="onSelectStateChanged($event)"
+                 [ngModel]="installationsRequestModel.state"
                  id="stateFilter">
       </ng-select>
     </div>
@@ -85,7 +86,7 @@
             </div>
           </th>
           <th scope="col">
-            {{ 'Assigned to' | translate }}
+              {{ 'Assigned to' | translate }}
           </th>
           <th scope="col" *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
             {{ 'Assign' | translate }}
@@ -142,8 +143,8 @@
           <td>
             <div class="d-flex flex-row justify-content-center">
               <a class="btn btn-success btn-icon mb-2"
-                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseDbId && installation.removalFormId"
-                 [routerLink]="['/cases/edit/' + installation.sdkCaseDbId + '/' + installation.removalFormId]"
+                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseMId && installation.removalFormId"
+                 [routerLink]="['/cases/edit/' + installation.sdkCaseMId + '/' + installation.removalFormId]"
                  id="showCaseLink_{{i}}">
                 {{ 'Show case' | translate }}
               </a>

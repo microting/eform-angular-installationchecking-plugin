@@ -23,7 +23,8 @@
       <ng-select [items]="states"
                  bindLabel="label" bindValue="id"
                  [placeholder]="'Select state' | translate"
-                 [(ngModel)]="installationsRequestModel.state"
+                 (ngModelChange)="onSelectStateChanged($event)"
+                 [ngModel]="installationsRequestModel.state"
                  id="stateFilter">
       </ng-select>
     </div>
@@ -81,8 +82,11 @@
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.dateInstall)}}</i>
             </div>
           </th>
-          <th scope="col">
+          <th scope="col" class="table-header-sortable" id="assignedToSort" (click)="sortTable(sortCols.assignedTo)">
+            <div class="d-flex align-items-center justify-content-center">
               {{ 'Assigned to' | translate }}
+              <i class="material-icons text-black-50">{{getSortIcon(sortCols.assignedTo)}}</i>
+            </div>
           </th>
           <th scope="col" *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
             {{ 'Assign' | translate }}
@@ -133,8 +137,8 @@
           <td>
             <div class="d-flex flex-row justify-content-center">
               <a class="btn btn-success btn-icon mb-2"
-                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseDbId && installationFormId"
-                 [routerLink]="['/cases/edit/' + installation.sdkCaseDbId + '/' + installationFormId]"
+                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseMId && installationFormId"
+                 [routerLink]="['/cases/edit/' + installation.sdkCaseMId + '/' + installationFormId]"
                  id="showCaseLink_{{i}}">
                 {{ 'Show case' | translate }}
               </a>

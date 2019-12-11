@@ -131,6 +131,11 @@ export class RemovalPageComponent implements OnInit {
     this.getRemovalsList();
   }
 
+  onSelectStateChanged(e: number) {
+    this.installationsRequestModel.state = e;
+    this.getRemovalsList();
+  }
+
   saveExcel(id: number) {
     this.spinnerStatus = true;
     this.installationsService.excel(id).subscribe(((data) => {
