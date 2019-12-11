@@ -73,13 +73,29 @@ namespace InstallationChecking.Pn.Services
                             EmployeeId = x.EmployeeId,
                             CustomerId = x.CustomerId,
                             SdkCaseId = x.SdkCaseId,
-                            RemovalFormId = x.RemovalFormId
+                            RemovalFormId = x.RemovalFormId,
                         }
                     ).FirstOrDefaultAsync();
 
                 if (installationModel == null)
                 {
                     return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("InstallationNotFound"));
+                }
+
+                if (installationModel.EmployeeId != null)
+                {
+                    var core = await _coreHelper.GetCore();
+                    var site = await core.SiteRead(installationModel.EmployeeId.GetValueOrDefault());
+                    installationModel.AssignedTo = site.FirstName + " " + site.LastName;
+                    if (installationModel.SdkCaseId != null)
+                    {
+                        var sdkCaseId = (int)installationModel.SdkCaseId;
+                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                        if (caseLookup?.CheckUId != null)
+                        {
+                            installationModel.SdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                        }
+                    }
                 }
 
                 return new OperationDataResult<InstallationModel>(true, installationModel);
@@ -100,6 +116,7 @@ namespace InstallationChecking.Pn.Services
                 var listQuery = _installationCheckingContext.Installations.AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed);
 
+                Debugger.Break();
                 if (requestModel.State != null)
                 {
                     listQuery = listQuery.Where(x => x.State == requestModel.State);
@@ -206,7 +223,7 @@ namespace InstallationChecking.Pn.Services
                         Type = InstallationType.Installation,
                         CustomerId = customer.Id,
                         CreatedByUserId = UserId,
-                        UpdatedByUserId = UserId
+                        UpdatedByUserId = UserId,
                     };
 
                     await installation.Create(_installationCheckingContext);
