@@ -275,7 +275,7 @@ namespace InstallationChecking.Pn.Services
 
                             var entityGroup = await core.EntityGroupCreate(
                                 Constants.FieldTypes.EntitySearch,
-                                "Removal devices " + installation.Id
+                                $"eform-angular-installationchecking-plugin_{installation.Id}"
                             );
 
                             var i = 0;
