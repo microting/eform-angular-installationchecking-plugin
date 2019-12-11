@@ -52,6 +52,6 @@ export class InstallationsService extends BaseService {
   }
 
   excel(id: number): Observable<any> {
-    return this.getBlobData(InstallationsMethods.Excel, id);
+    return this.getBlobData(InstallationsMethods.Excel + '/' + id);
   }
 }

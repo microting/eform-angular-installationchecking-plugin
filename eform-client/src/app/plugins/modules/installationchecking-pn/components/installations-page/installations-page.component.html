@@ -81,11 +81,8 @@
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.dateInstall)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="assignedToSort" (click)="sortTable(sortCols.assignedTo)">
-            <div class="d-flex align-items-center justify-content-center">
+          <th scope="col">
               {{ 'Assigned to' | translate }}
-              <i class="material-icons text-black-50">{{getSortIcon(sortCols.assignedTo)}}</i>
-            </div>
           </th>
           <th scope="col" *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
             {{ 'Assign' | translate }}
@@ -136,8 +133,8 @@
           <td>
             <div class="d-flex flex-row justify-content-center">
               <a class="btn btn-success btn-icon mb-2"
-                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseId && installationFormId"
-                 [routerLink]="['/cases/edit/' + installation.sdkCaseId + '/' + installationFormId]"
+                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseDbId && installationFormId"
+                 [routerLink]="['/cases/edit/' + installation.sdkCaseDbId + '/' + installationFormId]"
                  id="showCaseLink_{{i}}">
                 {{ 'Show case' | translate }}
               </a>
