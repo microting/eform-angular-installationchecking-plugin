@@ -143,8 +143,8 @@
           <td>
             <div class="d-flex flex-row justify-content-center">
               <a class="btn btn-success btn-icon mb-2"
-                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseMId && installation.removalFormId"
-                 [routerLink]="['/cases/edit/' + installation.sdkCaseMId + '/' + installation.removalFormId]"
+                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseDbId && installation.removalFormId"
+                 [routerLink]="['/cases/edit/' + installation.sdkCaseDbId + '/' + installation.removalFormId]"
                  id="showCaseLink_{{i}}">
                 {{ 'Show case' | translate }}
               </a>
