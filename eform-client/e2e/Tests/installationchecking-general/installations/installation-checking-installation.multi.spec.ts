@@ -5,7 +5,7 @@ import {Guid} from 'guid-typescript';
 import customersPage from '../../../Page objects/InstallationChecking/Customers.page';
 import deviceUsers from '../../../Page objects/DeviceUsers.page';
 import installationsPage from '../../../Page objects/InstallationChecking/InstallationChecking.page';
-import myEformsPage from '../../Page objects/MyEforms.page';
+import myEformsPage from '../../../Page objects/MyEforms.page';
 
 describe('Installation Checking - Installation - Add', function () {
   const companyName = 'BMW';
