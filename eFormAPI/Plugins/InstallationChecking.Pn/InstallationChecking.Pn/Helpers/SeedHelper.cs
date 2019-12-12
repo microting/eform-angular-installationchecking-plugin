@@ -94,7 +94,8 @@ namespace InstallationChecking.Pn.Helpers
                 "Radonmålinger Opsætning",
                 false,
                 "",
-                null);
+                new List<int>()
+                );
 
             if (templatesDto.Count > 0)
             {
