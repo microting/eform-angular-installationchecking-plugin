@@ -7,8 +7,7 @@ services:
   - mysql
 script:
   - sudo mkdir -p /var/www/microting/eform-angular-frontend/eFormAPI/eFormAPI.Web/out/output/datafolder/pdf/
-  - ls -lah .
-  - chown -R travis:travis /var/www/microting
+  - sudo chown -R travis:travis /var/www/microting
   - pip install --user awscli
   - echo 'deb http://www.rabbitmq.com/debian/ testing main' | sudo tee /etc/apt/sources.list.d/rabbitmq.list
   - wget -O- https://www.rabbitmq.com/rabbitmq-release-signing-key.asc | sudo apt-key add -
