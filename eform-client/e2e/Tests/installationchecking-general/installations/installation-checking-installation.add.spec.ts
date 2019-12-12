@@ -15,7 +15,7 @@ describe('Installation Checking - Installation - Add', function () {
     // customersPage.configureSearchableList();
     customersPage.createCustomer(companyName);
     // Setup device user
-    deviceUsers.createDeviceUserFromScratch();
+    deviceUsers.createNewDeviceUser();
     // Go to installation page
     installationsPage.goToInstallationsPage();
   });

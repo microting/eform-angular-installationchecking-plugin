@@ -19,7 +19,7 @@ describe('Installation Checking - Installation - Add', function () {
     //customersPage.configureSearchableList(listName);
     customersPage.createCustomer(companyName);
     // // Setup device user
-    deviceUsers.createDeviceUserFromScratch(deviceUserFirstName, deviceUserLastName);
+    deviceUsers.createNewDeviceUser(deviceUserFirstName, deviceUserLastName);
     // Go to installation page
     installationsPage.goToInstallationsPage();
   });
