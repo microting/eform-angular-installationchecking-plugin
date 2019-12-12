@@ -11,8 +11,84 @@ namespace InstallationChecking.Pn.Helpers
 {
     public class SeedHelper
     {
+        private static async Task<int> CreateCadastralTypeList(Core core)
+        {
+            EntityGroupList model = await core.Advanced_EntityGroupAll(
+                "id", 
+                "eform-angular-installationchecking-plugin-CadastralType",
+                0, 1, Constants.FieldTypes.EntitySelect,
+                false,
+                Constants.WorkflowStates.NotRemoved);
+
+            EntityGroup group;
+            
+            if (!model.EntityGroups.Any())
+            {
+                group = await core.EntityGroupCreate(Constants.FieldTypes.EntitySelect, 
+                    "eform-angular-installationchecking-plugin-CadastralType");
+
+                List<string> roomTypes = new List<string>()
+                {
+                    "Arbejdsplads", "Boligblok", "Boligbyggeri", "Butikker", "Delvist fritliggende hus", "Feriehus",
+                    "Fritliggende hus", "Generelle faciliteter", "Hospital", "Hotel", "Hus i klippe",
+                    "Information mangler", "Kaserne", "Kirke", "Kraftværk", "Plejehjem", "Rækkehus",
+                    "Rækkehuse forbundet med garage", "Skole/institution", "Slot", "Stort hus", "Vandværk"
+                };
+
+                int i = 0;
+                foreach (string roomType in roomTypes)
+                {
+                    await core.EntitySelectItemCreate(group.Id,roomType,i,i.ToString());
+                }
+            }
+            else
+            {
+                group = model.EntityGroups.First();
+            }
+
+            return group.Id;
+        }
+        
+        private static async Task<int> CreateRoomTypeList(Core core)
+        {
+            EntityGroupList model = await core.Advanced_EntityGroupAll(
+                "id", 
+                "eform-angular-installationchecking-plugin-RoomType",
+                0, 1, Constants.FieldTypes.EntitySelect,
+                false,
+                Constants.WorkflowStates.NotRemoved);
+
+            EntityGroup group;
+            
+            if (!model.EntityGroups.Any())
+            {
+                group = await core.EntityGroupCreate(Constants.FieldTypes.EntitySelect, 
+                    "eform-angular-installationchecking-plugin-RoomType");
+                
+                List<string> roomTypes = new List<string>()
+                {
+                    "Soveværelse","Stue","Hobbyrum","Gang","Køkken","Kontor","Kælder","Andre lukkede rum"
+                };
+
+                int i = 0;
+                foreach (string roomType in roomTypes)
+                {
+                    await core.EntitySelectItemCreate(group.Id,roomType,i,i.ToString());
+                }
+            }
+            else
+            {
+                group = model.EntityGroups.First();
+            }
+
+            return group.Id;
+        }
+
         public static async Task<int> CreateInstallationForm(Core core)
         {
+
+            int roomTypeListId = await CreateRoomTypeList(core);
+            int cadastralTypeId = await CreateCadastralTypeList(core);
             var templatesDto = await core.TemplateItemReadAll(false,
                 "",
                 "Radonmålinger Opsætning",
@@ -95,151 +171,16 @@ namespace InstallationChecking.Pn.Helpers
                     ""
                 )
             );
-            // TODO seed this as a EntitySelect group
-            dataItems.Add(new SingleSelect(
-                    4,
-                    true,
-                    false,
-                    "Matrikeltype *",
-                    "",
-                    "e8eaf6",
-                    3,
-                    false,
-                    new List<KeyValuePair>
-                    {
-                        new KeyValuePair(
-                            "1", 
-                            "Arbejdsplads", 
-                            false, 
-                            "1"
-                        ),
-                        new KeyValuePair(
-                            "2", 
-                            "Boligblok", 
-                            false, 
-                            "2"
-                        ),
-                        new KeyValuePair(
-                            "3", 
-                            "Boligbyggeri", 
-                            false, 
-                            "3"
-                        ),
-                        new KeyValuePair(
-                            "4", 
-                            "Butikker", 
-                            false, 
-                            "4"
-                        ),
-                        new KeyValuePair(
-                            "5", 
-                            "Delvist fritliggende hus", 
-                            false, 
-                            "5"
-                        ),
-                        new KeyValuePair(
-                            "6", 
-                            "Feriehus", 
-                            false, 
-                            "6"
-                        ),
-                        new KeyValuePair(
-                            "7", 
-                            "Fritliggende hus", 
-                            false, 
-                            "7"
-                        ),
-                        new KeyValuePair(
-                            "8", 
-                            "Generelle faciliteter", 
-                            false, 
-                            "8"
-                        ),
-                        new KeyValuePair(
-                            "9", 
-                            "Hospital", 
-                            false, 
-                            "9"
-                        ),
-                        new KeyValuePair(
-                            "10", 
-                            "Hotel", 
-                            false, 
-                            "10"
-                        ),
-                        new KeyValuePair(
-                            "11", 
-                            "Hus i klippe", 
-                            false, 
-                            "11"
-                        ),
-                        new KeyValuePair(
-                            "12", 
-                            "Information mangler", 
-                            false, 
-                            "12"
-                        ),
-                        new KeyValuePair(
-                            "13", 
-                            "Kaserne", 
-                            false, 
-                            "13"
-                        ),
-                        new KeyValuePair(
-                            "14", 
-                            "Kirke", 
-                            false, 
-                            "14"
-                        ),
-                        new KeyValuePair(
-                            "15", 
-                            "Kraftværk", 
-                            false, 
-                            "15"
-                        ),
-                        new KeyValuePair(
-                            "16", 
-                            "Plejehjem", 
-                            false, 
-                            "16"
-                        ),
-                        new KeyValuePair(
-                            "17", 
-                            "Rækkehus", 
-                            false, 
-                            "17"
-                        ),
-                        new KeyValuePair(
-                            "18", 
-                            "Rækkehuse forbundet med garage", 
-                            false, 
-                            "18"
-                        ),
-                        new KeyValuePair(
-                            "19", 
-                            "Skole/institution", 
-                            false, 
-                            "19"
-                        ),
-                        new KeyValuePair(
-                            "20", 
-                            "Slot", 
-                            false, 
-                            "20"
-                        ),
-                        new KeyValuePair(
-                            "21", 
-                            "Stort hus", 
-                            false, 
-                            "21"
-                        ),
-                        new KeyValuePair(
-                            "22", 
-                            "Vandværk", 
-                            false, 
-                            "22"
-                        )
-                    }
+            // TODO seed this as a EntitySelect group DONE
+            dataItems.Add(new EntitySelect(1, 
+                false, 
+                false, 
+                "Matrikeltype *", 
+                "", 
+                "e8eaf6",
+                3, 
+                false, 0, 
+                cadastralTypeId
                 )
             );
             dataItems.Add(new Number(
@@ -323,67 +264,18 @@ namespace InstallationChecking.Pn.Helpers
                     )
                 );
                 // TODO seed this as a EntitySelect group 
-                dataItems.Add(new SingleSelect(
-                        inc + 10,
-                        false,
-                        false,
-                        $"Måler {i} - Rumtype",
-                        "",
-                        "e8eaf6",
-                        inc + 9,
-                        false,
-                        new List<KeyValuePair>
-                        {
-                            new KeyValuePair(
-                                "1", 
-                                "Soveværelse", 
-                                false, 
-                                "1"
-                            ),
-                            new KeyValuePair(
-                                "2", 
-                                "Stue", 
-                                false, 
-                                "2"
-                            ),
-                            new KeyValuePair(
-                                "3", 
-                                "Hobbyrum", 
-                                false, 
-                                "3"
-                            ),
-                            new KeyValuePair(
-                                "4", 
-                                "Gang", 
-                                false, 
-                                "4"
-                            ),
-                            new KeyValuePair(
-                                "5", 
-                                "Køkken", 
-                                false, 
-                                "5"
-                            ),
-                            new KeyValuePair(
-                                "6", 
-                                "Kontor", 
-                                false, 
-                                "6"
-                            ),
-                            new KeyValuePair(
-                                "7", 
-                                "Kælder", 
-                                false, 
-                                "7"
-                            ),
-                            new KeyValuePair(
-                                "8", 
-                                "Andre lukkede rum", 
-                                false, 
-                                "8"
-                            )
-                        }
-                    )
+                
+                // TODO seed this as a EntitySelect group DONE
+                dataItems.Add(new EntitySelect(
+                    inc + 10, 
+                    false, 
+                    false, 
+                    $"Måler {i} - Rumtype", 
+                    "", 
+                    "e8eaf6",
+                    inc + 9, 
+                    false, 0, 
+                    roomTypeListId)
                 );
                 dataItems.Add(new Number(
                         inc + 11,
