@@ -5,6 +5,7 @@ import {Guid} from 'guid-typescript';
 import customersPage from '../../../Page objects/InstallationChecking/Customers.page';
 import deviceUsers from '../../../Page objects/DeviceUsers.page';
 import installationsPage from '../../../Page objects/InstallationChecking/InstallationChecking.page';
+import myEformsPage from '../../Page objects/MyEforms.page';
 
 describe('Installation Checking - Installation - Add', function () {
   const companyName = 'BMW';
@@ -19,6 +20,8 @@ describe('Installation Checking - Installation - Add', function () {
     //customersPage.configureSearchableList(listName);
     customersPage.createCustomer(companyName);
     // // Setup device user
+
+    myEformsPage.Navbar.goToDeviceUsersPage();
     deviceUsers.createNewDeviceUser(deviceUserFirstName, deviceUserLastName);
     // Go to installation page
     installationsPage.goToInstallationsPage();
