@@ -263,6 +263,10 @@ namespace InstallationChecking.Pn.Services
                         if (installation.Type == InstallationType.Installation)
                         {
                             mainElement = await core.TemplateRead(int.Parse(options.InstallationFormId));
+                            var dataElement = (DataElement) mainElement.ElementList[0];
+                            dataElement.Description.InderValue = 
+                                $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br>";
+
                         }
                         else
                         {

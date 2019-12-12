@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using eFormCore;
+using Microting.eForm.Infrastructure.Constants;
 using Microting.eForm.Infrastructure.Models;
 using KeyValuePair = Microting.eForm.Dto.KeyValuePair;
 
@@ -80,6 +81,7 @@ namespace InstallationChecking.Pn.Helpers
                     ""
                 )
             );
+            // TODO seed this as a EntitySelect group
             dataItems.Add(new SingleSelect(
                     4,
                     true,
@@ -302,10 +304,11 @@ namespace InstallationChecking.Pn.Helpers
                         false,
                         false,
                         false,
-                        false,
-                        ""
+                        true,
+                        Constants.BarcodeTypes.QrCode
                     )
                 );
+                // TODO seed this as a EntitySelect group 
                 dataItems.Add(new SingleSelect(
                         inc + 10,
                         false,
