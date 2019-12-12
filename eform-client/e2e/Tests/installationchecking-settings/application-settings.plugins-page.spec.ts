@@ -44,7 +44,7 @@ describe('Application settings page - site header section', function () {
 
     let secondPlugin = pluginsPage.getSecondPluginRowObj();
     expect(secondPlugin.id).equal(2);
-    expect(secondPlugin.name).equal('Microting Customers plugin');
+    expect(secondPlugin.name).equal('Microting Customers Plugin');
     expect(secondPlugin.version).equal('1.0.0.0');
 
     // pluginPage.pluginSettingsBtn.click();
