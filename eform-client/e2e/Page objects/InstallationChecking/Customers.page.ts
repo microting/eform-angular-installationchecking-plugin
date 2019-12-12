@@ -114,6 +114,7 @@ export class CustomersPage extends PageWithNavbarPage {
   }
 
   public get newCustomerBtn() {
+    browser.waitForExist('#createCustomerBtn', 50000);
     return browser.element('#newCustomerBtn');
   }
 
