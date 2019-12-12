@@ -10,11 +10,12 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        'e2e/Tests/installationchecking-settings/application-settings.plugins-page.spec.ts'
+       'e2e/Tests/installationchecking-settings/application-settings.plugins-page.spec.ts',
+      'e2e/Tests/installationchecking-general/installations/installation-checking-installation.add.spec.ts',
     ],
     suites: {
         settings: [
-            'e2e/Tests/application-settings/**/*.spec.ts'
+            'e2e/Tests/application-settings/**/*.spec.ts',
         ],
     },
     // Patterns to exclude.

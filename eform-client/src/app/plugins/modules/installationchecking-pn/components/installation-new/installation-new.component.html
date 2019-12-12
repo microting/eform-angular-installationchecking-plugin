@@ -22,10 +22,10 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-success"
-                [disabled]="!selectedCustomerId" (click)="createInstallation()" id="createInstallationBtn">
+                [disabled]="!selectedCustomerId" (click)="createInstallation()" id="installationCreateSaveBtn">
           {{ 'Create' | translate }}
         </button>
-        <button class="btn btn-accent text-black-50" (click)="frame.hide()" id="cancelCreateBtn">
+        <button class="btn btn-accent text-black-50" (click)="frame.hide()" id="installationCreateCancelBtn">
           {{ 'Cancel' | translate }}
         </button>
       </div>

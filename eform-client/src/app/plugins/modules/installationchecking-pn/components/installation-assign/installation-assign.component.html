@@ -21,10 +21,10 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-success"
-                [disabled]="!selectedSiteId" (click)="assignInstallation()" id="assignInstallationBtn">
+                [disabled]="!selectedSiteId" (click)="assignInstallation()" id="installationAssignBtnSave">
           {{ 'Assign' | translate }}
         </button>
-        <button class="btn btn-accent text-black-50" (click)="frame.hide()" id="cancelAssignBtn">
+        <button class="btn btn-accent text-black-50" (click)="frame.hide()" id="installationAssignBtnSaveCancel">
           {{ 'Cancel' | translate }}
         </button>
       </div>

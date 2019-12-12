@@ -1,7 +1,7 @@
 <subheader-pn [title]="'Installations' | translate">
   <div class="p-3">
     <button *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.createInstallations)"
-            id="installationNewBtn"
+            id="createInstallationBtn"
             class="btn btn-success"
             mdbTooltip="{{ 'New installation' | translate }}"
             (click)="showNewInstallationModal()">{{ 'New installation' | translate }}
@@ -34,61 +34,58 @@
       <table class="table table-sm table-striped text-center z-depth-1">
         <thead>
         <tr>
-          <th scope="col" class="table-header-sortable" id="idSort" (click)="sortTable(sortCols.id)">
+          <th scope="col" class="table-header-sortable" id="idTableHeader" (click)="sortTable(sortCols.id)">
             <div class="d-flex align-items-center justify-content-center">
               ID
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.id)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="companyNameSort" (click)="sortTable(sortCols.companyName)">
+          <th scope="col" class="table-header-sortable" id="companyNameTableHeader" (click)="sortTable(sortCols.companyName)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Company name' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.companyName)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="companyAddressSort" (click)="sortTable(sortCols.companyAddress)">
+          <th scope="col" class="table-header-sortable" id="companyAddressTableHeader" (click)="sortTable(sortCols.companyAddress)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Company address' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.companyAddress)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="companyAddress2Sort" (click)="sortTable(sortCols.companyAddress2)">
+          <th scope="col" class="table-header-sortable" id="companyAddress2TableHeader" (click)="sortTable(sortCols.companyAddress2)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Company address 2' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.companyAddress2)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="zipCodeSort" (click)="sortTable(sortCols.zipCode)">
+          <th scope="col" class="table-header-sortable" id="zipCodeTableHeader" (click)="sortTable(sortCols.zipCode)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Zip code' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.zipCode)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="cityNameSort" (click)="sortTable(sortCols.cityName)">
+          <th scope="col" class="table-header-sortable" id="cityNameTableHeader" (click)="sortTable(sortCols.cityName)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'City name' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.cityName)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="countryCodeSort" (click)="sortTable(sortCols.countryCode)">
+          <th scope="col" class="table-header-sortable" id="countryCodeTableHeader" (click)="sortTable(sortCols.countryCode)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Country code' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.countryCode)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="dateInstallSort" (click)="sortTable(sortCols.dateInstall)">
+          <th scope="col" class="table-header-sortable" id="dateInstallTableHeader" (click)="sortTable(sortCols.dateInstall)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Date install' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.dateInstall)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="assignedToSort" (click)="sortTable(sortCols.assignedTo)">
-            <div class="d-flex align-items-center justify-content-center">
+          <th scope="col"  id="assignedToTableHeader">
               {{ 'Assigned to' | translate }}
-              <i class="material-icons text-black-50">{{getSortIcon(sortCols.assignedTo)}}</i>
-            </div>
           </th>
-          <th scope="col" *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
+          <th scope="col" id="assignTableHeader" *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
             {{ 'Assign' | translate }}
           </th>
           <th scope="col">
@@ -98,39 +95,39 @@
         </thead>
         <tbody id="tableBody">
         <tr *ngFor="let installation of installationsListModel?.installations; let i = index">
-          <td id="idCol_{{i}}">
+          <td id="installationId">
             {{installation.id}}
           </td>
-          <td id="companyNameCol_{{i}}">
+          <td id="installationCompanyName">
             {{installation.companyName}}
           </td>
-          <td id="companyAddressCol_{{i}}">
+          <td id="installationCompanyAddress">
             {{installation.companyAddress}}
           </td>
-          <td id="companyAddress2Col_{{i}}">
+          <td id="installationCompanyAddress2">
             {{installation.companyAddress2}}
           </td>
-          <td id="zipCodeCol_{{i}}">
+          <td id="installationZipCode">
             {{installation.zipCode}}
           </td>
-          <td id="cityNameCol_{{i}}">
+          <td id="installationCityName">
             {{installation.cityName}}
           </td>
-          <td id="countryCodeCol_{{i}}">
+          <td id="installationCountryCode">
             {{installation.countryCode}}
           </td>
-          <td id="dateInstallCol_{{i}}">
+          <td id="installationDateInstall">
             {{installation.dateInstall | date : 'dd.MM.y HH:mm:ss'}}
           </td>
-          <td id="assignedToCol_{{i}}">
+          <td id="installationAssignedTo">
             {{installation.assignedTo}}
           </td>
           <td *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
             <div class="col" *ngIf="!installation.employeeId">
               <div class="mat-checkbox">
-                <input id="assignCheckbox_{{i}}" name="assignCheckbox_{{i}}" type="checkbox"
+                <input id="assignCheckbox" name="assignCheckbox" type="checkbox"
                        [(ngModel)]="installation.assign">
-                <label for="assignCheckbox_{{i}}"></label>
+                <label for="assignCheckbox"></label>
               </div>
             </div>
           </td>
@@ -144,7 +141,7 @@
               </a>
               <button class="btn btn-accent text-black-50 btn-icon mb-2"
                       mdbTooltip="{{ 'Retract installation' | translate }}"
-                      id="installationRetractBtn_{{i}}"
+                      id="installationRetractBtn"
                       *ngIf="installation.state === installationStates.Assigned && pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)"
                       (click)="showRetractInstallationModal(installation)">
                 {{ 'Retract' | translate }}
