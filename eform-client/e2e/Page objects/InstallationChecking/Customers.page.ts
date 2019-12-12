@@ -9,7 +9,7 @@ export class CustomersPage extends PageWithNavbarPage {
     super();
   }
 
-  public configureSearchableList() {
+  public configureSearchableList(listName: string) {
     customersPage.Navbar.advancedDropdown();
     browser.pause(10000);
     customersPage.Navbar.clickonSubMenuItem('Søgbar Lister');
@@ -18,7 +18,6 @@ export class CustomersPage extends PageWithNavbarPage {
     const numberOfListsBefore = browser.$$('#tableBody > tr').length;
     newSearchListBtn.click();
     browser.pause(8000);
-    const listName = 'My testing list';
     const fieldElement = browser.$('#createName');
     fieldElement.addValue(listName);
     const confirmBtn = browser.$('#entitySearchCreateSaveBtn');
