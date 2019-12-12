@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using eFormCore;
 using Microting.eForm.Infrastructure.Constants;
@@ -12,11 +13,24 @@ namespace InstallationChecking.Pn.Helpers
     {
         public static async Task<int> CreateInstallationForm(Core core)
         {
-            var installationForm = new MainElement
+            var templatesDto = await core.TemplateItemReadAll(false,
+                "",
+                "Radonmålinger Opsætning",
+                false,
+                "",
+                null);
+
+            if (templatesDto.Count > 0)
+            {
+                return templatesDto.First().Id;
+            }
+            else
+            {
+                var installationForm = new MainElement
             {
                 Id = 141699,
                 Repeated = 0,
-                Label = "(1) Radonmålinger Opsætning",
+                Label = "Radonmålinger Opsætning",
                 StartDate = new DateTime(2019, 11, 4),
                 EndDate = new DateTime(2029, 11, 4),
                 Language = "da",
@@ -451,6 +465,9 @@ namespace InstallationChecking.Pn.Helpers
             
             installationForm = await core.TemplateUploadData(installationForm);
             return await core.TemplateCreate(installationForm);
+            }
+            
+            
         }
 
         public static async Task<int> CreateRemovalForm(Core core)
