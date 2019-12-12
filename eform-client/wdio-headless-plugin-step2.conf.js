@@ -11,7 +11,7 @@ exports.config = {
     //
     specs: [
       'e2e/Tests/installationchecking-settings/application-settings.plugins-page.spec.ts',
-      'e2e/Tests/installationchecking-general/installations/installation-checking-installation.add.spec.ts'
+      'e2e/Tests/installationchecking-general/installations/installation-checking-installation.multi.spec.ts'
     ],
     suites: {
         settings: [
