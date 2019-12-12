@@ -86,9 +86,9 @@ export class InstallationCheckingInstallationPage extends Page {
   createInstallation(name: string) {
     this.installationCreateBtn.click();
     browser.pause(8000);
-    const searchField = installationPage.getSearchField();
+    const searchField = installationPage.getCustomerSearchField();
     searchField.addValue(name);
-    const listChoices = installationPage.getListOfChoices();
+    const listChoices = installationPage.getCustomerListOfChoices();
     const choice = listChoices[0];
     browser.pause(8000);
     choice.click();
@@ -103,47 +103,64 @@ export class InstallationCheckingInstallationPage extends Page {
     browser.pause(8000);
   }
   retractInstallation() {
-    this.installationCreateBtn.click();
-    browser.pause(8000);
-    this.installationCreateNameBox.addValue(name);
-    browser.pause(1000);
-    this.installationCreateCancelBtn.click();
-    browser.pause(8000);
+    const installation = installationPage.getFirstRowObject();
+    installation.retractBtn.click();
+    browser.pause(5000);
+    this.installationRetractSaveBtn.click();
+    browser.pause(15000);
   }
 
-  public  getSearchField() {
+  retractInstallation_Cancels() {
+    const installation = installationPage.getFirstRowObject();
+    installation.retractBtn.click();
+    browser.pause(5000);
+    this.installationRetractSaveCancelBtn.click();
+    browser.pause(5000);
+  }
+
+  public  getCustomerSearchField() {
     return browser.element('#selectCustomer .ng-input > input');
   }
-  public getListOfChoices() {
+  public getCustomerListOfChoices() {
     return browser.$$('#selectCustomer .ng-option');
   }
   public  selectedListField() {
     return browser.$('#selectCustomer .ng-value .ng-value-label');
   }
 
-  retractInstallation_Cancels() {
-    this.installationCreateBtn.click();
-    browser.pause(8000);
-    this.installationCreateNameBox.addValue(name);
-    browser.pause(1000);
-    this.installationCreateCancelBtn.click();
-    browser.pause(8000);
+  public  getDeviceUserSearchField() {
+    return browser.element('#selectDeviceUser .ng-input > input');
+  }
+  public getDeviceUserListOfChoices() {
+    return browser.$$('#selectDeviceUser .ng-option');
   }
 
-  assignInstallation() {
+  assignInstallation(deviceUserName: string) {
+    const installation = installationPage.getFirstRowObject();
+    installation.assignCheckbox.click();
+    browser.pause(8000);
     this.installationAssignBtn.click();
     browser.pause(8000);
-    // TODO: CHANGE
-    this.installationCreateNameBox.addValue(name);
-    browser.pause(1000);
-    this.installationCreateCancelBtn.click();
+    const searchField = installationPage.getDeviceUserSearchField();
+    searchField.addValue(deviceUserName);
+    const listChoices = installationPage.getDeviceUserListOfChoices();
+    const choice = listChoices[0];
     browser.pause(8000);
+    choice.click();
+    browser.pause(1000);
+    this.installationAssignBtnSave.click();
+    browser.pause(30000);
   }
 
   assignInstallation_Cancels() {
+    const installation = installationPage.getFirstRowObject();
+    installation.assignCheckbox.click();
+    browser.pause(8000);
     this.installationAssignBtn.click();
     browser.pause(8000);
     this.installationAssignBtnSaveCancel.click();
+    browser.pause(8000);
+    installation.assignCheckbox.click();
     browser.pause(8000);
   }
 
@@ -164,14 +181,33 @@ export class InstallationPageRowObject {
       this.id = $$('#installationId')[rowNum - 1];
       try {
         this.companyName = $$('#installationCompanyName')[rowNum - 1].getText();
+        // this.companyAddress = $$('#companyAddressTableHeader')[rowNum - 1].getText();
+        // this.companyAddress2 = $$('#companyAddress2TableHeader')[rowNum - 1].getText();
+        // this.zipCode = $$('#zipCodeTableHeader')[rowNum - 1].getText();
+        // this.cityName = $$('#cityNameTableHeader')[rowNum - 1].getText();
+        // this.countryCode = $$('#countryCodeTableHeader')[rowNum - 1].getText();
+        // this.dateInstall = $$('#dateInstallTableHeader')[rowNum - 1].getText();
+        this.assignedTo = $$('#installationAssignedTo')[rowNum - 1].getText();
       } catch (e) {}
       this.assignCheckbox = $$('#assignCheckbox')[rowNum - 1];
       this.retractBtn = $$('#installationRetractBtn')[rowNum - 1];
     }
   }
 
-  id;
-  companyName;
-  assignCheckbox;
-  retractBtn;
+  public id;
+  public companyName;
+  public assignCheckbox;
+  public retractBtn;
+  public version;
+  public date;
+  public companyAddress;
+  public companyAddress2;
+  public zipCode;
+  public cityName;
+  public time;
+  public countryCode;
+  public dateInstall;
+  public assignedTo;
+  public name;
+  public status;
 }
