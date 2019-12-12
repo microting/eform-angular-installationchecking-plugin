@@ -62,7 +62,7 @@ describe('Application settings page - site header section', function () {
 
     let pluginToFind = pluginsPage.getFirstPluginRowObj();
     expect(pluginToFind.id).equal(1);
-    expect(pluginToFind.name).equal('Microting InstallationChecking plugin');
+    expect(pluginToFind.name).equal('Microting InstallationChecking Plugin');
     expect(pluginToFind.version).equal('1.0.0.0');
     expect(browser.element(`//*[contains(text(), 'Planlægning')]`).isExisting()).equal(true);
   });
