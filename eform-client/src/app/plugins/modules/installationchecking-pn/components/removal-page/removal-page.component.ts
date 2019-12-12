@@ -10,6 +10,8 @@ import {TranslateService} from '@ngx-translate/core';
 import {saveAs} from 'file-saver';
 import * as moment from 'moment';
 import {ToastrService} from 'ngx-toastr';
+import {debounceTime} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-removal-page',
@@ -24,6 +26,7 @@ export class RemovalPageComponent implements OnInit {
   installationsListModel: InstallationsListModel = new InstallationsListModel();
   states = [];
   spinnerStatus = false;
+  searchSubject = new Subject();
 
   get pluginClaimsHelper() {
     return PluginClaimsHelper;
@@ -53,6 +56,12 @@ export class RemovalPageComponent implements OnInit {
       { id: InstallationStateEnum.Completed, label: translateService.instant('Completed') },
       { id: InstallationStateEnum.Archived, label: translateService.instant('Archived') }
     ];
+    this.searchSubject.pipe(
+      debounceTime(500)
+    ). subscribe(val => {
+      this.installationsRequestModel.searchString =  val.toString();
+      this.getRemovalsList();
+    });
   }
 
   ngOnInit() {
@@ -127,7 +136,11 @@ export class RemovalPageComponent implements OnInit {
   }
 
   onSearchInputChanged(e: any) {
-    this.installationsRequestModel.searchString = e.target.value;
+    this.searchSubject.next(e.target.value);
+  }
+
+  onSelectStateChanged(e: number) {
+    this.installationsRequestModel.state = e;
     this.getRemovalsList();
   }
 

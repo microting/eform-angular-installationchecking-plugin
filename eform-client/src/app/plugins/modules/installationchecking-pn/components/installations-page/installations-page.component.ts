@@ -7,6 +7,8 @@ import {InstallationCheckingPnSettingsService, InstallationsService} from '../..
 import {InstallationModel, InstallationsListModel, InstallationsRequestModel} from '../../models';
 import {InstallationAssignComponent, InstallationNewComponent, InstallationRetractComponent} from '..';
 import {TranslateService} from '@ngx-translate/core';
+import {debounceTime} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-installations-page',
@@ -23,6 +25,7 @@ export class InstallationsPageComponent implements OnInit {
   states = [];
   installationFormId: number;
   spinnerStatus = false;
+  searchSubject = new Subject();
 
   get pluginClaimsHelper() {
     return PluginClaimsHelper;
@@ -55,6 +58,12 @@ export class InstallationsPageComponent implements OnInit {
       { id: InstallationStateEnum.Assigned, label: translateService.instant('Assigned') },
       { id: InstallationStateEnum.Completed, label: translateService.instant('Completed') }
     ];
+    this.searchSubject.pipe(
+      debounceTime(500)
+    ). subscribe(val => {
+      this.installationsRequestModel.searchString =  val.toString();
+      this.getInstallationsList();
+    });
   }
 
   ngOnInit() {
@@ -129,7 +138,11 @@ export class InstallationsPageComponent implements OnInit {
   }
 
   onSearchInputChanged(e: any) {
-    this.installationsRequestModel.searchString = e.target.value;
+    this.searchSubject.next(e.target.value);
+  }
+
+  onSelectStateChanged(e: number) {
+    this.installationsRequestModel.state = e;
     this.getInstallationsList();
   }
 
