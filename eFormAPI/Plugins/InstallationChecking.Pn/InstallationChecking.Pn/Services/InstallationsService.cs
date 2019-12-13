@@ -291,24 +291,16 @@ namespace InstallationChecking.Pn.Services
                                     "",
                                     i++.ToString()
                                 );
+                                EntitySearch entity = (EntitySearch)dataElement.DataItemList[i];
+                                entity.EntityTypeId = entityGroup.Id;
+                                i += 1;
 
-                                dataElement.DataItemList.Add(new EntitySearch(
-                                    3 + i,
-                                    false,
-                                    false,
-                                    $"Måler {i} - QR",
-                                    "",
-                                    "e8eaf6",
-                                    i,
-                                    false,
-                                    0,
-                                    int.Parse(entityGroup.MicrotingUUID),
-                                    false,
-                                    "",
-                                    3,
-                                    false,
-                                    "")
-                                );
+                            }
+
+                            for (int j = installation.Meters.Count() - 1; j < 50; j++)
+                            {
+                                DataItem dataItem = dataElement.DataItemList[j];
+                                dataElement.DataItemList.Remove(dataItem);
                             }
                             
                             installation.RemovalFormId = int.Parse(options.RemovalFormId);

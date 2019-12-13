@@ -15,7 +15,7 @@ namespace InstallationChecking.Pn.Helpers
         {
             EntityGroupList model = await core.Advanced_EntityGroupAll(
                 "id", 
-                "eform-angular-installationchecking-plugin-CadastralType",
+                "eform-angular-installationchecking-plugin-editable-CadastralType",
                 0, 1, Constants.FieldTypes.EntitySelect,
                 false,
                 Constants.WorkflowStates.NotRemoved);
@@ -25,7 +25,7 @@ namespace InstallationChecking.Pn.Helpers
             if (!model.EntityGroups.Any())
             {
                 group = await core.EntityGroupCreate(Constants.FieldTypes.EntitySelect, 
-                    "eform-angular-installationchecking-plugin-CadastralType");
+                    "eform-angular-installationchecking-plugin-editable-CadastralType");
 
                 List<string> roomTypes = new List<string>()
                 {
@@ -53,7 +53,7 @@ namespace InstallationChecking.Pn.Helpers
         {
             EntityGroupList model = await core.Advanced_EntityGroupAll(
                 "id", 
-                "eform-angular-installationchecking-plugin-RoomType",
+                "eform-angular-installationchecking-plugin-editable-RoomType",
                 0, 1, Constants.FieldTypes.EntitySelect,
                 false,
                 Constants.WorkflowStates.NotRemoved);
@@ -63,7 +63,7 @@ namespace InstallationChecking.Pn.Helpers
             if (!model.EntityGroups.Any())
             {
                 group = await core.EntityGroupCreate(Constants.FieldTypes.EntitySelect, 
-                    "eform-angular-installationchecking-plugin-RoomType");
+                    "eform-angular-installationchecking-plugin-editable-RoomType");
                 
                 List<string> roomTypes = new List<string>()
                 {
@@ -365,11 +365,31 @@ namespace InstallationChecking.Pn.Helpers
 
         public static async Task<int> CreateRemovalForm(Core core)
         { 
-            var removalForm = new MainElement
+            var templatesDto = await core.TemplateItemReadAll(false,
+                "",
+                "Radonmålinger Nedtagning",
+                false,
+                "",
+                new List<int>()
+            );
+
+            if (templatesDto.Count > 0)
+            {
+                return templatesDto.First().Id;
+            }
+            else
+            {
+                var entityGroup = await core.EntityGroupCreate(
+                    Constants.FieldTypes.EntitySearch,
+                    $"eform-angular-installationchecking-plugin_0"
+                );
+                
+                
+                var removalForm = new MainElement
                 {
                     Id = 141709,
                     Repeated = 0,
-                    Label = "(2) Radonmålinger Nedtagning",
+                    Label = "Radonmålinger Nedtagning",
                     StartDate = new DateTime(2019, 11, 4),
                     EndDate = new DateTime(2029, 11, 4),
                     Language = "da",
@@ -389,7 +409,7 @@ namespace InstallationChecking.Pn.Helpers
                 "e8eaf6",
                 0,
                 false,
-                "https://eform.microting.com/app_files/uploads/20191008131612_14874_acb5333050e476e81c83bbcf5acd442c.pdf"
+                "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
             ));
             dataItems.Add(new SaveButton(
                 2,
@@ -402,8 +422,28 @@ namespace InstallationChecking.Pn.Helpers
                 false,
                 "GEM DATA"
             ));
+            for (int i = 0; i < 50; i++)
+            {
+                dataItems.Add(new EntitySearch(
+                    3 + i,
+                    false,
+                    false,
+                    $"Måler {i} - QR",
+                    "",
+                    "e8eaf6",
+                    i,
+                    false,
+                    0,
+                    int.Parse(entityGroup.MicrotingUUID),
+                    false,
+                    "",
+                    3,
+                    true,
+                    Constants.BarcodeTypes.QrCode)
+                );
+            }
             dataItems.Add(new SaveButton(
-                3,
+                50,
                 true,
                 false,
                 "Tryk GEM DATA, når alle målere er QR-scannet",
@@ -432,6 +472,7 @@ namespace InstallationChecking.Pn.Helpers
             removalForm = await core.TemplateUploadData(removalForm);
             
             return await core.TemplateCreate(removalForm);
+            }
         }
     }
 }
