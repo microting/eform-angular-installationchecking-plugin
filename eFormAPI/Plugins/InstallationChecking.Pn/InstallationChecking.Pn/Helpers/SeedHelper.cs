@@ -91,7 +91,7 @@ namespace InstallationChecking.Pn.Helpers
             int cadastralTypeId = await CreateCadastralTypeList(core);
             var templatesDto = await core.TemplateItemReadAll(false,
                 "",
-                "Radonmålinger Opsætning",
+                "eform-angular-installationchecking-plugin-installation",
                 false,
                 "",
                 new List<int>()
@@ -107,7 +107,7 @@ namespace InstallationChecking.Pn.Helpers
             {
                 Id = 141699,
                 Repeated = 0,
-                Label = "Radonmålinger Opsætning",
+                Label = "eform-angular-installationchecking-plugin-installation",
                 StartDate = new DateTime(2019, 11, 4),
                 EndDate = new DateTime(2029, 11, 4),
                 Language = "da",
@@ -367,7 +367,7 @@ namespace InstallationChecking.Pn.Helpers
         { 
             var templatesDto = await core.TemplateItemReadAll(false,
                 "",
-                "Radonmålinger Nedtagning",
+                "eform-angular-installationchecking-plugin-removal",
                 false,
                 "",
                 new List<int>()
@@ -389,7 +389,7 @@ namespace InstallationChecking.Pn.Helpers
                 {
                     Id = 141709,
                     Repeated = 0,
-                    Label = "Radonmålinger Nedtagning",
+                    Label = "eform-angular-installationchecking-plugin-removal",
                     StartDate = new DateTime(2019, 11, 4),
                     EndDate = new DateTime(2029, 11, 4),
                     Language = "da",
