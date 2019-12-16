@@ -300,17 +300,19 @@ namespace InstallationChecking.Pn.Services
                                 ss.ObjectStreamContent.Close();
                                 ss.ObjectStreamContent.Dispose();
                             }
-
-                            if (core.GetSdkSetting(Settings.s3Enabled).Result.ToLower() == "true")
+                            else
                             {
-                                var ss = await core.GetFileFromS3Storage(installation.InstallationImageName);
-                                var fileStream = File.Create(tempFilePath);
-                                ss.ResponseStream.CopyTo(fileStream);
-                                fileStream.Close();
-                                fileStream.Dispose();
+                                if (core.GetSdkSetting(Settings.s3Enabled).Result.ToLower() == "true")
+                                {
+                                    var ss = await core.GetFileFromS3Storage(installation.InstallationImageName);
+                                    var fileStream = File.Create(tempFilePath);
+                                    ss.ResponseStream.CopyTo(fileStream);
+                                    fileStream.Close();
+                                    fileStream.Dispose();
                                 
-                                ss.ResponseStream.Close();
-                                ss.ResponseStream.Dispose();
+                                    ss.ResponseStream.Close();
+                                    ss.ResponseStream.Dispose();
+                                }    
                             }
                             
                             using (MagickImage image = new MagickImage(tempFilePath))
