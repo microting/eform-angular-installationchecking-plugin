@@ -149,7 +149,9 @@ export class InstallationCheckingInstallationPage extends Page {
     choice.click();
     browser.pause(1000);
     this.installationAssignBtnSave.click();
-    browser.pause(30000);
+    browser.pause(40000);
+    browser.refresh();
+    browser.pause(10000)
   }
 
   assignInstallation_Cancels() {
