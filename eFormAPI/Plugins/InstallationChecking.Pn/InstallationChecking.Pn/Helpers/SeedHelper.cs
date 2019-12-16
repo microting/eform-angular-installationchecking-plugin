@@ -225,7 +225,7 @@ namespace InstallationChecking.Pn.Helpers
                     "ffe4e4",
                     6,
                     false,
-                    0,
+                    1,
                     false
                 )
             );

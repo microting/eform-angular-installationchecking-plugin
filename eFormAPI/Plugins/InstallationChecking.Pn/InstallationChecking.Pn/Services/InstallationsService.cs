@@ -19,6 +19,8 @@ using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
 using OfficeOpenXml;
 using System.Reflection;
 using System.IO;
+using ImageMagick;
+using Microting.eForm.Dto;
 using Microting.eForm.Infrastructure.Models;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
 
@@ -281,8 +283,50 @@ namespace InstallationChecking.Pn.Services
                                 Constants.FieldTypes.EntitySearch,
                                 $"eform-angular-installationchecking-plugin_{installation.Id}"
                             );
+                            
+                            #region Image to PDF section
+                            // Read image from file
 
-                            var i = 0;
+                            string tempFilePath = Path.Combine("tmp", installation.InstallationImageName);
+
+                            if (core.GetSdkSetting(Settings.swiftEnabled).Result.ToLower() == "true")
+                            {
+                                var ss = await core.GetFileFromSwiftStorage(installation.InstallationImageName);
+                                var fileStream = File.Create(tempFilePath);
+                                ss.ObjectStreamContent.CopyTo(fileStream);
+                                fileStream.Close();
+                                fileStream.Dispose();
+                                
+                                ss.ObjectStreamContent.Close();
+                                ss.ObjectStreamContent.Dispose();
+                            }
+
+                            if (core.GetSdkSetting(Settings.s3Enabled).Result.ToLower() == "true")
+                            {
+                                var ss = await core.GetFileFromS3Storage(installation.InstallationImageName);
+                                var fileStream = File.Create(tempFilePath);
+                                ss.ResponseStream.CopyTo(fileStream);
+                                fileStream.Close();
+                                fileStream.Dispose();
+                                
+                                ss.ResponseStream.Close();
+                                ss.ResponseStream.Dispose();
+                            }
+                            
+                            using (MagickImage image = new MagickImage(tempFilePath))
+                            {
+                                // Create pdf file with a single page
+                                image.Write(installation.InstallationImageName.Replace("png","pdf"));
+                            }
+
+                            var resultId = await core.PdfUpload(tempFilePath.Replace("png", "pdf")); 
+
+                            ShowPdf showPdf = (ShowPdf)dataElement.DataItemList[1];
+                            showPdf.Value = resultId;
+
+                            #endregion
+                            
+                            var i = 2;
                             foreach (var meter in installation.Meters)
                             {
                                 await core.EntitySearchItemCreate(
@@ -299,7 +343,7 @@ namespace InstallationChecking.Pn.Services
 
                             for (int j = installation.Meters.Count() - 1; j < 50; j++)
                             {
-                                DataItem dataItem = dataElement.DataItemList[j];
+                                EntitySearch dataItem = (EntitySearch)dataElement.DataItemList[j];
                                 dataElement.DataItemList.Remove(dataItem);
                             }
                             
