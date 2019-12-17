@@ -322,10 +322,14 @@ namespace InstallationChecking.Pn.Services
                             using (MagickImage image = new MagickImage(tempFilePath))
                             {
                                 // Create pdf file with a single page
-                                image.Write(installation.InstallationImageName.Replace("png","pdf"));
+                                image.Write(installation.InstallationImageName
+                                    .Replace("png","pdf")
+                                    .Replace("jpeg", "pdf"));
                             }
 
-                            var resultId = await core.PdfUpload(tempFilePath.Replace("png", "pdf")); 
+                            var resultId = await core.PdfUpload(tempFilePath
+                                .Replace("png", "pdf")
+                                .Replace("jpeg", "pdf")); 
 
                             ShowPdf showPdf = (ShowPdf)dataElement.DataItemList[1];
                             showPdf.Value = resultId;
