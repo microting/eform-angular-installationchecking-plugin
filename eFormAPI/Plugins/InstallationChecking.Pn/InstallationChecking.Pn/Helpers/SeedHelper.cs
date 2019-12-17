@@ -312,19 +312,19 @@ namespace InstallationChecking.Pn.Helpers
                         ""
                     )
                 );
-                dataItems.Add(new Picture(
-                        inc + 13,
-                        false,
-                        false,
-                        $"Måler {i} - Billede",
-                        "<br>",
-                        "ffe4e4",
-                        inc + 12,
-                        false,
-                        0,
-                        false
-                    )
-                );
+//                dataItems.Add(new Picture(
+//                        inc + 13,
+//                        false,
+//                        false,
+//                        $"Måler {i} - Billede",
+//                        "<br>",
+//                        "ffe4e4",
+//                        inc + 12,
+//                        false,
+//                        0,
+//                        false
+//                    )
+//                );
             }
             
             dataItems.Add(new SaveButton(

@@ -265,7 +265,9 @@ namespace InstallationChecking.Pn.Services
                         if (installation.Type == InstallationType.Installation)
                         {
                             mainElement = await core.TemplateRead(int.Parse(options.InstallationFormId));
+                            mainElement.Label = installation.CompanyName;
                             var dataElement = (DataElement) mainElement.ElementList[0];
+                            dataElement.Label = installation.CompanyName;
                             dataElement.Description.InderValue = 
                                 $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br>";
 
@@ -273,9 +275,11 @@ namespace InstallationChecking.Pn.Services
                         else
                         {
                             mainElement = await core.TemplateRead(int.Parse(options.RemovalFormId));
+                            mainElement.Label = installation.CompanyName;
 
                             var dataElement = (DataElement) mainElement.ElementList[0];
                             var removalDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+                            dataElement.Label = installation.CompanyName;
                             dataElement.Description.InderValue = 
                                 $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br><b>Nedtagningsdato: {removalDate}</b>";
 
