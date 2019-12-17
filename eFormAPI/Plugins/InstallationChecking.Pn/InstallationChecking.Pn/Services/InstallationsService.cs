@@ -324,11 +324,13 @@ namespace InstallationChecking.Pn.Services
                                 // Create pdf file with a single page
                                 image.Write(installation.InstallationImageName
                                     .Replace("png","pdf")
+                                    .Replace("jpg","pdf")
                                     .Replace("jpeg", "pdf"));
                             }
 
                             var resultId = await core.PdfUpload(tempFilePath
                                 .Replace("png", "pdf")
+                                .Replace("jpg", "pdf")
                                 .Replace("jpeg", "pdf")); 
 
                             ShowPdf showPdf = (ShowPdf)dataElement.DataItemList[1];
