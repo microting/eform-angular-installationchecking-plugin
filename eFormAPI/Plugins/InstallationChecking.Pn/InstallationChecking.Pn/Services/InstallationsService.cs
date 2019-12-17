@@ -281,7 +281,7 @@ namespace InstallationChecking.Pn.Services
 
                             var entityGroup = await core.EntityGroupCreate(
                                 Constants.FieldTypes.EntitySearch,
-                                $"eform-angular-installationchecking-plugin_{installation.Id}"
+                                $"eform-angular-installationchecking-plugin_{installation.Id}_hidden"
                             );
                             
                             #region Image to PDF section
@@ -352,7 +352,7 @@ namespace InstallationChecking.Pn.Services
                             installation.RemovalFormId = int.Parse(options.RemovalFormId);
                         }
                         
-                        mainElement.Repeated = 0;
+                        mainElement.Repeated = 1;
                         mainElement.EndDate = DateTime.UtcNow.AddYears(10);
                         mainElement.StartDate = DateTime.UtcNow;
                         installation.EmployeeId = installationsAssignModel.EmployeeId;
