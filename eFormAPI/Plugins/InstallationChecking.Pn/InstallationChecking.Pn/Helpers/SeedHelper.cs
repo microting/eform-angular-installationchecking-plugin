@@ -46,7 +46,7 @@ namespace InstallationChecking.Pn.Helpers
                 group = model.EntityGroups.First();
             }
 
-            return group.Id;
+            return int.Parse(group.MicrotingUUID);
         }
         
         private static async Task<int> CreateRoomTypeList(Core core)
@@ -81,7 +81,7 @@ namespace InstallationChecking.Pn.Helpers
                 group = model.EntityGroups.First();
             }
 
-            return group.Id;
+            return int.Parse(group.MicrotingUUID);
         }
 
         public static async Task<int> CreateInstallationForm(Core core)

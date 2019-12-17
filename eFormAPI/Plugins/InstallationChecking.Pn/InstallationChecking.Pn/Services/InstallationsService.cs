@@ -338,7 +338,7 @@ namespace InstallationChecking.Pn.Services
                                     i++.ToString()
                                 );
                                 EntitySearch entity = (EntitySearch)dataElement.DataItemList[i];
-                                entity.EntityTypeId = entityGroup.Id;
+                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);
                                 i += 1;
 
                             }
