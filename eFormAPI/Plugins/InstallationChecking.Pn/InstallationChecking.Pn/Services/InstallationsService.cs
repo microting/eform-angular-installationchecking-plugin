@@ -74,9 +74,9 @@ namespace InstallationChecking.Pn.Services
                             DateInstall = x.DateInstall,
                             DateRemove = x.DateRemove,
                             DateActRemove = x.DateActRemove,
-                            EmployeeId = x.EmployeeId,
+                            EmployeeId = x.InstallationEmployeeId,
                             CustomerId = x.CustomerId,
-                            SdkCaseId = x.SdkCaseId,
+                            SdkCaseId = x.InstallationSdkCaseId,
                             RemovalFormId = x.RemovalFormId,
                         }
                     ).FirstOrDefaultAsync();
@@ -168,9 +168,9 @@ namespace InstallationChecking.Pn.Services
                             DateInstall = x.DateInstall,
                             DateRemove = x.DateRemove,
                             DateActRemove = x.DateActRemove,
-                            EmployeeId = x.EmployeeId,
+                            EmployeeId = x.InstallationEmployeeId,
                             CustomerId = x.CustomerId,
-                            SdkCaseId = x.SdkCaseId,
+                            SdkCaseId = x.InstallationSdkCaseId,
                             RemovalFormId = x.RemovalFormId
                         }
                     ).ToListAsync();
@@ -272,6 +272,17 @@ namespace InstallationChecking.Pn.Services
                             dataElement.Label = installation.CompanyName;
                             dataElement.Description.InderValue = 
                                 $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br>";
+                            
+                        
+                            mainElement.Repeated = 1;
+                            mainElement.EndDate = DateTime.UtcNow.AddYears(10);
+                            mainElement.StartDate = DateTime.UtcNow;
+                            installation.InstallationEmployeeId = installationsAssignModel.EmployeeId;
+                            installation.InstallationSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
+                            installation.State = InstallationState.Assigned;
+                            installation.UpdatedByUserId = UserId;
+
+                            await installation.Update(_installationCheckingContext);
 
                         }
                         else
@@ -402,17 +413,17 @@ namespace InstallationChecking.Pn.Services
                             
                             
                             installation.RemovalFormId = int.Parse(options.RemovalFormId);
-                        }
                         
-                        mainElement.Repeated = 1;
-                        mainElement.EndDate = DateTime.UtcNow.AddYears(10);
-                        mainElement.StartDate = DateTime.UtcNow;
-                        installation.EmployeeId = installationsAssignModel.EmployeeId;
-                        installation.SdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
-                        installation.State = InstallationState.Assigned;
-                        installation.UpdatedByUserId = UserId;
+                            mainElement.Repeated = 1;
+                            mainElement.EndDate = DateTime.UtcNow.AddYears(10);
+                            mainElement.StartDate = DateTime.UtcNow;
+                            installation.RemovalEmployeeId = installationsAssignModel.EmployeeId;
+                            installation.RemovalSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
+                            installation.State = InstallationState.Assigned;
+                            installation.UpdatedByUserId = UserId;
 
-                        await installation.Update(_installationCheckingContext);
+                            await installation.Update(_installationCheckingContext);
+                        }
                     }
 
                     transaction.Commit();
@@ -442,16 +453,34 @@ namespace InstallationChecking.Pn.Services
                         return new OperationResult(false, _localizationService.GetString("InstallationCannotBeRetracted"));
                     }
 
-                    await core.CaseDelete(installation.SdkCaseId.GetValueOrDefault());
+                    if (installation.Type == InstallationType.Installation)
+                    {
+                        await core.CaseDelete(installation.InstallationSdkCaseId.GetValueOrDefault());   
 
-                    installation.EmployeeId = null;
-                    installation.SdkCaseId = null;
-                    installation.State = InstallationState.NotAssigned;
-                    installation.UpdatedByUserId = UserId;
-                    await installation.Update(_installationCheckingContext);
 
-                    transaction.Commit();
-                    return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));
+                        installation.InstallationEmployeeId = null;
+                        installation.InstallationSdkCaseId = null;
+                        installation.State = InstallationState.NotAssigned;
+                        installation.UpdatedByUserId = UserId;
+                        await installation.Update(_installationCheckingContext);
+
+                        transaction.Commit();
+                        return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));                     
+                    }
+                    else
+                    {
+                        await core.CaseDelete(installation.RemovalSdkCaseId.GetValueOrDefault());
+
+
+                        installation.RemovalEmployeeId = null;
+                        installation.RemovalSdkCaseId = null;
+                        installation.State = InstallationState.NotAssigned;
+                        installation.UpdatedByUserId = UserId;
+                        await installation.Update(_installationCheckingContext);
+
+                        transaction.Commit();
+                        return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));
+                    }
                 }
                 catch (Exception e)
                 {
@@ -505,7 +534,7 @@ namespace InstallationChecking.Pn.Services
                     return new OperationDataResult<byte[]>(false, _localizationService.GetString("InstallationCannotBeExported"));
                 }
 
-                var caseDto = await core.CaseLookupMUId(installation.SdkCaseId.GetValueOrDefault());
+                var caseDto = await core.CaseLookupMUId(installation.InstallationSdkCaseId.GetValueOrDefault());
 
                 if (caseDto == null)
                 {
@@ -549,7 +578,7 @@ namespace InstallationChecking.Pn.Services
                         worksheet.Cells[row, 23].Value = installation.DateInstall;
                         worksheet.Cells[row, 24].Value = installation.DateActRemove;
 
-                        var site = await core.SiteRead(installation.EmployeeId.GetValueOrDefault());
+                        var site = await core.SiteRead(installation.RemovalSdkCaseId.GetValueOrDefault());
                         worksheet.Cells[row, 25].Value = site.FirstName + " " + site.LastName;
 
                         row++;
