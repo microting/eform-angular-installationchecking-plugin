@@ -74,9 +74,11 @@ namespace InstallationChecking.Pn.Services
                             DateInstall = x.DateInstall,
                             DateRemove = x.DateRemove,
                             DateActRemove = x.DateActRemove,
-                            EmployeeId = x.InstallationEmployeeId,
+                            InstallationEmployeeId = x.InstallationEmployeeId,
+                            RemovalEmployeeId = x.RemovalEmployeeId,
                             CustomerId = x.CustomerId,
-                            SdkCaseId = x.InstallationSdkCaseId,
+                            InstallationSdkCaseId = x.InstallationSdkCaseId,
+                            RemovalSdkCaseId = x.RemovalSdkCaseId,
                             RemovalFormId = x.RemovalFormId,
                         }
                     ).FirstOrDefaultAsync();
@@ -86,14 +88,14 @@ namespace InstallationChecking.Pn.Services
                     return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("InstallationNotFound"));
                 }
 
-                if (installationModel.EmployeeId != null)
+                if (installationModel.InstallationEmployeeId != null)
                 {
                     var core = await _coreHelper.GetCore();
-                    var site = await core.SiteRead(installationModel.EmployeeId.GetValueOrDefault());
+                    var site = await core.SiteRead(installationModel.InstallationEmployeeId.GetValueOrDefault());
                     installationModel.AssignedTo = site.FirstName + " " + site.LastName;
-                    if (installationModel.SdkCaseId != null)
+                    if (installationModel.InstallationSdkCaseId != null)
                     {
-                        var sdkCaseId = (int)installationModel.SdkCaseId;
+                        var sdkCaseId = (int)installationModel.InstallationSdkCaseId;
                         var caseLookup = await core.CaseLookupMUId(sdkCaseId);
                         if (caseLookup?.CheckUId != null)
                         {
@@ -101,7 +103,22 @@ namespace InstallationChecking.Pn.Services
                         }
                     }
                 }
-
+                
+                if (installationModel.RemovalEmployeeId != null)
+                {
+                    var core = await _coreHelper.GetCore();
+                    var site = await core.SiteRead(installationModel.RemovalEmployeeId.GetValueOrDefault());
+                    installationModel.AssignedTo = site.FirstName + " " + site.LastName;
+                    if (installationModel.RemovalSdkCaseId != null)
+                    {
+                        var sdkCaseId = (int)installationModel.RemovalSdkCaseId;
+                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                        if (caseLookup?.CheckUId != null)
+                        {
+                            installationModel.SdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                        }
+                    }
+                }
                 return new OperationDataResult<InstallationModel>(true, installationModel);
             }
             catch (Exception e)
@@ -168,20 +185,36 @@ namespace InstallationChecking.Pn.Services
                             DateInstall = x.DateInstall,
                             DateRemove = x.DateRemove,
                             DateActRemove = x.DateActRemove,
-                            EmployeeId = x.InstallationEmployeeId,
+                            InstallationEmployeeId = x.InstallationEmployeeId,
+                            RemovalEmployeeId = x.RemovalEmployeeId,
                             CustomerId = x.CustomerId,
-                            SdkCaseId = x.InstallationSdkCaseId,
+                            InstallationSdkCaseId = x.InstallationSdkCaseId,
+                            RemovalSdkCaseId = x.RemovalSdkCaseId,
                             RemovalFormId = x.RemovalFormId
                         }
                     ).ToListAsync();
 
-                foreach (var item in list.Where(x => x.EmployeeId != null))
+                foreach (var item in list.Where(x => x.InstallationEmployeeId != null))
                 {
-                    var site = await core.SiteRead(item.EmployeeId.GetValueOrDefault());
+                    var site = await core.SiteRead(item.InstallationEmployeeId.GetValueOrDefault());
                     item.AssignedTo = site.FirstName + " " + site.LastName;
-                    if (item.SdkCaseId != null)
+                    if (item.InstallationSdkCaseId != null)
                     {
-                        var sdkCaseId = (int) item.SdkCaseId;
+                        var sdkCaseId = (int) item.InstallationSdkCaseId;
+                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                        if (caseLookup?.CheckUId != null && caseLookup?.CheckUId != 0)
+                        {
+                            item.SdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                        }
+                    }
+                }
+                foreach (var item in list.Where(x => x.RemovalEmployeeId != null))
+                {
+                    var site = await core.SiteRead(item.RemovalEmployeeId.GetValueOrDefault());
+                    item.AssignedTo = site.FirstName + " " + site.LastName;
+                    if (item.RemovalSdkCaseId != null)
+                    {
+                        var sdkCaseId = (int) item.RemovalSdkCaseId;
                         var caseLookup = await core.CaseLookupMUId(sdkCaseId);
                         if (caseLookup?.CheckUId != null && caseLookup?.CheckUId != 0)
                         {
