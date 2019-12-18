@@ -189,7 +189,7 @@ export class InstallationPageRowObject {
         // this.dateInstall = $$('#dateInstallTableHeader')[rowNum - 1].getText();
         this.assignedTo = $$('#installationAssignedTo')[rowNum - 1].getText();
       } catch (e) {}
-      this.assignCheckbox = $$('#assignCheckbox')[rowNum - 1];
+      this.assignCheckbox = $$(`#assignCheckbox_${rowNum - 1}`)[rowNum - 1];
       this.retractBtn = $$('#installationRetractBtn')[rowNum - 1];
     }
   }
