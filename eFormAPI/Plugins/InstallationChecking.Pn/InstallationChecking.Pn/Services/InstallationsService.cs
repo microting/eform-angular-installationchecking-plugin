@@ -22,7 +22,9 @@ using System.IO;
 using ImageMagick;
 using Microting.eForm.Dto;
 using Microting.eForm.Infrastructure.Models;
+using Microting.eFormApi.BasePn.Infrastructure.Helpers;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
+using OpenStack.NetCoreSwiftClient.Extensions;
 
 namespace InstallationChecking.Pn.Services
 {
@@ -72,9 +74,11 @@ namespace InstallationChecking.Pn.Services
                             DateInstall = x.DateInstall,
                             DateRemove = x.DateRemove,
                             DateActRemove = x.DateActRemove,
-                            EmployeeId = x.EmployeeId,
+                            InstallationEmployeeId = x.InstallationEmployeeId,
+                            RemovalEmployeeId = x.RemovalEmployeeId,
                             CustomerId = x.CustomerId,
-                            SdkCaseId = x.SdkCaseId,
+                            InstallationSdkCaseId = x.InstallationSdkCaseId,
+                            RemovalSdkCaseId = x.RemovalSdkCaseId,
                             RemovalFormId = x.RemovalFormId,
                         }
                     ).FirstOrDefaultAsync();
@@ -84,22 +88,37 @@ namespace InstallationChecking.Pn.Services
                     return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("InstallationNotFound"));
                 }
 
-                if (installationModel.EmployeeId != null)
+                if (installationModel.InstallationEmployeeId != null && installationModel.Type == InstallationType.Installation)
                 {
                     var core = await _coreHelper.GetCore();
-                    var site = await core.SiteRead(installationModel.EmployeeId.GetValueOrDefault());
+                    var site = await core.SiteRead(installationModel.InstallationEmployeeId.GetValueOrDefault());
                     installationModel.AssignedTo = site.FirstName + " " + site.LastName;
-                    if (installationModel.SdkCaseId != null)
+                    if (installationModel.InstallationSdkCaseId != null)
                     {
-                        var sdkCaseId = (int)installationModel.SdkCaseId;
+                        var sdkCaseId = (int)installationModel.InstallationSdkCaseId;
                         var caseLookup = await core.CaseLookupMUId(sdkCaseId);
                         if (caseLookup?.CheckUId != null)
                         {
-                            installationModel.SdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                            installationModel.InstallationSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
                         }
                     }
                 }
-
+                
+                if (installationModel.RemovalEmployeeId != null && installationModel.Type == InstallationType.Removal)
+                {
+                    var core = await _coreHelper.GetCore();
+                    var site = await core.SiteRead(installationModel.RemovalEmployeeId.GetValueOrDefault());
+                    installationModel.AssignedTo = site.FirstName + " " + site.LastName;
+                    if (installationModel.RemovalSdkCaseId != null)
+                    {
+                        var sdkCaseId = (int)installationModel.RemovalSdkCaseId;
+                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                        if (caseLookup?.CheckUId != null)
+                        {
+                            installationModel.RemovalSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                        }
+                    }
+                }
                 return new OperationDataResult<InstallationModel>(true, installationModel);
             }
             catch (Exception e)
@@ -166,24 +185,46 @@ namespace InstallationChecking.Pn.Services
                             DateInstall = x.DateInstall,
                             DateRemove = x.DateRemove,
                             DateActRemove = x.DateActRemove,
-                            EmployeeId = x.EmployeeId,
+                            InstallationEmployeeId = x.InstallationEmployeeId,
+                            RemovalEmployeeId = x.RemovalEmployeeId,
                             CustomerId = x.CustomerId,
-                            SdkCaseId = x.SdkCaseId,
+                            InstallationSdkCaseId = x.InstallationSdkCaseId,
+                            RemovalSdkCaseId = x.RemovalSdkCaseId,
                             RemovalFormId = x.RemovalFormId
                         }
                     ).ToListAsync();
-
-                foreach (var item in list.Where(x => x.EmployeeId != null))
+                
+                foreach (var item in list.Where(x => x.InstallationEmployeeId != null))
                 {
-                    var site = await core.SiteRead(item.EmployeeId.GetValueOrDefault());
-                    item.AssignedTo = site.FirstName + " " + site.LastName;
-                    if (item.SdkCaseId != null)
+                    if (item.Type == InstallationType.Installation)
                     {
-                        var sdkCaseId = (int) item.SdkCaseId;
-                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
-                        if (caseLookup?.CheckUId != null && caseLookup?.CheckUId != 0)
+                        var site = await core.SiteRead(item.InstallationEmployeeId.GetValueOrDefault());
+                        item.AssignedTo = site.FirstName + " " + site.LastName;
+                        if (item.InstallationSdkCaseId != null)
                         {
-                            item.SdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                            var sdkCaseId = (int) item.InstallationSdkCaseId;
+                            var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                            if (caseLookup?.CheckUId != null && caseLookup?.CheckUId != 0)
+                            {
+                                item.InstallationSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                            }
+                        }    
+                    }
+                }
+                foreach (var item in list.Where(x => x.RemovalEmployeeId != null))
+                {
+                    if (item.Type == InstallationType.Removal)
+                    {
+                        var site = await core.SiteRead(item.RemovalEmployeeId.GetValueOrDefault());
+                        item.AssignedTo = site.FirstName + " " + site.LastName;
+                        if (item.RemovalSdkCaseId != null)
+                        {
+                            var sdkCaseId = (int) item.RemovalSdkCaseId;
+                            var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                            if (caseLookup?.CheckUId != null && caseLookup?.CheckUId != 0)
+                            {
+                                item.RemovalSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                            }
                         }
                     }
                 }
@@ -265,102 +306,165 @@ namespace InstallationChecking.Pn.Services
                         if (installation.Type == InstallationType.Installation)
                         {
                             mainElement = await core.TemplateRead(int.Parse(options.InstallationFormId));
+                            mainElement.Label = installation.CompanyName;
                             var dataElement = (DataElement) mainElement.ElementList[0];
+                            dataElement.Label = installation.CompanyName;
                             dataElement.Description.InderValue = 
                                 $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br>";
+                            
+                        
+                            mainElement.Repeated = 1;
+                            mainElement.EndDate = DateTime.UtcNow.AddYears(10);
+                            mainElement.StartDate = DateTime.UtcNow;
+                            installation.InstallationEmployeeId = installationsAssignModel.EmployeeId;
+                            installation.InstallationSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
+                            installation.State = InstallationState.Assigned;
+                            installation.UpdatedByUserId = UserId;
+
+                            await installation.Update(_installationCheckingContext);
 
                         }
                         else
                         {
                             mainElement = await core.TemplateRead(int.Parse(options.RemovalFormId));
+                            mainElement.Label = installation.CompanyName;
 
                             var dataElement = (DataElement) mainElement.ElementList[0];
                             var removalDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
+                            dataElement.Label = installation.CompanyName;
                             dataElement.Description.InderValue = 
                                 $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br><b>Nedtagningsdato: {removalDate}</b>";
 
-                            var entityGroup = await core.EntityGroupCreate(
-                                Constants.FieldTypes.EntitySearch,
-                                $"eform-angular-installationchecking-plugin_{installation.Id}"
-                            );
                             
-                            #region Image to PDF section
-                            // Read image from file
-
-                            string tempFilePath = Path.Combine("tmp", installation.InstallationImageName);
-
-                            if (core.GetSdkSetting(Settings.swiftEnabled).Result.ToLower() == "true")
+                            
+                            EntityGroupList model = await core.Advanced_EntityGroupAll(
+                                "id", 
+                                $"eform-angular-installationchecking-plugin_{installation.Id}_hidden",
+                                0, 1, Constants.FieldTypes.EntitySearch,
+                                false,
+                                Constants.WorkflowStates.NotRemoved);
+                            
+                            EntityGroup entityGroup;
+                            
+                            if (!model.EntityGroups.Any())
                             {
-                                var ss = await core.GetFileFromSwiftStorage(installation.InstallationImageName);
-                                var fileStream = File.Create(tempFilePath);
-                                ss.ObjectStreamContent.CopyTo(fileStream);
-                                fileStream.Close();
-                                fileStream.Dispose();
-                                
-                                ss.ObjectStreamContent.Close();
-                                ss.ObjectStreamContent.Dispose();
+                                entityGroup = await core.EntityGroupCreate(
+                                    Constants.FieldTypes.EntitySearch,
+                                    $"eform-angular-installationchecking-plugin_{installation.Id}_hidden"
+                                );
                             }
                             else
                             {
-                                if (core.GetSdkSetting(Settings.s3Enabled).Result.ToLower() == "true")
+                                entityGroup = model.EntityGroups.First();
+                            }
+
+                            #region Image to PDF section
+                            // Read image from file
+
+                            try
+                            {
+                                string filename = installation.InstallationImageName.Replace(",", "");
+                                string tempFilePath = Path.Combine("tmp", filename);
+                                Directory.CreateDirectory("tmp");
+                                Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: tempFilePath is {tempFilePath}");
+
+                                if (core.GetSdkSetting(Settings.swiftEnabled).Result.ToLower() == "true")
                                 {
-                                    var ss = await core.GetFileFromS3Storage(installation.InstallationImageName);
+                                    Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: swiftEnabled is true");
+                                    var ss = await core.GetFileFromSwiftStorage(filename);
                                     var fileStream = File.Create(tempFilePath);
-                                    ss.ResponseStream.CopyTo(fileStream);
+                                    ss.ObjectStreamContent.CopyTo(fileStream);
                                     fileStream.Close();
                                     fileStream.Dispose();
-                                
-                                    ss.ResponseStream.Close();
-                                    ss.ResponseStream.Dispose();
-                                }    
+
+                                    ss.ObjectStreamContent.Close();
+                                    ss.ObjectStreamContent.Dispose();
+                                }
+                                else
+                                {
+                                    if (core.GetSdkSetting(Settings.s3Enabled).Result.ToLower() == "true")
+                                    {
+                                        Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: s3Enabled is true");
+                                        var ss = await core.GetFileFromS3Storage(filename);
+                                        var fileStream = File.Create(tempFilePath);
+                                        ss.ResponseStream.CopyTo(fileStream);
+                                        fileStream.Close();
+                                        fileStream.Dispose();
+
+                                        ss.ResponseStream.Close();
+                                        ss.ResponseStream.Dispose();
+                                    }
+                                }
+
+                                using (MagickImage image = new MagickImage(tempFilePath))
+                                {
+                                    Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: MagickImage converting");
+                                    // Create pdf file with a single page
+                                    image.Write(tempFilePath
+                                        .Replace("png", "pdf")
+                                        .Replace("jpg", "pdf")
+                                        .Replace("jpeg", "pdf"));
+                                }
+
+                                Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: Uploading PDF to Microting");
+                                var resultId = await core.PdfUpload(tempFilePath
+                                    .Replace("png", "pdf")
+                                    .Replace("jpg", "pdf")
+                                    .Replace("jpeg", "pdf"));
+
+                                ShowPdf showPdf = (ShowPdf) dataElement.DataItemList[0];
+                                showPdf.Value = resultId;
+                                Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: PDF set for field");
+
                             }
-                            
-                            using (MagickImage image = new MagickImage(tempFilePath))
+                            catch (Exception ex)
                             {
-                                // Create pdf file with a single page
-                                image.Write(installation.InstallationImageName.Replace("png","pdf"));
+                                Log.LogException($"[ERR] InstallationsService.AssignInstallations convert image to pdf failed and got exception : {ex.Message}");
                             }
-
-                            var resultId = await core.PdfUpload(tempFilePath.Replace("png", "pdf")); 
-
-                            ShowPdf showPdf = (ShowPdf)dataElement.DataItemList[1];
-                            showPdf.Value = resultId;
-
                             #endregion
                             
                             var i = 2;
-                            foreach (var meter in installation.Meters)
+                            foreach (var meter in installation.Meters.Where(x => !x.QR.IsNullOrEmpty()))
                             {
                                 await core.EntitySearchItemCreate(
                                     entityGroup.Id,
                                     meter.QR,
                                     "",
-                                    i++.ToString()
+                                    i.ToString()
                                 );
                                 EntitySearch entity = (EntitySearch)dataElement.DataItemList[i];
-                                entity.EntityTypeId = entityGroup.Id;
+                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);    
                                 i += 1;
-
                             }
 
-                            for (int j = installation.Meters.Count() - 1; j < 50; j++)
+                            int validFields = installation.Meters.Count(x => !x.QR.IsNullOrEmpty()) + 2;
+
+                            try
                             {
-                                EntitySearch dataItem = (EntitySearch)dataElement.DataItemList[j];
-                                dataElement.DataItemList.Remove(dataItem);
+                                for (int j = validFields; j < 52; j++)
+                                {
+                                    EntitySearch dataItem = (EntitySearch) dataElement.DataItemList[validFields];
+                                    dataElement.DataItemList.Remove(dataItem);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.LogException(ex.Message);
                             }
                             
+                            
                             installation.RemovalFormId = int.Parse(options.RemovalFormId);
-                        }
                         
-                        mainElement.Repeated = 0;
-                        mainElement.EndDate = DateTime.UtcNow.AddYears(10);
-                        mainElement.StartDate = DateTime.UtcNow;
-                        installation.EmployeeId = installationsAssignModel.EmployeeId;
-                        installation.SdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
-                        installation.State = InstallationState.Assigned;
-                        installation.UpdatedByUserId = UserId;
+                            mainElement.Repeated = 1;
+                            mainElement.EndDate = DateTime.UtcNow.AddYears(10);
+                            mainElement.StartDate = DateTime.UtcNow;
+                            installation.RemovalEmployeeId = installationsAssignModel.EmployeeId;
+                            installation.RemovalSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
+                            installation.State = InstallationState.Assigned;
+                            installation.UpdatedByUserId = UserId;
 
-                        await installation.Update(_installationCheckingContext);
+                            await installation.Update(_installationCheckingContext);
+                        }
                     }
 
                     transaction.Commit();
@@ -390,16 +494,34 @@ namespace InstallationChecking.Pn.Services
                         return new OperationResult(false, _localizationService.GetString("InstallationCannotBeRetracted"));
                     }
 
-                    await core.CaseDelete(installation.SdkCaseId.GetValueOrDefault());
+                    if (installation.Type == InstallationType.Installation)
+                    {
+                        await core.CaseDelete(installation.InstallationSdkCaseId.GetValueOrDefault());   
 
-                    installation.EmployeeId = null;
-                    installation.SdkCaseId = null;
-                    installation.State = InstallationState.NotAssigned;
-                    installation.UpdatedByUserId = UserId;
-                    await installation.Update(_installationCheckingContext);
 
-                    transaction.Commit();
-                    return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));
+                        installation.InstallationEmployeeId = null;
+                        installation.InstallationSdkCaseId = null;
+                        installation.State = InstallationState.NotAssigned;
+                        installation.UpdatedByUserId = UserId;
+                        await installation.Update(_installationCheckingContext);
+
+                        transaction.Commit();
+                        return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));                     
+                    }
+                    else
+                    {
+                        await core.CaseDelete(installation.RemovalSdkCaseId.GetValueOrDefault());
+
+
+                        installation.RemovalEmployeeId = null;
+                        installation.RemovalSdkCaseId = null;
+                        installation.State = InstallationState.NotAssigned;
+                        installation.UpdatedByUserId = UserId;
+                        await installation.Update(_installationCheckingContext);
+
+                        transaction.Commit();
+                        return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));
+                    }
                 }
                 catch (Exception e)
                 {
@@ -453,7 +575,7 @@ namespace InstallationChecking.Pn.Services
                     return new OperationDataResult<byte[]>(false, _localizationService.GetString("InstallationCannotBeExported"));
                 }
 
-                var caseDto = await core.CaseLookupMUId(installation.SdkCaseId.GetValueOrDefault());
+                var caseDto = await core.CaseLookupMUId(installation.InstallationSdkCaseId.GetValueOrDefault());
 
                 if (caseDto == null)
                 {
@@ -497,7 +619,7 @@ namespace InstallationChecking.Pn.Services
                         worksheet.Cells[row, 23].Value = installation.DateInstall;
                         worksheet.Cells[row, 24].Value = installation.DateActRemove;
 
-                        var site = await core.SiteRead(installation.EmployeeId.GetValueOrDefault());
+                        var site = await core.SiteRead(installation.RemovalSdkCaseId.GetValueOrDefault());
                         worksheet.Cells[row, 25].Value = site.FirstName + " " + site.LastName;
 
                         row++;

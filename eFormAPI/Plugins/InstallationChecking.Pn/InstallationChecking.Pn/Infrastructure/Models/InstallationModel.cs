@@ -23,10 +23,13 @@ namespace InstallationChecking.Pn.Infrastructure.Models
         public InstallationType Type { get; set; }
         public InstallationState State { get; set; }
 
-        public int? EmployeeId { get; set; }
+        public int? InstallationEmployeeId { get; set; }
+        public int? RemovalEmployeeId { get; set; }
         public int? CustomerId { get; set; }
-        public int? SdkCaseId { get; set; } // MicrotingUId
-        public int? SdkCaseDbId { get; set; } // Case Id
+        public int? InstallationSdkCaseId { get; set; } // MicrotingUId
+        public int? RemovalSdkCaseId { get; set; } // MicrotingUId
+        public int? InstallationSdkCaseDbId { get; set; } // Case Id
+        public int? RemovalSdkCaseDbId { get; set; } // Case Id
         public int? RemovalFormId { get; set; }
     }
 }
