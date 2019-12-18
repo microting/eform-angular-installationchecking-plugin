@@ -619,7 +619,7 @@ namespace InstallationChecking.Pn.Services
                         worksheet.Cells[row, 23].Value = installation.DateInstall;
                         worksheet.Cells[row, 24].Value = installation.DateActRemove;
 
-                        var site = await core.SiteRead(installation.RemovalSdkCaseId.GetValueOrDefault());
+                        var site = await core.SiteRead(installation.RemovalEmployeeId.GetValueOrDefault());
                         worksheet.Cells[row, 25].Value = site.FirstName + " " + site.LastName;
 
                         row++;
