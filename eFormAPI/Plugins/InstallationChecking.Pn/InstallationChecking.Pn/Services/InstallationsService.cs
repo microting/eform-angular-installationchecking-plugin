@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microting.InstallationCheckingBase.Infrastructure.Data;
 using Microting.eFormApi.BasePn.Abstractions;
 using Microting.eFormApi.BasePn.Infrastructure.Models.API;
-using Microting.eForm.Infrastructure.Constants;
 using Microting.eFormBaseCustomerBase.Infrastructure.Data;
 using Microting.InstallationCheckingBase.Infrastructure.Data.Entities;
 using Microting.InstallationCheckingBase.Infrastructure.Enums;
@@ -19,12 +18,14 @@ using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
 using OfficeOpenXml;
 using System.Reflection;
 using System.IO;
+using Castle.Core.Internal;
 using ImageMagick;
 using Microting.eForm.Dto;
 using Microting.eForm.Infrastructure.Models;
 using Microting.eFormApi.BasePn.Infrastructure.Helpers;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
 using OpenStack.NetCoreSwiftClient.Extensions;
+using Constants = Microting.eForm.Infrastructure.Constants.Constants;
 
 namespace InstallationChecking.Pn.Services
 {
@@ -592,7 +593,7 @@ namespace InstallationChecking.Pn.Services
                     var worksheet = package.Workbook.Worksheets[0];
                     var row = 12;
 
-                    foreach (var meter in installation.Meters)
+                    foreach (var meter in installation.Meters.Where(x => !x.QR.IsNullOrEmpty()))
                     {
                         worksheet.Cells[row, 1].Value = installation.CadastralNumber;
                         worksheet.Cells[row, 2].Value = installation.PropertyNumber;
@@ -616,8 +617,8 @@ namespace InstallationChecking.Pn.Services
                         worksheet.Cells[row, 20].Value = meter.RoomType; 
                         worksheet.Cells[row, 21].Value = meter.Floor;
                         worksheet.Cells[row, 22].Value = meter.RoomName;
-                        worksheet.Cells[row, 23].Value = installation.DateInstall;
-                        worksheet.Cells[row, 24].Value = installation.DateActRemove;
+                        worksheet.Cells[row, 23].Value = installation.DateInstall?.ToString("MM/dd/yyyy HH:mm");
+                        worksheet.Cells[row, 24].Value = installation.DateActRemove?.ToString("MM/dd/yyyy HH:mm");
 
                         var site = await core.SiteRead(installation.RemovalEmployeeId.GetValueOrDefault());
                         worksheet.Cells[row, 25].Value = site.FirstName + " " + site.LastName;
