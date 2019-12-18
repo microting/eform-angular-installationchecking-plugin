@@ -19,10 +19,13 @@ export class InstallationModel {
   type: InstallationTypeEnum;
   state: InstallationStateEnum;
 
-  employeeId: number;
+  installationEmployeeId: number;
+  removalEmployeeId: number;
   customerId: number;
-  sdkCaseId: number;
-  sdkCaseDbId: number;
+  installationSdkCaseId: number;
+  removalSdkCaseId: number;
+  installationSdkCaseDbId: number;
+  removalSdkCaseDbId: number;
   removalFormId: number;
 
   assign = false;

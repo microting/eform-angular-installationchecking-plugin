@@ -46,7 +46,7 @@ namespace InstallationChecking.Pn.Helpers
                 group = model.EntityGroups.First();
             }
 
-            return group.Id;
+            return int.Parse(group.MicrotingUUID);
         }
         
         private static async Task<int> CreateRoomTypeList(Core core)
@@ -81,7 +81,7 @@ namespace InstallationChecking.Pn.Helpers
                 group = model.EntityGroups.First();
             }
 
-            return group.Id;
+            return int.Parse(group.MicrotingUUID);
         }
 
         public static async Task<int> CreateInstallationForm(Core core)
@@ -312,19 +312,19 @@ namespace InstallationChecking.Pn.Helpers
                         ""
                     )
                 );
-                dataItems.Add(new Picture(
-                        inc + 13,
-                        false,
-                        false,
-                        $"Måler {i} - Billede",
-                        "<br>",
-                        "ffe4e4",
-                        inc + 12,
-                        false,
-                        0,
-                        false
-                    )
-                );
+//                dataItems.Add(new Picture(
+//                        inc + 13,
+//                        false,
+//                        false,
+//                        $"Måler {i} - Billede",
+//                        "<br>",
+//                        "ffe4e4",
+//                        inc + 12,
+//                        false,
+//                        0,
+//                        false
+//                    )
+//                );
             }
             
             dataItems.Add(new SaveButton(
