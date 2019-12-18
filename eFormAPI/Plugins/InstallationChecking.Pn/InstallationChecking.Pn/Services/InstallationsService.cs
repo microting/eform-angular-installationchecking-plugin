@@ -294,11 +294,12 @@ namespace InstallationChecking.Pn.Services
 
                             try
                             {
-
                                 string tempFilePath = Path.Combine("tmp", installation.InstallationImageName);
+                                Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: tempFilePath is {tempFilePath}");
 
                                 if (core.GetSdkSetting(Settings.swiftEnabled).Result.ToLower() == "true")
                                 {
+                                    Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: swiftEnabled is true");
                                     var ss = await core.GetFileFromSwiftStorage(installation.InstallationImageName);
                                     var fileStream = File.Create(tempFilePath);
                                     ss.ObjectStreamContent.CopyTo(fileStream);
@@ -312,6 +313,7 @@ namespace InstallationChecking.Pn.Services
                                 {
                                     if (core.GetSdkSetting(Settings.s3Enabled).Result.ToLower() == "true")
                                     {
+                                        Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: s3Enabled is true");
                                         var ss = await core.GetFileFromS3Storage(installation.InstallationImageName);
                                         var fileStream = File.Create(tempFilePath);
                                         ss.ResponseStream.CopyTo(fileStream);
@@ -325,6 +327,7 @@ namespace InstallationChecking.Pn.Services
 
                                 using (MagickImage image = new MagickImage(tempFilePath))
                                 {
+                                    Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: MagickImage converting");
                                     // Create pdf file with a single page
                                     image.Write(tempFilePath
                                         .Replace("png", "pdf")
@@ -332,6 +335,7 @@ namespace InstallationChecking.Pn.Services
                                         .Replace("jpeg", "pdf"));
                                 }
 
+                                Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: Uploading PDF to Microting");
                                 var resultId = await core.PdfUpload(tempFilePath
                                     .Replace("png", "pdf")
                                     .Replace("jpg", "pdf")
@@ -339,6 +343,7 @@ namespace InstallationChecking.Pn.Services
 
                                 ShowPdf showPdf = (ShowPdf) dataElement.DataItemList[1];
                                 showPdf.Value = resultId;
+                                Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: PDF set for field");
 
                             }
                             catch (Exception ex)
