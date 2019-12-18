@@ -22,6 +22,7 @@ using System.IO;
 using ImageMagick;
 using Microting.eForm.Dto;
 using Microting.eForm.Infrastructure.Models;
+using Microting.eFormApi.BasePn.Infrastructure.Helpers;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
 
 namespace InstallationChecking.Pn.Services
@@ -291,51 +292,59 @@ namespace InstallationChecking.Pn.Services
                             #region Image to PDF section
                             // Read image from file
 
-                            string tempFilePath = Path.Combine("tmp", installation.InstallationImageName);
+                            try
+                            {
 
-                            if (core.GetSdkSetting(Settings.swiftEnabled).Result.ToLower() == "true")
-                            {
-                                var ss = await core.GetFileFromSwiftStorage(installation.InstallationImageName);
-                                var fileStream = File.Create(tempFilePath);
-                                ss.ObjectStreamContent.CopyTo(fileStream);
-                                fileStream.Close();
-                                fileStream.Dispose();
-                                
-                                ss.ObjectStreamContent.Close();
-                                ss.ObjectStreamContent.Dispose();
-                            }
-                            else
-                            {
-                                if (core.GetSdkSetting(Settings.s3Enabled).Result.ToLower() == "true")
+                                string tempFilePath = Path.Combine("tmp", installation.InstallationImageName);
+
+                                if (core.GetSdkSetting(Settings.swiftEnabled).Result.ToLower() == "true")
                                 {
-                                    var ss = await core.GetFileFromS3Storage(installation.InstallationImageName);
+                                    var ss = await core.GetFileFromSwiftStorage(installation.InstallationImageName);
                                     var fileStream = File.Create(tempFilePath);
-                                    ss.ResponseStream.CopyTo(fileStream);
+                                    ss.ObjectStreamContent.CopyTo(fileStream);
                                     fileStream.Close();
                                     fileStream.Dispose();
-                                
-                                    ss.ResponseStream.Close();
-                                    ss.ResponseStream.Dispose();
-                                }    
-                            }
-                            
-                            using (MagickImage image = new MagickImage(tempFilePath))
-                            {
-                                // Create pdf file with a single page
-                                image.Write(installation.InstallationImageName
-                                    .Replace("png","pdf")
-                                    .Replace("jpg","pdf")
+
+                                    ss.ObjectStreamContent.Close();
+                                    ss.ObjectStreamContent.Dispose();
+                                }
+                                else
+                                {
+                                    if (core.GetSdkSetting(Settings.s3Enabled).Result.ToLower() == "true")
+                                    {
+                                        var ss = await core.GetFileFromS3Storage(installation.InstallationImageName);
+                                        var fileStream = File.Create(tempFilePath);
+                                        ss.ResponseStream.CopyTo(fileStream);
+                                        fileStream.Close();
+                                        fileStream.Dispose();
+
+                                        ss.ResponseStream.Close();
+                                        ss.ResponseStream.Dispose();
+                                    }
+                                }
+
+                                using (MagickImage image = new MagickImage(tempFilePath))
+                                {
+                                    // Create pdf file with a single page
+                                    image.Write(tempFilePath
+                                        .Replace("png", "pdf")
+                                        .Replace("jpg", "pdf")
+                                        .Replace("jpeg", "pdf"));
+                                }
+
+                                var resultId = await core.PdfUpload(tempFilePath
+                                    .Replace("png", "pdf")
+                                    .Replace("jpg", "pdf")
                                     .Replace("jpeg", "pdf"));
+
+                                ShowPdf showPdf = (ShowPdf) dataElement.DataItemList[1];
+                                showPdf.Value = resultId;
+
                             }
-
-                            var resultId = await core.PdfUpload(tempFilePath
-                                .Replace("png", "pdf")
-                                .Replace("jpg", "pdf")
-                                .Replace("jpeg", "pdf")); 
-
-                            ShowPdf showPdf = (ShowPdf)dataElement.DataItemList[1];
-                            showPdf.Value = resultId;
-
+                            catch (Exception ex)
+                            {
+                                Log.LogException($"[ERR] InstallationsService.AssignInstallations convert image to pdf failed and got exception : {ex.Message}");
+                            }
                             #endregion
                             
                             var i = 2;
