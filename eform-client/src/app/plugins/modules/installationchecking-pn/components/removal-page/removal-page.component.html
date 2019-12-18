@@ -145,29 +145,29 @@
               <a class="btn btn-success btn-icon mb-2"
                  *ngIf="installation.state === installationStates.Completed && installation.sdkCaseDbId && installation.removalFormId"
                  [routerLink]="['/cases/edit/' + installation.sdkCaseDbId + '/' + installation.removalFormId]"
-                 id="showCaseLink_{{i}}">
-                {{ 'Show case' | translate }}
+                 id="showCaseLink_{{i}}"  mdbTooltip="{{ 'Show case' | translate }}">
+                <fa-icon icon="briefcase" [fixedWidth]="true" size="lg"></fa-icon>
               </a>
               <button class="btn btn-accent text-black-50 btn-icon mb-2"
                       mdbTooltip="{{ 'Retract installation' | translate }}"
                       id="installationRetractBtn_{{i}}"
                       *ngIf="installation.state === installationStates.Assigned && pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)"
                       (click)="showRetractInstallationModal(installation)">
-                {{ 'Retract' | translate }}
+                <fa-icon icon="times-circle" [fixedWidth]="true" size="lg"></fa-icon>
               </button>
               <button class="btn btn-success btn-icon mb-2"
                       mdbTooltip="{{ 'Export to excel' | translate }}"
                       id="installationExcelBtn_{{i}}"
                       *ngIf="installation.state === installationStates.Completed && pluginClaimsHelper.check(installationCheckingPnClaims.exportInstallations)"
                       (click)="saveExcel(installation.id)">
-                {{ 'Excel' | translate }}
+                <fa-icon icon="file-excel" [fixedWidth]="true" size="lg"></fa-icon>
               </button>
               <button class="btn btn-danger btn-icon mb-2"
                       mdbTooltip="{{ 'Archive installation' | translate }}"
                       id="installationArchiveBtn_{{i}}"
                       *ngIf="installation.state === installationStates.Completed && pluginClaimsHelper.check(installationCheckingPnClaims.archiveInstallations)"
                       (click)="archiveInstallation(installation.id)">
-                {{ 'Archive' | translate }}
+                <fa-icon icon="archive" [fixedWidth]="true" size="lg"></fa-icon>
               </button>
             </div>
           </td>

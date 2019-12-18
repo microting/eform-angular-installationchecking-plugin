@@ -40,19 +40,22 @@
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.id)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="companyNameTableHeader" (click)="sortTable(sortCols.companyName)">
+          <th scope="col" class="table-header-sortable" id="companyNameTableHeader"
+              (click)="sortTable(sortCols.companyName)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Company name' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.companyName)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="companyAddressTableHeader" (click)="sortTable(sortCols.companyAddress)">
+          <th scope="col" class="table-header-sortable" id="companyAddressTableHeader"
+              (click)="sortTable(sortCols.companyAddress)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Company address' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.companyAddress)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="companyAddress2TableHeader" (click)="sortTable(sortCols.companyAddress2)">
+          <th scope="col" class="table-header-sortable" id="companyAddress2TableHeader"
+              (click)="sortTable(sortCols.companyAddress2)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Company address 2' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.companyAddress2)}}</i>
@@ -70,22 +73,25 @@
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.cityName)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="countryCodeTableHeader" (click)="sortTable(sortCols.countryCode)">
+          <th scope="col" class="table-header-sortable" id="countryCodeTableHeader"
+              (click)="sortTable(sortCols.countryCode)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Country code' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.countryCode)}}</i>
             </div>
           </th>
-          <th scope="col" class="table-header-sortable" id="dateInstallTableHeader" (click)="sortTable(sortCols.dateInstall)">
+          <th scope="col" class="table-header-sortable" id="dateInstallTableHeader"
+              (click)="sortTable(sortCols.dateInstall)">
             <div class="d-flex align-items-center justify-content-center">
               {{ 'Date install' | translate }}
               <i class="material-icons text-black-50">{{getSortIcon(sortCols.dateInstall)}}</i>
             </div>
           </th>
-          <th scope="col"  id="assignedToTableHeader">
-              {{ 'Assigned to' | translate }}
+          <th scope="col" id="assignedToTableHeader">
+            {{ 'Assigned to' | translate }}
           </th>
-          <th scope="col" id="assignTableHeader" *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
+          <th scope="col" id="assignTableHeader"
+              *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
             {{ 'Assign' | translate }}
           </th>
           <th scope="col">
@@ -133,18 +139,18 @@
           </td>
           <td>
             <div class="d-flex flex-row justify-content-center">
-              <a class="btn btn-success btn-icon mb-2"
-                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseDbId && installationFormId"
-                 [routerLink]="['/cases/edit/' + installation.sdkCaseDbId + '/' + installationFormId]"
-                 id="showCaseLink_{{i}}">
-                {{ 'Show case' | translate }}
-              </a>
+              <button class="btn btn-success btn-icon mb-2"
+                      *ngIf="installation.state === installationStates.Completed && installation.sdkCaseDbId && installationFormId"
+                      [routerLink]="['/cases/edit/' + installation.sdkCaseDbId + '/' + installationFormId]"
+                      id="showCaseLink_{{i}}" mdbTooltip="{{ 'Show case' | translate }}">
+                <fa-icon icon="briefcase" [fixedWidth]="true" size="lg"></fa-icon>
+              </button>
               <button class="btn btn-accent text-black-50 btn-icon mb-2"
                       mdbTooltip="{{ 'Retract installation' | translate }}"
                       id="installationRetractBtn"
                       *ngIf="installation.state === installationStates.Assigned && pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)"
                       (click)="showRetractInstallationModal(installation)">
-                {{ 'Retract' | translate }}
+                <fa-icon icon="times-circle" [fixedWidth]="true" size="lg"></fa-icon>
               </button>
             </div>
           </td>
@@ -159,7 +165,9 @@
                 class="btn btn-success"
                 mdbTooltip="{{ 'Assign installation' | translate }}"
                 [disabled]="!someAssign"
-                (click)="showAssignInstallationModal()">{{ 'Assign' | translate }}
+                (click)="showAssignInstallationModal()">
+          <fa-icon icon="plus" size="lg" [fixedWidth]="true"></fa-icon>
+          {{ 'Assign' | translate }}
         </button>
       </div>
     </div>
@@ -177,10 +185,10 @@
     </div>
     <pagination-pn
       *ngIf="installationsListModel?.total > installationsRequestModel.pageSize"
-       [limit]="installationsRequestModel.pageSize"
-       [size]="installationsListModel.total"
-       [offset]="installationsRequestModel.offset"
-       (onPageChanged)="changePage($event)"
+      [limit]="installationsRequestModel.pageSize"
+      [size]="installationsListModel.total"
+      [offset]="installationsRequestModel.offset"
+      (onPageChanged)="changePage($event)"
     ></pagination-pn>
   </div>
 </div>
@@ -188,11 +196,11 @@
 <spinner-pn [spinnerVisibility]="spinnerStatus"></spinner-pn>
 
 <app-installation-new
-    #newInstallationModal (installationCreated)="getInstallationsList()"
+  #newInstallationModal (installationCreated)="getInstallationsList()"
 ></app-installation-new>
 <app-installation-assign
-    #assignInstallationModal (installationAssigned)="getInstallationsList()"
+  #assignInstallationModal (installationAssigned)="getInstallationsList()"
 ></app-installation-assign>
 <app-installation-retract
-    #retractInstallationModal (installationRetracted)="getInstallationsList()"
+  #retractInstallationModal (installationRetracted)="getInstallationsList()"
 ></app-installation-retract>
