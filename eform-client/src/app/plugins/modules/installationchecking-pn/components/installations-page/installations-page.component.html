@@ -125,9 +125,9 @@
           <td *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
             <div class="col" *ngIf="!installation.employeeId">
               <div class="mat-checkbox">
-                <input id="checkbox" name="assignCheckbox" type="checkbox"
+                <input id="checkbox_{{i}}" name="assignCheckbox" type="checkbox"
                        [(ngModel)]="installation.assign">
-                <label for="checkbox" id="assignCheckbox"></label>
+                <label for="checkbox_{{i}}" id="assignCheckbox_{{i}}"></label>
               </div>
             </div>
           </td>
