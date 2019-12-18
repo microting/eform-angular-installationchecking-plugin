@@ -28,7 +28,8 @@ namespace InstallationChecking.Pn.Infrastructure.Models
         public int? CustomerId { get; set; }
         public int? InstallationSdkCaseId { get; set; } // MicrotingUId
         public int? RemovalSdkCaseId { get; set; } // MicrotingUId
-        public int? SdkCaseDbId { get; set; } // Case Id
+        public int? InstallationSdkCaseDbId { get; set; } // Case Id
+        public int? RemovalSdkCaseDbId { get; set; } // Case Id
         public int? RemovalFormId { get; set; }
     }
 }

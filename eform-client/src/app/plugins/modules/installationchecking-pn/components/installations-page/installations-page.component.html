@@ -123,7 +123,7 @@
             {{installation.assignedTo}}
           </td>
           <td *ngIf="pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)">
-            <div class="col" *ngIf="!installation.employeeId">
+            <div class="col" *ngIf="!installation.installationEmployeeId">
               <div class="mat-checkbox">
                 <input id="checkbox" name="assignCheckbox" type="checkbox"
                        [(ngModel)]="installation.assign">
@@ -134,8 +134,8 @@
           <td>
             <div class="d-flex flex-row justify-content-center">
               <a class="btn btn-success btn-icon mb-2"
-                 *ngIf="installation.state === installationStates.Completed && installation.sdkCaseDbId && installationFormId"
-                 [routerLink]="['/cases/edit/' + installation.sdkCaseDbId + '/' + installationFormId]"
+                 *ngIf="installation.state === installationStates.Completed && installation.installationSdkCaseDbId && installationFormId"
+                 [routerLink]="['/cases/edit/' + installation.installationSdkCaseDbId + '/' + installationFormId]"
                  id="showCaseLink_{{i}}">
                 {{ 'Show case' | translate }}
               </a>
