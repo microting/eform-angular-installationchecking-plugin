@@ -24,6 +24,7 @@ using Microting.eForm.Dto;
 using Microting.eForm.Infrastructure.Models;
 using Microting.eFormApi.BasePn.Infrastructure.Helpers;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
+using OpenStack.NetCoreSwiftClient.Extensions;
 
 namespace InstallationChecking.Pn.Services
 {
@@ -284,11 +285,29 @@ namespace InstallationChecking.Pn.Services
                             dataElement.Description.InderValue = 
                                 $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br><b>Nedtagningsdato: {removalDate}</b>";
 
-                            var entityGroup = await core.EntityGroupCreate(
-                                Constants.FieldTypes.EntitySearch,
-                                $"eform-angular-installationchecking-plugin_{installation.Id}_hidden"
-                            );
                             
+                            
+                            EntityGroupList model = await core.Advanced_EntityGroupAll(
+                                "id", 
+                                $"eform-angular-installationchecking-plugin_{installation.Id}_hidden",
+                                0, 1, Constants.FieldTypes.EntitySearch,
+                                false,
+                                Constants.WorkflowStates.NotRemoved);
+                            
+                            EntityGroup entityGroup;
+                            
+                            if (!model.EntityGroups.Any())
+                            {
+                                entityGroup = await core.EntityGroupCreate(
+                                    Constants.FieldTypes.EntitySearch,
+                                    $"eform-angular-installationchecking-plugin_{installation.Id}_hidden"
+                                );
+                            }
+                            else
+                            {
+                                entityGroup = model.EntityGroups.First();
+                            }
+
                             #region Image to PDF section
                             // Read image from file
 
@@ -353,25 +372,34 @@ namespace InstallationChecking.Pn.Services
                             #endregion
                             
                             var i = 2;
-                            foreach (var meter in installation.Meters)
+                            foreach (var meter in installation.Meters.Where(x => !x.QR.IsNullOrEmpty()))
                             {
                                 await core.EntitySearchItemCreate(
                                     entityGroup.Id,
                                     meter.QR,
                                     "",
-                                    i++.ToString()
+                                    i.ToString()
                                 );
                                 EntitySearch entity = (EntitySearch)dataElement.DataItemList[i];
-                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);
+                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);    
                                 i += 1;
-
                             }
 
-                            for (int j = installation.Meters.Count() - 1; j < 50; j++)
+                            int validFields = installation.Meters.Count(x => !x.QR.IsNullOrEmpty()) + 2;
+
+                            try
                             {
-                                EntitySearch dataItem = (EntitySearch)dataElement.DataItemList[j];
-                                dataElement.DataItemList.Remove(dataItem);
+                                for (int j = validFields; j < 52; j++)
+                                {
+                                    EntitySearch dataItem = (EntitySearch) dataElement.DataItemList[validFields];
+                                    dataElement.DataItemList.Remove(dataItem);
+                                }
                             }
+                            catch (Exception ex)
+                            {
+                                Log.LogException(ex.Message);
+                            }
+                            
                             
                             installation.RemovalFormId = int.Parse(options.RemovalFormId);
                         }
