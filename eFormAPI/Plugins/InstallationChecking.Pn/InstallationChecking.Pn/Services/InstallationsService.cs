@@ -434,7 +434,8 @@ namespace InstallationChecking.Pn.Services
                                     i.ToString()
                                 );
                                 EntitySearch entity = (EntitySearch)dataElement.DataItemList[i];
-                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);    
+                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);
+                                entity.DisplayOrder = i;
                                 i += 1;
                             }
 
