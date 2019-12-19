@@ -181,7 +181,9 @@
                 id="installationAssignBtn"
                 class="btn btn-success"
                 mdbTooltip="{{ 'Assign installation' | translate }}"
-                (click)="showAssignInstallationModal()">{{ 'Assign' | translate }}
+                (click)="showAssignInstallationModal()">
+          <fa-icon icon="user-plus" size="lg" [fixedWidth]="true"></fa-icon>
+          {{ 'Assign' | translate }}
         </button>
       </div>
     </div>
