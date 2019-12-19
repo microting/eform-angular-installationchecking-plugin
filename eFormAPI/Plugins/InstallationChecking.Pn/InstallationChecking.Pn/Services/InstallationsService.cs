@@ -617,8 +617,8 @@ namespace InstallationChecking.Pn.Services
                         worksheet.Cells[row, 20].Value = meter.RoomType; 
                         worksheet.Cells[row, 21].Value = meter.Floor;
                         worksheet.Cells[row, 22].Value = meter.RoomName;
-                        worksheet.Cells[row, 23].Value = installation.DateInstall?.ToString("MM/dd/yyyy HH:mm");
-                        worksheet.Cells[row, 24].Value = installation.DateActRemove?.ToString("MM/dd/yyyy HH:mm");
+                        worksheet.Cells[row, 23].Value = installation.DateInstall?.ToString("dd-MM-yyyy");
+                        worksheet.Cells[row, 24].Value = installation.DateActRemove?.ToString("dd-MM-yyyy");
 
                         var site = await core.SiteRead(installation.RemovalEmployeeId.GetValueOrDefault());
                         worksheet.Cells[row, 25].Value = site.FirstName + " " + site.LastName;
