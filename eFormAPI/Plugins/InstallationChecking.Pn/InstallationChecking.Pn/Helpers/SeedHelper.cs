@@ -174,11 +174,11 @@ namespace InstallationChecking.Pn.Helpers
                 );
                 // TODO seed this as a EntitySelect group DONE
                 dataItems.Add(new EntitySelect(1, 
-                        false, 
+                        true, 
                         false, 
                         "Matrikeltype *", 
                         "", 
-                        "e8eaf6",
+                        "ffe4e4",
                         3, 
                         false, 0, 
                         cadastralTypeId
@@ -218,11 +218,11 @@ namespace InstallationChecking.Pn.Helpers
                 );
                 dataItems.Add(new Picture(
                         7,
-                        true,
                         false,
-                        "Tag billede af kort/tegning over placeringer, når alle målere er opsat *",
+                        false,
+                        "Tag evt. billede af kort/tegning over placeringer, når alle målere er opsat *",
                         "<br>",
-                        "ffe4e4",
+                        "e8eaf6",
                         6,
                         false,
                         1,
