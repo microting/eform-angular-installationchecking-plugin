@@ -54,82 +54,8 @@ namespace InstallationChecking.Pn.Services
             _httpContextAccessor = httpContextAccessor;
             _coreHelper = coreHelper;
         }
-
-        public async Task<OperationDataResult<InstallationModel>> GetInstallation(int id)
-        {
-            try
-            {
-                var installationModel = await _installationCheckingContext.Installations.AsNoTracking()
-                    .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed && x.Id == id)
-                    .Select(x => new InstallationModel
-                        {
-                            Id = x.Id,
-                            CompanyName = x.CompanyName,
-                            CompanyAddress = x.CompanyAddress,
-                            CompanyAddress2 = x.CompanyAddress2,
-                            CityName = x.CityName,
-                            CountryCode = x.CountryCode,
-                            ZipCode = x.ZipCode,
-                            State = x.State,
-                            Type = x.Type,
-                            DateInstall = x.DateInstall,
-                            DateRemove = x.DateRemove,
-                            DateActRemove = x.DateActRemove,
-                            InstallationEmployeeId = x.InstallationEmployeeId,
-                            RemovalEmployeeId = x.RemovalEmployeeId,
-                            CustomerId = x.CustomerId,
-                            InstallationSdkCaseId = x.InstallationSdkCaseId,
-                            RemovalSdkCaseId = x.RemovalSdkCaseId,
-                            RemovalFormId = x.RemovalFormId,
-                        }
-                    ).FirstOrDefaultAsync();
-
-                if (installationModel == null)
-                {
-                    return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("InstallationNotFound"));
-                }
-
-                if (installationModel.InstallationEmployeeId != null && installationModel.Type == InstallationType.Installation)
-                {
-                    var core = await _coreHelper.GetCore();
-                    var site = await core.SiteRead(installationModel.InstallationEmployeeId.GetValueOrDefault());
-                    installationModel.AssignedTo = site.FirstName + " " + site.LastName;
-                    if (installationModel.InstallationSdkCaseId != null)
-                    {
-                        var sdkCaseId = (int)installationModel.InstallationSdkCaseId;
-                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
-                        if (caseLookup?.CheckUId != null)
-                        {
-                            installationModel.InstallationSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
-                        }
-                    }
-                }
-                
-                if (installationModel.RemovalEmployeeId != null && installationModel.Type == InstallationType.Removal)
-                {
-                    var core = await _coreHelper.GetCore();
-                    var site = await core.SiteRead(installationModel.RemovalEmployeeId.GetValueOrDefault());
-                    installationModel.AssignedTo = site.FirstName + " " + site.LastName;
-                    if (installationModel.RemovalSdkCaseId != null)
-                    {
-                        var sdkCaseId = (int)installationModel.RemovalSdkCaseId;
-                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
-                        if (caseLookup?.CheckUId != null)
-                        {
-                            installationModel.RemovalSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
-                        }
-                    }
-                }
-                return new OperationDataResult<InstallationModel>(true, installationModel);
-            }
-            catch (Exception e)
-            {
-                Trace.TraceError(e.Message);
-                return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("ErrorGettingInstallation"));
-            }
-        }
-
-        public async Task<OperationDataResult<InstallationsListModel>> GetInstallationsList(InstallationsRequestModel requestModel)
+        
+        public async Task<OperationDataResult<InstallationsListModel>> Index(InstallationsRequestModel requestModel)
         {
             try
             {
@@ -241,7 +167,7 @@ namespace InstallationChecking.Pn.Services
             }
         }
 
-        public async Task<OperationResult> CreateInstallation(int customerId)
+        public async Task<OperationResult> Create(int customerId)
         {
             using (var transaction = await _installationCheckingContext.Database.BeginTransactionAsync())
             {
@@ -282,7 +208,81 @@ namespace InstallationChecking.Pn.Services
                 }
             }
         }
+        
+        public async Task<OperationDataResult<InstallationModel>> Read(int id)
+        {
+            try
+            {
+                var installationModel = await _installationCheckingContext.Installations.AsNoTracking()
+                    .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed && x.Id == id)
+                    .Select(x => new InstallationModel
+                        {
+                            Id = x.Id,
+                            CompanyName = x.CompanyName,
+                            CompanyAddress = x.CompanyAddress,
+                            CompanyAddress2 = x.CompanyAddress2,
+                            CityName = x.CityName,
+                            CountryCode = x.CountryCode,
+                            ZipCode = x.ZipCode,
+                            State = x.State,
+                            Type = x.Type,
+                            DateInstall = x.DateInstall,
+                            DateRemove = x.DateRemove,
+                            DateActRemove = x.DateActRemove,
+                            InstallationEmployeeId = x.InstallationEmployeeId,
+                            RemovalEmployeeId = x.RemovalEmployeeId,
+                            CustomerId = x.CustomerId,
+                            InstallationSdkCaseId = x.InstallationSdkCaseId,
+                            RemovalSdkCaseId = x.RemovalSdkCaseId,
+                            RemovalFormId = x.RemovalFormId,
+                        }
+                    ).FirstOrDefaultAsync();
 
+                if (installationModel == null)
+                {
+                    return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("InstallationNotFound"));
+                }
+
+                if (installationModel.InstallationEmployeeId != null && installationModel.Type == InstallationType.Installation)
+                {
+                    var core = await _coreHelper.GetCore();
+                    var site = await core.SiteRead(installationModel.InstallationEmployeeId.GetValueOrDefault());
+                    installationModel.AssignedTo = site.FirstName + " " + site.LastName;
+                    if (installationModel.InstallationSdkCaseId != null)
+                    {
+                        var sdkCaseId = (int)installationModel.InstallationSdkCaseId;
+                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                        if (caseLookup?.CheckUId != null)
+                        {
+                            installationModel.InstallationSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                        }
+                    }
+                }
+                
+                if (installationModel.RemovalEmployeeId != null && installationModel.Type == InstallationType.Removal)
+                {
+                    var core = await _coreHelper.GetCore();
+                    var site = await core.SiteRead(installationModel.RemovalEmployeeId.GetValueOrDefault());
+                    installationModel.AssignedTo = site.FirstName + " " + site.LastName;
+                    if (installationModel.RemovalSdkCaseId != null)
+                    {
+                        var sdkCaseId = (int)installationModel.RemovalSdkCaseId;
+                        var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                        if (caseLookup?.CheckUId != null)
+                        {
+                            installationModel.RemovalSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                        }
+                    }
+                }
+                return new OperationDataResult<InstallationModel>(true, installationModel);
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError(e.Message);
+                return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("ErrorGettingInstallation"));
+            }
+        }
+        
         public async Task<OperationResult> AssignInstallations(InstallationsAssignModel installationsAssignModel)
         {
             using (var transaction = await _installationCheckingContext.Database.BeginTransactionAsync())

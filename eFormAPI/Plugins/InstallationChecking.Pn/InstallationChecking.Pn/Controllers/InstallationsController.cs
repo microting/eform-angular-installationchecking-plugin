@@ -20,22 +20,22 @@ namespace InstallationChecking.Pn.Controllers
         }
 
         [HttpGet()]
-        public async Task<OperationDataResult<InstallationsListModel>> GetInstallationsList(InstallationsRequestModel requestModel)
+        public async Task<OperationDataResult<InstallationsListModel>> Index(InstallationsRequestModel requestModel)
         {
-            return await _installationsService.GetInstallationsList(requestModel);
+            return await _installationsService.Index(requestModel);
+        }
+        
+        [HttpPost("create")]
+        [Authorize(Policy = InstallationCheckingClaims.CreateInstallations)]
+        public async Task<OperationResult> Create([FromBody] int customerId)
+        {
+            return await _installationsService.Create(customerId);
         }
 
         [HttpGet("{id}")]
-        public async Task<OperationDataResult<InstallationModel>> GetInstallation(int id)
+        public async Task<OperationDataResult<InstallationModel>> Read(int id)
         {
-            return await _installationsService.GetInstallation(id);
-        }
-
-        [HttpPost("create")]
-        [Authorize(Policy = InstallationCheckingClaims.CreateInstallations)]
-        public async Task<OperationResult> CreateInstallation([FromBody] int customerId)
-        {
-            return await _installationsService.CreateInstallation(customerId);
+            return await _installationsService.Read(id);
         }
 
         [HttpPost("assign")]

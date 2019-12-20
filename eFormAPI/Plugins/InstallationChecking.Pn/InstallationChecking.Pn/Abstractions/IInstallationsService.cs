@@ -6,9 +6,9 @@ namespace InstallationChecking.Pn.Abstractions
 {
     public interface IInstallationsService
     {
-        Task<OperationDataResult<InstallationModel>> GetInstallation(int id);
-        Task<OperationDataResult<InstallationsListModel>> GetInstallationsList(InstallationsRequestModel requestModel);
-        Task<OperationResult> CreateInstallation(int customerId);
+        Task<OperationDataResult<InstallationsListModel>> Index(InstallationsRequestModel requestModel);
+        Task<OperationDataResult<InstallationModel>> Read(int id);
+        Task<OperationResult> Create(int customerId);
         Task<OperationResult> AssignInstallations(InstallationsAssignModel installationsAssignModel);
         Task<OperationResult> RetractInstallation(int installationId);
         Task<OperationResult> ArchiveInstallation(int installationId);
