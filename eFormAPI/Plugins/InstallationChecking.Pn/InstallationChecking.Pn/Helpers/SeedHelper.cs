@@ -408,7 +408,7 @@ namespace InstallationChecking.Pn.Helpers
                     false,
                     "GEM DATA"
                 ));
-                for (int i = 0; i < 50; i++)
+                for (int i = 1; i < 51; i++)
                 {
                     dataItems.Add(new EntitySearch(
                         3 + i,
@@ -429,7 +429,7 @@ namespace InstallationChecking.Pn.Helpers
                     );
                 }
                 dataItems.Add(new SaveButton(
-                    50,
+                    51,
                     true,
                     false,
                     "Tryk GEM DATA, når alle målere er QR-scannet",
@@ -447,7 +447,7 @@ namespace InstallationChecking.Pn.Helpers
                     "CompanyAddress<br>CompanyAddress2<br>ZipCode<br>CityName<br>Country<br><b>Nedtagningsdato: 2020-02-23</b>",
                     false,
                     false,
-                    true,
+                    false,
                     false,
                     "",
                     false,
