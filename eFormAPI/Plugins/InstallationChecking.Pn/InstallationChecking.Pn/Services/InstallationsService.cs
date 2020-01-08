@@ -310,10 +310,20 @@ namespace InstallationChecking.Pn.Services
                             mainElement.Label = installation.CompanyName;
                             var dataElement = (DataElement) mainElement.ElementList[0];
                             dataElement.Label = installation.CompanyName;
-                            dataElement.Description.InderValue = 
-                                $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br>";
-                            
-                        
+                            dataElement.Description.InderValue = installation.CompanyAddress;
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CompanyAddress2)
+                                ? ""
+                                : $"<br>{installation.CompanyAddress2}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.ZipCode)
+                                ? ""
+                                : $"<br>{installation.ZipCode}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CityName)
+                                ? ""
+                                : $"<br>{installation.CityName}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CountryCode)
+                                ? ""
+                                : $"<br>{installation.CountryCode}";
+
                             mainElement.Repeated = 1;
                             mainElement.EndDate = DateTime.UtcNow.AddYears(10);
                             mainElement.StartDate = DateTime.UtcNow;
@@ -333,10 +343,20 @@ namespace InstallationChecking.Pn.Services
                             var dataElement = (DataElement) mainElement.ElementList[0];
                             var removalDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
                             dataElement.Label = installation.CompanyName;
-                            dataElement.Description.InderValue = 
-                                $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br><b>Nedtagningsdato: {removalDate}</b>";
-
-                            
+                            dataElement.Description.InderValue = installation.CompanyAddress;
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CompanyAddress2)
+                                ? ""
+                                : $"<br>{installation.CompanyAddress2}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.ZipCode)
+                                ? ""
+                                : $"<br>{installation.ZipCode}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CityName)
+                                ? ""
+                                : $"<br>{installation.CityName}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CountryCode)
+                                ? ""
+                                : $"<br>{installation.CountryCode}";
+                            dataElement.Description.InderValue += $"<b>Nedtagningsdato: {removalDate}</b>";
                             
                             EntityGroupList model = await core.Advanced_EntityGroupAll(
                                 "id", 
