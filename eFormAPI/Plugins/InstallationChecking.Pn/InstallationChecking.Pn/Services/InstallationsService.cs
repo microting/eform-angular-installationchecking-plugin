@@ -325,8 +325,8 @@ namespace InstallationChecking.Pn.Services
                                 : $"<br>{installation.CountryCode}";
 
                             mainElement.Repeated = 1;
-                            mainElement.EndDate = DateTime.UtcNow.AddYears(10);
-                            mainElement.StartDate = DateTime.UtcNow;
+                            mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
+                            mainElement.StartDate = DateTime.Now.ToUniversalTime();
                             installation.InstallationEmployeeId = installationsAssignModel.EmployeeId;
                             installation.InstallationSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
                             installation.State = InstallationState.Assigned;
@@ -478,8 +478,8 @@ namespace InstallationChecking.Pn.Services
                             installation.RemovalFormId = int.Parse(options.RemovalFormId);
                         
                             mainElement.Repeated = 1;
-                            mainElement.EndDate = DateTime.UtcNow.AddYears(10);
-                            mainElement.StartDate = DateTime.UtcNow;
+                            mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
+                            mainElement.StartDate = DateTime.Now.ToUniversalTime();
                             installation.RemovalEmployeeId = installationsAssignModel.EmployeeId;
                             installation.RemovalSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
                             installation.State = InstallationState.Assigned;
