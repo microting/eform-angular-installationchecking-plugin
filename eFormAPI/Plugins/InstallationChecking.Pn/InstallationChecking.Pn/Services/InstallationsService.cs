@@ -588,8 +588,9 @@ namespace InstallationChecking.Pn.Services
 
                 using (var templateStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.export-template.xlsx"))
                 using (var stream = new MemoryStream())
-                using (var package = new ExcelPackage(stream, templateStream))
                 {
+                    var package = new ExcelPackage(stream, templateStream);
+                
                     var worksheet = package.Workbook.Worksheets[0];
                     var row = 12;
 
@@ -627,7 +628,8 @@ namespace InstallationChecking.Pn.Services
                     }
                     
                     package.Save();
-                    var bytes = package.GetAsByteArray();
+                    package.Dispose();
+                    var bytes = stream.ToArray();
 
                     return new OperationDataResult<byte[]>(true, bytes);
                 }
