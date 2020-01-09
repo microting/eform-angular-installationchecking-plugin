@@ -356,7 +356,7 @@ namespace InstallationChecking.Pn.Services
                             dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CountryCode)
                                 ? ""
                                 : $"<br>{installation.CountryCode}";
-                            dataElement.Description.InderValue += $"<b>Nedtagningsdato: {removalDate}</b>";
+                            dataElement.Description.InderValue += $"<br><b>Nedtagningsdato: {removalDate}</b>";
                             
                             EntityGroupList model = await core.Advanced_EntityGroupAll(
                                 "id", 
