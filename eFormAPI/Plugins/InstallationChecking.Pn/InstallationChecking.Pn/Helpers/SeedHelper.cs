@@ -265,28 +265,37 @@ namespace InstallationChecking.Pn.Helpers
                             Constants.BarcodeTypes.QrCode
                         )
                     );
-                    // TODO seed this as a EntitySelect group 
                     
-                    // TODO seed this as a EntitySelect group DONE
-                    dataItems.Add(new EntitySelect(
+                    dataItems.Add(new Picture(
                         inc + 10, 
+                        false, 
+                        false, 
+                        $"Måler {i} - Billed", 
+                        "", 
+                        color, 
+                        inc + 9, 
+                        false, 
+                        1, 
+                        true));
+                    dataItems.Add(new EntitySelect(
+                        inc + 11, 
                         false, 
                         false, 
                         $"Måler {i} - Rumtype", 
                         "", 
                         color,
-                        inc + 9, 
+                        inc + 10, 
                         false, 0, 
                         roomTypeListId)
                     );
                     dataItems.Add(new Number(
-                            inc + 11,
+                            inc + 12,
                             false,
                             false,
                             $"Måler {i} - Etage",
                             "<u>Forklaring:<br></u>Etage for lokalet som måleren placeres i. Forskudt/kælderplan = 0, stueetage = 1 osv.",
                             color,
-                            inc + 10,
+                            inc + 11,
                             false,
                             "",
                             "",
@@ -296,13 +305,13 @@ namespace InstallationChecking.Pn.Helpers
                         )
                     );
                     dataItems.Add(new Text(
-                            inc + 12,
+                            inc + 13,
                             false,
                             false,
                             $"Måler {i} - Rumnavn",
                             "",
                             color,
-                            inc + 11,
+                            inc + 12,
                             false,
                             "",
                             0,
