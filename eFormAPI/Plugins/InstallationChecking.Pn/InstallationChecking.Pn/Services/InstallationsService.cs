@@ -264,7 +264,11 @@ namespace InstallationChecking.Pn.Services
                         ZipCode = customer.ZipCode,
                         State = InstallationState.NotAssigned,
                         Type = InstallationType.Installation,
-//                        CadastralNumber = customer
+                        CadastralNumber = customer.CadastralNumber,
+                        ApartmentNumber = customer.ApartmentNumber.ToString(),
+                        PropertyNumber = customer.PropertyNumber.ToString(),
+                        YearBuilt = customer.CompletionYear,
+                        LivingFloorsNumber = customer.FloorsWithLivingSpace,
                         CustomerId = customer.Id,
                         CreatedByUserId = UserId,
                         UpdatedByUserId = UserId,
