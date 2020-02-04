@@ -269,6 +269,7 @@ namespace InstallationChecking.Pn.Services
                         PropertyNumber = customer.PropertyNumber != null ? customer.PropertyNumber.ToString() : "",
                         YearBuilt = customer.CompletionYear,
                         LivingFloorsNumber = customer.FloorsWithLivingSpace,
+//                        CadastralType = customer.CadastralType != null ? customer.CadastralType.ToString() : "",
                         CustomerId = customer.Id,
                         CreatedByUserId = UserId,
                         UpdatedByUserId = UserId,
@@ -349,7 +350,7 @@ namespace InstallationChecking.Pn.Services
 
                             foreach (EntityItem entityItem in model.EntityGroups.First().EntityGroupItemLst)
                             {
-                                if (entityItem.Name == installation.PropertyNumber)
+                                if (entityItem.Id == int.Parse(installation.CadastralType))
                                 {
                                     dataItemSelect.DefaultValue = entityItem.Id;
                                 }
