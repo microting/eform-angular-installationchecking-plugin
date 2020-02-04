@@ -1,0 +1,19 @@
+<section>
+  <div class="card z-depth-3 mt-4 mb-4" style="width: 100%">
+    <div class="row mt-4 mb-4 pl-4">
+      <div class="col">
+        <p>Id: <strong>{{installationModel.id}}</strong></p>
+        <p>Company Name: <strong>{{installationModel.companyName}}</strong></p>
+        <p>Company Address: <strong>{{installationModel.companyAddress}}</strong></p>
+        <p>Zip Code: <strong>{{installationModel.zipCode}}</strong></p>
+        <p>City Name: <strong>{{installationModel.cityName}}</strong></p>
+      </div>
+      <div class="col">
+        <p>Date install: <strong>{{installationModel.dateInstall | date : 'dd.MM.y HH:mm:ss'}}</strong></p>
+        <p>Date remove: <strong>{{installationModel.dateRemove | date : 'dd.MM.y HH:mm:ss'}}</strong></p>
+        <p>Date act remove: <strong>{{installationModel.dateActRemove | date : 'dd.MM.y HH:mm:ss'}}</strong></p>
+        <p>Assigned to: <strong>{{installationModel.assignedTo}}</strong></p>
+      </div>
+    </div>
+  </div>
+</section>

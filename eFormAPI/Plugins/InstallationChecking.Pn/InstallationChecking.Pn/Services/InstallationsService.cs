@@ -190,6 +190,12 @@ namespace InstallationChecking.Pn.Services
                         ZipCode = customer.ZipCode,
                         State = InstallationState.NotAssigned,
                         Type = InstallationType.Installation,
+                        CadastralNumber = customer.CadastralNumber,
+                        ApartmentNumber = customer.ApartmentNumber != null ? customer.ApartmentNumber.ToString() : "",
+                        PropertyNumber = customer.PropertyNumber != null ? customer.PropertyNumber.ToString() : "",
+                        YearBuilt = customer.CompletionYear,
+                        LivingFloorsNumber = customer.FloorsWithLivingSpace,
+//                        CadastralType = customer.CadastralType != null ? customer.CadastralType.ToString() : "",
                         CustomerId = customer.Id,
                         CreatedByUserId = UserId,
                         UpdatedByUserId = UserId,
@@ -310,13 +316,61 @@ namespace InstallationChecking.Pn.Services
                             mainElement.Label = installation.CompanyName;
                             var dataElement = (DataElement) mainElement.ElementList[0];
                             dataElement.Label = installation.CompanyName;
-                            dataElement.Description.InderValue = 
-                                $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br>";
+                            dataElement.Description.InderValue = installation.CompanyAddress;
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CompanyAddress2)
+                                ? ""
+                                : $"<br>{installation.CompanyAddress2}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.ZipCode)
+                                ? ""
+                                : $"<br>{installation.ZipCode}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CityName)
+                                ? ""
+                                : $"<br>{installation.CityName}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CountryCode)
+                                ? ""
+                                : $"<br>{installation.CountryCode}";
+
+                            var dataItem = (Text) dataElement.DataItemList[0];
+                            dataItem.Value = installation.CadastralNumber;
                             
-                        
+                            dataItem = (Text) dataElement.DataItemList[1];
+                            dataItem.Value = installation.PropertyNumber;
+                            
+                            dataItem = (Text) dataElement.DataItemList[2];
+                            dataItem.Value = installation.ApartmentNumber;
+
+                            var dataItemSelect = (EntitySelect) dataElement.DataItemList[3];
+                            
+                            EntityGroupList model = await core.Advanced_EntityGroupAll(
+                                "id", 
+                                "eform-angular-installationchecking-plugin-editable-CadastralType",
+                                0, 1, Constants.FieldTypes.EntitySelect,
+                                false,
+                                Constants.WorkflowStates.NotRemoved);
+
+                            foreach (EntityItem entityItem in model.EntityGroups.First().EntityGroupItemLst)
+                            {
+                                if (entityItem.Id == int.Parse(installation.CadastralType))
+                                {
+                                    dataItemSelect.DefaultValue = entityItem.Id;
+                                }
+                            }
+                            
+                            var dataItemNumber = (Number) dataElement.DataItemList[4];
+                            if (installation.YearBuilt != null)
+                            {
+                                dataItemNumber.DefaultValue = (int)installation.YearBuilt;
+                            }
+                            
+                            dataItemNumber = (Number) dataElement.DataItemList[5];
+                            if (installation.LivingFloorsNumber != null)
+                            {
+                                dataItemNumber.DefaultValue = (int)installation.LivingFloorsNumber;
+                            }
+
                             mainElement.Repeated = 1;
-                            mainElement.EndDate = DateTime.UtcNow.AddYears(10);
-                            mainElement.StartDate = DateTime.UtcNow;
+                            mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
+                            mainElement.StartDate = DateTime.Now.ToUniversalTime();
                             installation.InstallationEmployeeId = installationsAssignModel.EmployeeId;
                             installation.InstallationSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
                             installation.State = InstallationState.Assigned;
@@ -333,10 +387,20 @@ namespace InstallationChecking.Pn.Services
                             var dataElement = (DataElement) mainElement.ElementList[0];
                             var removalDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
                             dataElement.Label = installation.CompanyName;
-                            dataElement.Description.InderValue = 
-                                $"{installation.CompanyAddress}<br>{installation.CompanyAddress2}<br>{installation.ZipCode}<br>{installation.CityName}<br>{installation.CountryCode}<br><b>Nedtagningsdato: {removalDate}</b>";
-
-                            
+                            dataElement.Description.InderValue = installation.CompanyAddress;
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CompanyAddress2)
+                                ? ""
+                                : $"<br>{installation.CompanyAddress2}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.ZipCode)
+                                ? ""
+                                : $"<br>{installation.ZipCode}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CityName)
+                                ? ""
+                                : $"<br>{installation.CityName}";
+                            dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CountryCode)
+                                ? ""
+                                : $"<br>{installation.CountryCode}";
+                            dataElement.Description.InderValue += $"<br><b>Nedtagningsdato: {removalDate}</b>";
                             
                             EntityGroupList model = await core.Advanced_EntityGroupAll(
                                 "id", 
@@ -434,7 +498,8 @@ namespace InstallationChecking.Pn.Services
                                     i.ToString()
                                 );
                                 EntitySearch entity = (EntitySearch)dataElement.DataItemList[i];
-                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);    
+                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);
+                                entity.DisplayOrder = i;
                                 i += 1;
                             }
 
@@ -457,8 +522,8 @@ namespace InstallationChecking.Pn.Services
                             installation.RemovalFormId = int.Parse(options.RemovalFormId);
                         
                             mainElement.Repeated = 1;
-                            mainElement.EndDate = DateTime.UtcNow.AddYears(10);
-                            mainElement.StartDate = DateTime.UtcNow;
+                            mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
+                            mainElement.StartDate = DateTime.Now.ToUniversalTime();
                             installation.RemovalEmployeeId = installationsAssignModel.EmployeeId;
                             installation.RemovalSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
                             installation.State = InstallationState.Assigned;
@@ -588,8 +653,9 @@ namespace InstallationChecking.Pn.Services
 
                 using (var templateStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.export-template.xlsx"))
                 using (var stream = new MemoryStream())
-                using (var package = new ExcelPackage(stream, templateStream))
                 {
+                    var package = new ExcelPackage(stream, templateStream);
+                
                     var worksheet = package.Workbook.Worksheets[0];
                     var row = 12;
 
@@ -617,8 +683,10 @@ namespace InstallationChecking.Pn.Services
                         worksheet.Cells[row, 20].Value = meter.RoomType; 
                         worksheet.Cells[row, 21].Value = meter.Floor;
                         worksheet.Cells[row, 22].Value = meter.RoomName;
-                        worksheet.Cells[row, 23].Value = installation.DateInstall?.ToString("MM/dd/yyyy HH:mm");
-                        worksheet.Cells[row, 24].Value = installation.DateActRemove?.ToString("MM/dd/yyyy HH:mm");
+                        worksheet.Cells[row, 23].Value = installation.DateInstall?.ToString("dd-MM-yyyy");
+                        worksheet.Cells[row, 23].Style.Numberformat.Format = "dd-MM-yyyy";
+                        worksheet.Cells[row, 24].Value = installation.DateActRemove?.ToString("dd-MM-yyyy");
+                        worksheet.Cells[row, 24].Style.Numberformat.Format = "dd-MM-yyyy";
 
                         var site = await core.SiteRead(installation.RemovalEmployeeId.GetValueOrDefault());
                         worksheet.Cells[row, 25].Value = site.FirstName + " " + site.LastName;
@@ -627,7 +695,8 @@ namespace InstallationChecking.Pn.Services
                     }
                     
                     package.Save();
-                    var bytes = package.GetAsByteArray();
+                    package.Dispose();
+                    var bytes = stream.ToArray();
 
                     return new OperationDataResult<byte[]>(true, bytes);
                 }

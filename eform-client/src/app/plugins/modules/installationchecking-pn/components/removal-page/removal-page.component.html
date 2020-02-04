@@ -142,12 +142,11 @@
           </td>
           <td>
             <div class="d-flex flex-row justify-content-center">
-              <a class="btn btn-success btn-icon mb-2"
-                 *ngIf="installation.state === installationStates.Completed && installation.removalSdkCaseDbId && installation.removalFormId"
-                 [routerLink]="['/cases/edit/' + installation.removalSdkCaseDbId + '/' + installation.removalFormId]"
-                 id="showCaseLink_{{i}}"  mdbTooltip="{{ 'Show case' | translate }}">
+              <button class="btn btn-success btn-icon mb-2" *ngIf="installation.state === installationStates.Completed && installation.removalSdkCaseDbId && installation.removalFormId"
+                      [routerLink]="['../case/' + installation.removalSdkCaseDbId + '/' + installation.removalFormId + '/' + installation.id]"
+                      id="showCaseLink_{{i}}" mdbTooltip="{{ 'Show case' | translate }}">
                 <fa-icon icon="briefcase" [fixedWidth]="true" size="lg"></fa-icon>
-              </a>
+              </button>
               <button class="btn btn-accent text-black-50 btn-icon mb-2"
                       mdbTooltip="{{ 'Retract installation' | translate }}"
                       id="installationRetractBtn_{{i}}"
@@ -181,7 +180,9 @@
                 id="installationAssignBtn"
                 class="btn btn-success"
                 mdbTooltip="{{ 'Assign installation' | translate }}"
-                (click)="showAssignInstallationModal()">{{ 'Assign' | translate }}
+                (click)="showAssignInstallationModal()">
+          <fa-icon icon="user-plus" size="lg" [fixedWidth]="true"></fa-icon>
+          {{ 'Assign' | translate }}
         </button>
       </div>
     </div>

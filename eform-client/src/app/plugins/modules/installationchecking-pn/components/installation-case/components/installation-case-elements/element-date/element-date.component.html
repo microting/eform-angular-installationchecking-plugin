@@ -1,0 +1,11 @@
+<div class="md-form md-form-case-elem">
+  <fa-icon icon="calendar-day" size="lg" [fixedWidth]="true"></fa-icon>
+
+  <input mdbInputDirective
+         [mdbValidate]="false"
+         [disabled]="true"
+         [ngModel]="fieldValueObj.value"
+         type="text" id="dateElement{{fieldValueObj.fieldId}}"
+         name="dateElement{{fieldValueObj.fieldId}}" class="form-control">
+  <label for="dateElement{{fieldValueObj.fieldId}}">{{'Selected date' | translate}}</label>
+</div>
