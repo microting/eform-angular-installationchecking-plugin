@@ -1,0 +1,13 @@
+<section id="section{{element.id}}" *ngIf="element.dataItemList">
+  <div class="card z-depth-3 mb-4 mt-4" style="width: 100%">
+    <div class="card-body">
+      <app-installation-case-switch
+        [dataItemList]="element.dataItemList"></app-installation-case-switch>
+    </div>
+  </div>
+</section>
+<ng-container *ngIf="element.elementList">
+  <app-installation-case-block [element]="elem" *ngFor="let elem of element.elementList"></app-installation-case-block>
+</ng-container>
+
+

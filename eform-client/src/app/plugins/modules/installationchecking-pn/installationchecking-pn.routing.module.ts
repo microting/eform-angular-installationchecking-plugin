@@ -26,7 +26,11 @@ export const routes: Routes = [
         path: 'settings',
         canActivate: [AdminGuard],
         component: InstallationCheckingSettingsComponent
-      }
+      },
+      {
+        path: 'case',
+        loadChildren: './components/installation-case/installation-case.module#InstallationCaseModule'
+      },
     ]
   }
 ];

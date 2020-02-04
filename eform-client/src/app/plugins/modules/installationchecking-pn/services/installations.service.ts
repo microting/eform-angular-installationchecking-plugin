@@ -5,7 +5,7 @@ import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {Observable} from 'rxjs';
 import {OperationDataResult, OperationResult} from '../../../../common/models';
-import {InstallationsAssignModel, InstallationsListModel, InstallationsRequestModel} from '../models';
+import {InstallationModel, InstallationsAssignModel, InstallationsListModel, InstallationsRequestModel} from '../models';
 import {CustomersPnModel, CustomersPnRequestModel} from '../../customers-pn/models/customer';
 import {CustomerPnMethods} from '../../customers-pn/services';
 
@@ -31,7 +31,7 @@ export class InstallationsService extends BaseService {
     return this.get(InstallationsMethods.Get, request);
   }
 
-  getSingle(id: number): Observable<OperationDataResult<InstallationsListModel>> {
+  getSingle(id: number): Observable<OperationDataResult<InstallationModel>> {
     return this.get(InstallationsMethods.Get + '/' + id);
   }
 

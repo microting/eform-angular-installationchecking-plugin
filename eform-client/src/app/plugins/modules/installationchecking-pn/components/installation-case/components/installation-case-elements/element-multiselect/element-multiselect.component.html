@@ -1,0 +1,11 @@
+<div class="checkbox" *ngFor="let item of fieldValueObj.keyValuePairList">
+    <label class="md-checkbox">
+      <input (click)="updateCheckedOptions(item, $event)"
+             name="checkbox{{item.key}}" id="checkbox{{item.key}}"
+             [checked]="item.selected"
+             [disabled]="true"
+             value="{{item.selected}}" type="checkbox" />
+      <span class="md-checkbox--fake"></span>
+      <div>{{item.value}}</div>
+    </label>
+</div>
