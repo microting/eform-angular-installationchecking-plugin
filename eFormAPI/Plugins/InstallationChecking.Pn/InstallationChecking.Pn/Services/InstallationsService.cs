@@ -264,11 +264,11 @@ namespace InstallationChecking.Pn.Services
                         ZipCode = customer.ZipCode,
                         State = InstallationState.NotAssigned,
                         Type = InstallationType.Installation,
-//                        CadastralNumber = customer.CadastralNumber,
-//                        ApartmentNumber = customer.ApartmentNumber != null ? customer.ApartmentNumber.ToString() : "",
-//                        PropertyNumber = customer.PropertyNumber != null ? customer.PropertyNumber.ToString() : "",
-//                        YearBuilt = customer.CompletionYear,
-//                        LivingFloorsNumber = customer.FloorsWithLivingSpace,
+                        CadastralNumber = customer.CadastralNumber,
+                        ApartmentNumber = customer.ApartmentNumber != null ? customer.ApartmentNumber.ToString() : "",
+                        PropertyNumber = customer.PropertyNumber != null ? customer.PropertyNumber.ToString() : "",
+                        YearBuilt = customer.CompletionYear,
+                        LivingFloorsNumber = customer.FloorsWithLivingSpace,
                         CustomerId = customer.Id,
                         CreatedByUserId = UserId,
                         UpdatedByUserId = UserId,
@@ -329,37 +329,43 @@ namespace InstallationChecking.Pn.Services
                                 ? ""
                                 : $"<br>{installation.CountryCode}";
 
-//                            var dataItem = (Text) dataElement.DataItemList[0];
-//                            dataItem.Value = installation.CadastralNumber;
-//                            
-//                            dataItem = (Text) dataElement.DataItemList[1];
-//                            dataItem.Value = installation.PropertyNumber;
-//                            
-//                            dataItem = (Text) dataElement.DataItemList[2];
-//                            dataItem.Value = installation.ApartmentNumber;
-//
-//                            var dataItemSelect = (EntitySelect) dataElement.DataItemList[3];
-//                            
-//                            EntityGroupList model = await core.Advanced_EntityGroupAll(
-//                                "id", 
-//                                "eform-angular-installationchecking-plugin-editable-CadastralType",
-//                                0, 1, Constants.FieldTypes.EntitySelect,
-//                                false,
-//                                Constants.WorkflowStates.NotRemoved);
-//
-//                            foreach (EntityItem entityItem in model.EntityGroups.First().EntityGroupItemLst)
-//                            {
-//                                if (entityItem.Name == installation.PropertyNumber)
-//                                {
-//                                    dataItemSelect.DefaultValue = entityItem.Id;
-//                                }
-//                            }
-//                            
-//                            var dataItemNumber = (Text) dataElement.DataItemList[4];
-//                            dataItemNumber.Value = installation.YearBuilt.ToString();
-//                            
-//                            dataItemNumber = (Text) dataElement.DataItemList[5];
-//                            dataItemNumber.Value = installation.LivingFloorsNumber.ToString();
+                            var dataItem = (Text) dataElement.DataItemList[0];
+                            dataItem.Value = installation.CadastralNumber;
+                            
+                            dataItem = (Text) dataElement.DataItemList[1];
+                            dataItem.Value = installation.PropertyNumber;
+                            
+                            dataItem = (Text) dataElement.DataItemList[2];
+                            dataItem.Value = installation.ApartmentNumber;
+
+                            var dataItemSelect = (EntitySelect) dataElement.DataItemList[3];
+                            
+                            EntityGroupList model = await core.Advanced_EntityGroupAll(
+                                "id", 
+                                "eform-angular-installationchecking-plugin-editable-CadastralType",
+                                0, 1, Constants.FieldTypes.EntitySelect,
+                                false,
+                                Constants.WorkflowStates.NotRemoved);
+
+                            foreach (EntityItem entityItem in model.EntityGroups.First().EntityGroupItemLst)
+                            {
+                                if (entityItem.Name == installation.PropertyNumber)
+                                {
+                                    dataItemSelect.DefaultValue = entityItem.Id;
+                                }
+                            }
+                            
+                            var dataItemNumber = (Number) dataElement.DataItemList[4];
+                            if (installation.YearBuilt != null)
+                            {
+                                dataItemNumber.DefaultValue = (int)installation.YearBuilt;
+                            }
+                            
+                            dataItemNumber = (Number) dataElement.DataItemList[5];
+                            if (installation.LivingFloorsNumber != null)
+                            {
+                                dataItemNumber.DefaultValue = (int)installation.LivingFloorsNumber;
+                            }
 
                             mainElement.Repeated = 1;
                             mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
