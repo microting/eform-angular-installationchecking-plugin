@@ -60,6 +60,7 @@ namespace InstallationChecking.Pn.Services
             try
             {
                 var core = await _coreHelper.GetCore();
+                var options = _options.Value;
 
                 var listQuery = _installationCheckingContext.Installations.AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed);
@@ -123,6 +124,7 @@ namespace InstallationChecking.Pn.Services
                 
                 foreach (var item in list.Where(x => x.InstallationEmployeeId != null))
                 {
+                    item.InstallationFormId = int.Parse(options.InstallationFormId);
                     if (item.Type == InstallationType.Installation)
                     {
                         var site = await core.SiteRead(item.InstallationEmployeeId.GetValueOrDefault());
@@ -140,6 +142,7 @@ namespace InstallationChecking.Pn.Services
                 }
                 foreach (var item in list.Where(x => x.RemovalEmployeeId != null))
                 {
+                    item.InstallationFormId = int.Parse(options.InstallationFormId);
                     if (item.Type == InstallationType.Removal)
                     {
                         var site = await core.SiteRead(item.RemovalEmployeeId.GetValueOrDefault());
@@ -219,6 +222,7 @@ namespace InstallationChecking.Pn.Services
         {
             try
             {
+                var options = _options.Value;
                 var installationModel = await _installationCheckingContext.Installations.AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed && x.Id == id)
                     .Select(x => new InstallationModel
@@ -246,6 +250,7 @@ namespace InstallationChecking.Pn.Services
 
                 if (installationModel == null)
                 {
+                    installationModel.InstallationFormId = int.Parse(options.InstallationFormId);
                     return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("InstallationNotFound"));
                 }
 

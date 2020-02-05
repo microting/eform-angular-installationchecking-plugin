@@ -31,5 +31,6 @@ namespace InstallationChecking.Pn.Infrastructure.Models
         public int? InstallationSdkCaseDbId { get; set; } // Case Id
         public int? RemovalSdkCaseDbId { get; set; } // Case Id
         public int? RemovalFormId { get; set; }
+        public int? InstallationFormId { get; set; }
     }
 }

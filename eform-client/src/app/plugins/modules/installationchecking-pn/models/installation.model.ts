@@ -27,6 +27,7 @@ export class InstallationModel {
   installationSdkCaseDbId: number;
   removalSdkCaseDbId: number;
   removalFormId: number;
+  installationFormId: number;
 
   assign = false;
 }
