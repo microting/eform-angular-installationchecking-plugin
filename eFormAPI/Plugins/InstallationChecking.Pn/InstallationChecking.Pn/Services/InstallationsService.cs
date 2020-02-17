@@ -156,6 +156,15 @@ namespace InstallationChecking.Pn.Services
                                 item.RemovalSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
                             }
                         }
+                        if (item.InstallationSdkCaseId != null)
+                        {
+                            var sdkCaseId = (int) item.InstallationSdkCaseId;
+                            var caseLookup = await core.CaseLookupMUId(sdkCaseId);
+                            if (caseLookup?.CheckUId != null && caseLookup?.CheckUId != 0)
+                            {
+                                item.InstallationSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
+                            }
+                        }  
                     }
                 }
 
