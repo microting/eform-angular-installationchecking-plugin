@@ -180,32 +180,34 @@ const customersPage = new CustomersPage();
 export default customersPage;
 
 export class CustomersRowObject {
-  constructor(rowNumber) {
-    this.createdBy = $$('#CreatedBy')[rowNumber - 1].getText();
-    this.customerNo = $$('#CustomerNo')[rowNumber - 1].getText();
-    this.contactPerson = $$('#ContactPerson')[rowNumber - 1].getText();
-    this.companyName = $$('#CompanyName')[rowNumber - 1].getText();
-    this.companyAddress = $$('#CompanyAddress')[rowNumber - 1].getText();
-    this.zipCode = $$('#ZipCode')[rowNumber - 1].getText();
-    this.cityName = $$('#CityName')[rowNumber - 1].getText();
-    this.email = $$('#Email')[rowNumber - 1].getText();
-    this.phone = $$('#Phone')[rowNumber - 1].getText();
-    this.editBtn = $$('#editCustomerBtn')[rowNumber - 1];
-    this.deleteBtn = $$('#deleteCustomerBtn')[rowNumber - 1];
-  }
+    constructor(rowNumber) {
+        this.createdBy = $$('#CreatedBy_' + (rowNumber - 1))[0].getText();
+        this.customerNo = $$('#CustomerNo_' + (rowNumber - 1))[0].getText();
+        this.contactPerson = $$('#ContactPerson_' + (rowNumber - 1))[0].getText();
+        this.companyName = $$('#CompanyName_' + (rowNumber - 1))[0].getText();
+        this.companyAddress = $$('#CompanyAddress_' + (rowNumber - 1))[0].getText();
+        this.zipCode = $$('#ZipCode_' + (rowNumber - 1))[0].getText();
+        this.cityName = $$('#CityName_' + (rowNumber - 1))[0].getText();
+        this.email = $$('#Email_' + (rowNumber - 1))[0].getText();
+        this.phone = $$('#Phone_' + (rowNumber - 1))[0].getText();
+        this.editBtn = $$('#editCustomerBtn_' + (rowNumber - 1))[0];
+        this.copyBtn = $$('#copyCustomerBtn_' + (rowNumber - 1))[0];
+        this.deleteBtn = $$('#deleteCustomerBtn_' + (rowNumber - 1))[0];
+    }
 
-  public id;
-  public version;
-  public updatedByUserId;
-  public createdBy;
-  public customerNo;
-  public contactPerson;
-  public companyName;
-  public companyAddress;
-  public zipCode;
-  public cityName;
-  public email;
-  public phone;
-  public editBtn;
-  public deleteBtn;
+    public id;
+    public version;
+    public updatedByUserId;
+    public createdBy;
+    public customerNo;
+    public contactPerson;
+    public companyName;
+    public companyAddress;
+    public zipCode;
+    public cityName;
+    public email;
+    public phone;
+    public editBtn;
+    public copyBtn;
+    public deleteBtn;
 }
