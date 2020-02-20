@@ -46,6 +46,7 @@ export class CustomersPage extends PageWithNavbarPage {
   public createCustomer(companyName: string) {
     customersPage.goToCustomersPage();
     customersPage.newCustomerBtn.click();
+    browser.waitForVisible('#spinner-animation', 10000, true);
     browser.pause(6000);
     const customerObject = {
       createdBy: 'John Smith',
@@ -181,6 +182,7 @@ export default customersPage;
 
 export class CustomersRowObject {
     constructor(rowNumber) {
+      console.log('rowNumber is ' + rowNumber);
         this.createdBy = $$('#CreatedBy_' + (rowNumber - 1))[0].getText();
         this.customerNo = $$('#CustomerNo_' + (rowNumber - 1))[0].getText();
         this.contactPerson = $$('#ContactPerson_' + (rowNumber - 1))[0].getText();
