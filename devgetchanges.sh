@@ -2,14 +2,22 @@
 
 cd ~
 
-if [ -d "Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/src/app/plugins/modules/installationchecking-pn" ]; then
-	rm -fR Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/src/app/plugins/modules/installationchecking-pn
-fi
+rm -fR Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/src/app/plugins/modules/installationchecking-pn
 
 cp -av Documents/workspace/microting/eform-angular-frontend/eform-client/src/app/plugins/modules/installationchecking-pn Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/src/app/plugins/modules/installationchecking-pn
 
-if [ -d "Documents/workspace/microting/eform-angular-installationchecking-plugin/eFormAPI/Plugins/InstallationChecking.Pn" ]; then
-	rm -fR Documents/workspace/microting/eform-angular-installationchecking-plugin/eFormAPI/Plugins/InstallationChecking.Pn
-fi
+rm -fR Documents/workspace/microting/eform-angular-installationchecking-plugin/eFormAPI/Plugins/InstallationChecking.Pn
 
 cp -av Documents/workspace/microting/eform-angular-frontend/eFormAPI/Plugins/InstallationChecking.Pn Documents/workspace/microting/eform-angular-installationchecking-plugin/eFormAPI/Plugins/InstallationChecking.Pn
+
+# Test files rm
+rm -fR Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/e2e/Tests/installationchecking-settings
+rm -fR Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/e2e/Tests/installationchecking-general
+rm -fR Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/e2e/Page\ objects/InstallationChecking
+rm -fR Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/wdio-headless-plugin-step2.conf.js
+# Test files cp
+
+cp -av Documents/workspace/microting/eform-angular-frontend/eform-client/e2e/Tests/installationchecking-settings Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/e2e/Tests/installationchecking-settings
+cp -av Documents/workspace/microting/eform-angular-frontend/eform-client/e2e/Tests/installationchecking-general Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/e2e/Tests/installationchecking-general
+cp -av Documents/workspace/microting/eform-angular-frontend/eform-client/e2e/Page\ objects/InstallationChecking Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/e2e/Page\ objects/InstallationChecking
+cp -av Documents/workspace/microting/eform-angular-frontend/eform-client/wdio-plugin-step2.conf.js Documents/workspace/microting/eform-angular-installationchecking-plugin/eform-client/wdio-headless-plugin-step2.conf.js
