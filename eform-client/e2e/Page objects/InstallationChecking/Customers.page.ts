@@ -62,6 +62,7 @@ export class CustomersPage extends PageWithNavbarPage {
     const rowCountBeforeCreation = customersPage.rowNum();
     browser.pause(2000);
     customersModalPage.createCustomer(customerObject);
+    browser.waitForVisible('#spinner-animation', 10000, true);
     const rowCountAfterCreation = customersPage.rowNum();
     browser.pause(2000);
     expect(rowCountAfterCreation, 'Number of rows hasn\'t changed after creating new user').equal(rowCountBeforeCreation + 1);
