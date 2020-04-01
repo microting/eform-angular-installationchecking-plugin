@@ -74,7 +74,7 @@ describe('Application settings page - site header section', function () {
         // expect(pluginToFind.name).equal('Microting InstallationChecking Plugin');
         expect(pluginToFind.version).equal('1.0.0.0');
         $(`//*[contains(text(), 'Planlægning')]`).waitForDisplayed(20000);
-        $(`//*[contains(text(), 'Kunder')]`)waitForDisplayed(20000);
+        $(`//*[contains(text(), 'Kunder')]`).waitForDisplayed(20000);
     });
 
     // it('should activate the plugin', function () {
