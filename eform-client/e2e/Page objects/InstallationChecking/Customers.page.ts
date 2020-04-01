@@ -14,16 +14,16 @@ export class CustomersPage extends PageWithNavbarPage {
         $('#spinner-animation').waitForDisplayed(90000, true);
         customersPage.Navbar.clickonSubMenuItem('Søgbar Lister');
         $('#spinner-animation').waitForDisplayed(90000, true);
-        const newSearchListBtn = browser.$('#createEntitySearchBtn');
-        const numberOfListsBefore = browser.$$('#tableBody > tr').length;
+        const newSearchListBtn = $('#createEntitySearchBtn');
+        const numberOfListsBefore = $$('#tableBody > tr').length;
         newSearchListBtn.click();
         $('#spinner-animation').waitForDisplayed(90000, true);
-        const fieldElement = browser.$('#createName');
+        const fieldElement = $('#createName');
         fieldElement.addValue(listName);
-        const confirmBtn = browser.$('#entitySearchCreateSaveBtn');
+        const confirmBtn = $('#entitySearchCreateSaveBtn');
         confirmBtn.click();
         $('#spinner-animation').waitForDisplayed(90000, true);
-        const numberOfListsAfter = browser.$$('#tableBody > tr').length;
+        const numberOfListsAfter = $$('#tableBody > tr').length;
         expect(numberOfListsAfter, 'Number of rows is less than expected').equal(numberOfListsBefore + 1);
 
         // Configure List
@@ -80,27 +80,27 @@ export class CustomersPage extends PageWithNavbarPage {
     }
 
     public getListOfChoices() {
-        return browser.$$('.ng-option');
+        return $$('.ng-option');
     }
     public  selectedListField() {
-        return browser.$('.ng-value .ng-value-label');
+        return $('.ng-value .ng-value-label');
     }
 
     public rowNum(): number {
         browser.pause(500);
-        return browser.$$('#mainTableBody > tr').length;
+        return $$('#mainTableBody > tr').length;
     }
     public clickIdSort() {
-        browser.$('#IdTableHeader').click();
+        $('#IdTableHeader').click();
         $('#spinner-animation').waitForDisplayed(90000, true);
     }
     public clickContactSort() {
-        browser.$('#ContactPersonTableHeader').click();
+        $('#ContactPersonTableHeader').click();
         $('#spinner-animation').waitForDisplayed(90000, true);
     }
 
     public clickCompanySort() {
-        browser.$('#CompanyNameTableHeader').click();
+        $('#CompanyNameTableHeader').click();
         $('#spinner-animation').waitForDisplayed(90000, true);
     }
 
@@ -179,11 +179,11 @@ export class CustomersPage extends PageWithNavbarPage {
     }
 
     public get settingsCustomerBtn() {
-        return browser.$('#settingsCustomerBtn');
+        return $('#settingsCustomerBtn');
     }
 
     public goToCustomerSettings() {
-        const elem = browser.$('button .btn .btn-danger');
+        const elem = $('button .btn .btn-danger');
         elem.click();
         $('#spinner-animation').waitForDisplayed(90000, true);
     }
