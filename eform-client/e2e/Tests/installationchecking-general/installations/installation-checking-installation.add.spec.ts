@@ -20,17 +20,15 @@ describe('Installation Checking - Installation - Add', function () {
     installationsPage.goToInstallationsPage();
   });
   it('Should create installation', function () {
-    browser.waitForVisible('#createInstallationBtn', 30000);
+    $('#createInstallationBtn').waitForDisplayed(30000);
     installationPage.createInstallation(companyName);
     const installation = installationPage.getFirstRowObject();
     expect(installation.companyName).equal(companyName);
-    browser.pause(8000);
-    browser.refresh();
   });
   it('should not create installation', function () {
     const rowNumsBeforeCreate = installationPage.rowNum;
     browser.pause(8000);
-    browser.waitForVisible('#createInstallationBtn', 30000);
+    $('#createInstallationBtn').waitForDisplayed(30000);
     installationPage.createInstallation_Cancels();
     expect(rowNumsBeforeCreate).equal(installationPage.rowNum);
   });

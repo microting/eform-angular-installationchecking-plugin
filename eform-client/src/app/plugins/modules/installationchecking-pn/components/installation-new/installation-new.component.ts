@@ -9,7 +9,7 @@ import {InstallationsService} from '../../services';
   styleUrls: ['./installation-new.component.scss']
 })
 export class InstallationNewComponent implements OnInit {
-  @ViewChild('frame') frame;
+  @ViewChild('frame', {static: false}) frame;
   @Output() installationCreated: EventEmitter<void> = new EventEmitter<void>();
   customersRequestModel: CustomersPnRequestModel = new CustomersPnRequestModel();
   customers = [];

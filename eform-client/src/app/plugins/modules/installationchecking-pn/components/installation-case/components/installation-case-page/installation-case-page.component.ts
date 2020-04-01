@@ -16,7 +16,7 @@ import {InstallationModel} from '../../../../models';
 })
 export class InstallationCasePageComponent implements OnInit {
   @ViewChildren(CaseEditElementComponent) editElements: QueryList<CaseEditElementComponent>;
-  @ViewChild('caseConfirmation') caseConfirmation;
+  @ViewChild('caseConfirmation', {static: false}) caseConfirmation;
   id: number;
   installationId: number;
   templateId: number;

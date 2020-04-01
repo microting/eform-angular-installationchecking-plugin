@@ -6,11 +6,13 @@ class ApplicationSettingsPluginsPage extends PageWithNavbarPage {
     }
 
     getFirstPluginRowObj(): PluginRowObject {
+        browser.pause(500);
         return new PluginRowObject(1);
     }
 
     getSecondPluginRowObj(): PluginRowObject {
-      return new PluginRowObject(2);
+        browser.pause(500);
+        return new PluginRowObject(2);
     }
 }
 

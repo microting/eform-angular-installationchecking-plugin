@@ -9,7 +9,7 @@ import {InstallationModel} from '../../../../models';
 })
 export class InstallationCaseHeaderComponent implements OnInit {
   @Input() installationModel: InstallationModel = new InstallationModel();
-  @ViewChild('reportCropperModal') reportCropperModal;
+  @ViewChild('reportCropperModal', {static: false}) reportCropperModal;
   constructor() { }
 
   ngOnInit() {

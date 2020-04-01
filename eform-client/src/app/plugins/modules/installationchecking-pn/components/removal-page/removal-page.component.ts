@@ -19,8 +19,8 @@ import {Subject} from 'rxjs';
   styleUrls: ['./removal-page.component.scss']
 })
 export class RemovalPageComponent implements OnInit {
-  @ViewChild('assignInstallationModal') assignInstallationModal: InstallationAssignComponent;
-  @ViewChild('retractInstallationModal') retractInstallationModal: InstallationRetractComponent;
+  @ViewChild('assignInstallationModal', {static: false}) assignInstallationModal: InstallationAssignComponent;
+  @ViewChild('retractInstallationModal', {static: false}) retractInstallationModal: InstallationRetractComponent;
   localPageSettings: PageSettingsModel = new PageSettingsModel();
   installationsRequestModel: InstallationsRequestModel = new InstallationsRequestModel();
   installationsListModel: InstallationsListModel = new InstallationsListModel();

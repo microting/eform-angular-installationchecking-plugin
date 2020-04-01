@@ -8,7 +8,7 @@ import {InstallationsService} from '../../services';
   styleUrls: ['./installation-retract.component.scss']
 })
 export class InstallationRetractComponent implements OnInit {
-  @ViewChild('frame') frame;
+  @ViewChild('frame', {static: false}) frame;
   @Output() installationRetracted: EventEmitter<void> = new EventEmitter<void>();
   selectedModel: InstallationModel = new InstallationModel();
 

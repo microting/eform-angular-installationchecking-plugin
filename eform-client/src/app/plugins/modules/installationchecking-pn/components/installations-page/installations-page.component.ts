@@ -16,9 +16,9 @@ import {Subject} from 'rxjs';
   styleUrls: ['./installations-page.component.scss']
 })
 export class InstallationsPageComponent implements OnInit {
-  @ViewChild('newInstallationModal') newInstallationModal: InstallationNewComponent;
-  @ViewChild('assignInstallationModal') assignInstallationModal: InstallationAssignComponent;
-  @ViewChild('retractInstallationModal') retractInstallationModal: InstallationRetractComponent;
+  @ViewChild('newInstallationModal', {static: false}) newInstallationModal: InstallationNewComponent;
+  @ViewChild('assignInstallationModal', {static: false}) assignInstallationModal: InstallationAssignComponent;
+  @ViewChild('retractInstallationModal', {static: false}) retractInstallationModal: InstallationRetractComponent;
   localPageSettings: PageSettingsModel = new PageSettingsModel();
   installationsRequestModel: InstallationsRequestModel = new InstallationsRequestModel();
   installationsListModel: InstallationsListModel = new InstallationsListModel();

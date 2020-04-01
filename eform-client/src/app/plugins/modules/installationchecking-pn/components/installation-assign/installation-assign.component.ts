@@ -9,7 +9,7 @@ import {InstallationsAssignModel} from '../../models';
   styleUrls: ['./installation-assign.component.scss']
 })
 export class InstallationAssignComponent implements OnInit {
-  @ViewChild('frame') frame;
+  @ViewChild('frame', {static: false}) frame;
   @Output() installationAssigned: EventEmitter<void> = new EventEmitter<void>();
   sites = [];
   installationIds: number[];

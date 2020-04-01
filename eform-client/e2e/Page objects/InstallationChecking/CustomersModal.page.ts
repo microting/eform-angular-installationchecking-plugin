@@ -7,99 +7,147 @@ export class CustomersModalPage extends Page {
   }
 
   public get createBtn() {
-    return browser.element('#createCustomerBtn');
+    $('#createCustomerBtn').waitForDisplayed(20000);
+$('#createCustomerBtn').waitForClickable({timeout: 20000});
+return $('#createCustomerBtn');
   }
 
   public get cancelCreateBtn() {
-    return browser.element('#cancelCreateCustomerBtn');
+    $('#cancelCreateCustomerBtn').waitForDisplayed(20000);
+$('#cancelCreateCustomerBtn').waitForClickable({timeout: 20000});
+return $('#cancelCreateCustomerBtn');
   }
 
   public get saveEditBtn() {
-    return browser.element('#saveEditBtn');
+    $('#saveEditBtn').waitForDisplayed(20000);
+$('#saveEditBtn').waitForClickable({timeout: 20000});
+return $('#saveEditBtn');
   }
 
   public get cancelEditBtn() {
-    return browser.element('#cancelEditBtn');
+    $('#cancelEditBtn').waitForDisplayed(20000);
+$('#cancelEditBtn').waitForClickable({timeout: 20000});
+return $('#cancelEditBtn');
   }
 
   public get saveDeleteBtn() {
-    return browser.element('#customerSaveDeleteBtn');
+    $('#customerSaveDeleteBtn').waitForDisplayed(20000);
+$('#customerSaveDeleteBtn').waitForClickable({timeout: 20000});
+return $('#customerSaveDeleteBtn');
   }
 
   public get cancelDeleteBtn() {
-    return browser.element('#customerDeleteCancelBtn');
+    $('#customerDeleteCancelBtn').waitForDisplayed(20000);
+$('#customerDeleteCancelBtn').waitForClickable({timeout: 20000});
+return $('#customerDeleteCancelBtn');
   }
 
   public get createCreatedByInput() {
-    return browser.element('#createCreatedBy');
+    $('#createCreatedBy').waitForDisplayed(20000);
+$('#createCreatedBy').waitForClickable({timeout: 20000});
+return $('#createCreatedBy');
   }
 
   public get editCreatedByInput() {
-    return browser.element('#editCreatedBy');
+    $('#editCreatedBy').waitForDisplayed(20000);
+$('#editCreatedBy').waitForClickable({timeout: 20000});
+return $('#editCreatedBy');
   }
 
   public get createCustomerNo() {
-    return browser.element('#createCustomerNo');
+    $('#createCustomerNo').waitForDisplayed(20000);
+$('#createCustomerNo').waitForClickable({timeout: 20000});
+return $('#createCustomerNo');
   }
 
   public get editCustomerNo() {
-    return browser.element('#editCustomerNo');
+    $('#editCustomerNo').waitForDisplayed(20000);
+$('#editCustomerNo').waitForClickable({timeout: 20000});
+return $('#editCustomerNo');
   }
 
   public get createContactPerson() {
-    return browser.element('#createContactPerson');
+    $('#createContactPerson').waitForDisplayed(20000);
+$('#createContactPerson').waitForClickable({timeout: 20000});
+return $('#createContactPerson');
   }
 
   public get editContactPerson() {
-    return browser.element('#editContactPerson');
+    $('#editContactPerson').waitForDisplayed(20000);
+$('#editContactPerson').waitForClickable({timeout: 20000});
+return $('#editContactPerson');
   }
 
   public get createCompanyName() {
-    return browser.element('#createCompanyName');
+    $('#createCompanyName').waitForDisplayed(20000);
+$('#createCompanyName').waitForClickable({timeout: 20000});
+return $('#createCompanyName');
   }
 
   public get editCompanyName() {
-    return browser.element('#editCompanyName');
+    $('#editCompanyName').waitForDisplayed(20000);
+$('#editCompanyName').waitForClickable({timeout: 20000});
+return $('#editCompanyName');
   }
 
   public get createCompanyAddress() {
-    return browser.element('#createCompanyAddress');
+    $('#createCompanyAddress').waitForDisplayed(20000);
+$('#createCompanyAddress').waitForClickable({timeout: 20000});
+return $('#createCompanyAddress');
   }
 
   public get editCompanyAddress() {
-    return browser.element('#editCompanyAddress');
+    $('#editCompanyAddress').waitForDisplayed(20000);
+$('#editCompanyAddress').waitForClickable({timeout: 20000});
+return $('#editCompanyAddress');
   }
 
   public get createZipCode() {
-    return browser.element('#createZipCode');
+    $('#createZipCode').waitForDisplayed(20000);
+$('#createZipCode').waitForClickable({timeout: 20000});
+return $('#createZipCode');
   }
 
   public get editZipCode() {
-    return browser.element('#editZipCode');
+    $('#editZipCode').waitForDisplayed(20000);
+$('#editZipCode').waitForClickable({timeout: 20000});
+return $('#editZipCode');
   }
 
   public get createCityName() {
-    return browser.element('#createCityName');
+    $('#createCityName').waitForDisplayed(20000);
+$('#createCityName').waitForClickable({timeout: 20000});
+return $('#createCityName');
   }
 
   public get editCityName() {
-    return browser.element('#editCityName');
+    $('#editCityName').waitForDisplayed(20000);
+$('#editCityName').waitForClickable({timeout: 20000});
+return $('#editCityName');
   }
 
   public get createPhone() {
-    return browser.element('#createPhone');
+    $('#createPhone').waitForDisplayed(20000);
+$('#createPhone').waitForClickable({timeout: 20000});
+return $('#createPhone');
   }
 
   public get editPhone() {
-    return browser.element('#editPhone');
+    $('#editPhone').waitForDisplayed(20000);
+$('#editPhone').waitForClickable({timeout: 20000});
+return $('#editPhone');
   }
 
   public get createEmail() {
-    return browser.element('#createEmail');
+    $('#createEmail').waitForDisplayed(20000);
+$('#createEmail').waitForClickable({timeout: 20000});
+return $('#createEmail');
   }
 
   public get editEmail() {
-    return browser.element('#editEmail');
+    $('#editEmail').waitForDisplayed(20000);
+$('#editEmail').waitForClickable({timeout: 20000});
+return $('#editEmail');
   }
 
   public createCustomer(data: any) {

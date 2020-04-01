@@ -11,7 +11,9 @@ export class InstallationsPage extends Page {
     browser.element(`//*[contains(@class, 'dropdown')]//*[contains(text(), 'Planlægning')]`).click();
   }
   public get InstallationsBtn() {
-    return browser.element('#installationchecking-pn-installation');
+    $('#installationchecking-pn-installation').waitForDisplayed(20000);
+$('#installationchecking-pn-installation').waitForClickable({timeout: 20000});
+return $('#installationchecking-pn-installation');
   }
   goToInstallationsPage() {
     this.InstallationCheckingDropDown();

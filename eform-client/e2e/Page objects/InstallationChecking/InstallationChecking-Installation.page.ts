@@ -11,67 +11,109 @@ export class InstallationCheckingInstallationPage extends Page {
     browser.element(`//*[contains(@class, 'dropdown')]//*[contains(text(), 'Planlægning')]`).click();
   }
   public get installationBtn() {
-    return browser.element('#installationchecking-pn-installation');
+    $('#installationchecking-pn-installation').waitForDisplayed(20000);
+$('#installationchecking-pn-installation').waitForClickable({timeout: 20000});
+return $('#installationchecking-pn-installation');
   }
   public get installationCreateBtn() {
-    return browser.element('#createInstallationBtn');
+    $('#createInstallationBtn').waitForDisplayed(20000);
+$('#createInstallationBtn').waitForClickable({timeout: 20000});
+return $('#createInstallationBtn');
   }
   public get installationAssignBtn() {
-    return browser.element('#installationAssignBtn');
+    $('#installationAssignBtn').waitForDisplayed(20000);
+$('#installationAssignBtn').waitForClickable({timeout: 20000});
+return $('#installationAssignBtn');
   }
   public get installationAssignBtnSave() {
-    return browser.element('#installationAssignBtnSave');
+    $('#installationAssignBtnSave').waitForDisplayed(20000);
+$('#installationAssignBtnSave').waitForClickable({timeout: 20000});
+return $('#installationAssignBtnSave');
   }
   public get installationAssignBtnSaveCancel() {
-    return browser.element('#installationAssignBtnSaveCancel');
+    $('#installationAssignBtnSaveCancel').waitForDisplayed(20000);
+$('#installationAssignBtnSaveCancel').waitForClickable({timeout: 20000});
+return $('#installationAssignBtnSaveCancel');
   }
   public get installationRetractBtn() {
-    return browser.element('#installationRetractBtn');
+    $('#installationRetractBtn').waitForDisplayed(20000);
+$('#installationRetractBtn').waitForClickable({timeout: 20000});
+return $('#installationRetractBtn');
   }
   public get installationRetractSaveBtn() {
-    return browser.element('#installationRetractSaveBtn');
+    $('#installationRetractSaveBtn').waitForDisplayed(20000);
+$('#installationRetractSaveBtn').waitForClickable({timeout: 20000});
+return $('#installationRetractSaveBtn');
   }
   public get installationRetractSaveCancelBtn() {
-    return browser.element('#installationRetractSaveCancelBtn');
+    $('#installationRetractSaveCancelBtn').waitForDisplayed(20000);
+$('#installationRetractSaveCancelBtn').waitForClickable({timeout: 20000});
+return $('#installationRetractSaveCancelBtn');
   }
   public get installationCreateNameBox() {
-    return browser.element('#createInstallationName');
+    $('#createInstallationName').waitForDisplayed(20000);
+$('#createInstallationName').waitForClickable({timeout: 20000});
+return $('#createInstallationName');
   }
   public get installationAssignCheckbox() {
-    return browser.element('#assignCheckbox');
+    $('#assignCheckbox').waitForDisplayed(20000);
+$('#assignCheckbox').waitForClickable({timeout: 20000});
+return $('#assignCheckbox');
   }
   public get installationCreateSiteCheckbox() {
-    return browser.element('#checkbox');
+    $('#checkbox').waitForDisplayed(20000);
+$('#checkbox').waitForClickable({timeout: 20000});
+return $('#checkbox');
   }
   public get installationCreateSaveBtn() {
-    return browser.element('#installationCreateSaveBtn');
+    $('#installationCreateSaveBtn').waitForDisplayed(20000);
+$('#installationCreateSaveBtn').waitForClickable({timeout: 20000});
+return $('#installationCreateSaveBtn');
   }
   public get installationCreateCancelBtn() {
-    return browser.element('#installationCreateCancelBtn');
+    $('#installationCreateCancelBtn').waitForDisplayed(20000);
+$('#installationCreateCancelBtn').waitForClickable({timeout: 20000});
+return $('#installationCreateCancelBtn');
   }
   public get installationUpdateNameBox() {
-    return browser.element('#updateInstallationName');
+    $('#updateInstallationName').waitForDisplayed(20000);
+$('#updateInstallationName').waitForClickable({timeout: 20000});
+return $('#updateInstallationName');
   }
   public get installationUpdateSiteCheckbox() {
-    return browser.element('#checkbox');
+    $('#checkbox').waitForDisplayed(20000);
+$('#checkbox').waitForClickable({timeout: 20000});
+return $('#checkbox');
   }
   public get installationUpdateSaveBtn() {
-    return browser.element('#installationUpdateSaveBtn');
+    $('#installationUpdateSaveBtn').waitForDisplayed(20000);
+$('#installationUpdateSaveBtn').waitForClickable({timeout: 20000});
+return $('#installationUpdateSaveBtn');
   }
   public get installationUpdateCancelBtn() {
-    return browser.element('#installationUpdateCancelBtn');
+    $('#installationUpdateCancelBtn').waitForDisplayed(20000);
+$('#installationUpdateCancelBtn').waitForClickable({timeout: 20000});
+return $('#installationUpdateCancelBtn');
   }
   public get installationDeleteId() {
-    return browser.element('#selectedInstallationId');
+    $('#selectedInstallationId').waitForDisplayed(20000);
+$('#selectedInstallationId').waitForClickable({timeout: 20000});
+return $('#selectedInstallationId');
   }
   public get installationDeleteName() {
-    return browser.element('#selectedInstallationName');
+    $('#selectedInstallationName').waitForDisplayed(20000);
+$('#selectedInstallationName').waitForClickable({timeout: 20000});
+return $('#selectedInstallationName');
   }
   public get installationDeleteDeleteBtn() {
-    return browser.element('#installationDeleteDeleteBtn');
+    $('#installationDeleteDeleteBtn').waitForDisplayed(20000);
+$('#installationDeleteDeleteBtn').waitForClickable({timeout: 20000});
+return $('#installationDeleteDeleteBtn');
   }
   public get installationDeleteCancelBtn() {
-    return browser.element('#installationDeleteCancelBtn');
+    $('#installationDeleteCancelBtn').waitForDisplayed(20000);
+$('#installationDeleteCancelBtn').waitForClickable({timeout: 20000});
+return $('#installationDeleteCancelBtn');
   }
   public get page2Object() {
     return browser.element(`//*[div]//*[contains(@class, 'd-flex justify-content-center')]//*[ul]//*[contains(@class, 'page-item')]//*[contains(text(), '2')]`);
@@ -119,7 +161,9 @@ export class InstallationCheckingInstallationPage extends Page {
   }
 
   public  getCustomerSearchField() {
-    return browser.element('#selectCustomer .ng-input > input');
+    $('#selectCustomer .ng-input > input').waitForDisplayed(20000);
+$('#selectCustomer .ng-input > input').waitForClickable({timeout: 20000});
+return $('#selectCustomer .ng-input > input');
   }
   public getCustomerListOfChoices() {
     return browser.$$('#selectCustomer .ng-option');
@@ -129,7 +173,9 @@ export class InstallationCheckingInstallationPage extends Page {
   }
 
   public  getDeviceUserSearchField() {
-    return browser.element('#selectDeviceUser .ng-input > input');
+    $('#selectDeviceUser .ng-input > input').waitForDisplayed(20000);
+$('#selectDeviceUser .ng-input > input').waitForClickable({timeout: 20000});
+return $('#selectDeviceUser .ng-input > input');
   }
   public getDeviceUserListOfChoices() {
     return browser.$$('#selectDeviceUser .ng-option');
