@@ -165,10 +165,10 @@ export class InstallationCheckingInstallationPage extends Page {
         return $('#selectCustomer .ng-input > input');
     }
     public getCustomerListOfChoices() {
-        return browser.$$('#selectCustomer .ng-option');
+        return $$('#selectCustomer .ng-option');
     }
     public  selectedListField() {
-        return browser.$('#selectCustomer .ng-value .ng-value-label');
+        return $('#selectCustomer .ng-value .ng-value-label');
     }
 
     public  getDeviceUserSearchField() {
@@ -177,7 +177,7 @@ export class InstallationCheckingInstallationPage extends Page {
         return $('#selectDeviceUser .ng-input > input');
     }
     public getDeviceUserListOfChoices() {
-        return browser.$$('#selectDeviceUser .ng-option');
+        return $$('#selectDeviceUser .ng-option');
     }
 
     assignInstallation(deviceUserName: string) {
