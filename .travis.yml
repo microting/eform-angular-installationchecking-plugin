@@ -10,7 +10,6 @@ services:
 install:
   - nvm install 11.0.0
   - nvm use 11.0.0
-install:
   - sudo mkdir -p /var/www/microting/eform-angular-frontend/eFormAPI/eFormAPI.Web/out/output/datafolder/pdf/
   - sudo chown -R travis:travis /var/www/microting
   - pip install --user awscli
