@@ -129,6 +129,7 @@ export class InstallationCheckingInstallationPage extends Page {
         $('#spinner-animation').waitForDisplayed(90000, true);
         const searchField = installationPage.getCustomerSearchField();
         searchField.addValue(name);
+        browser.pause(500);
         const listChoices = installationPage.getCustomerListOfChoices();
         const choice = listChoices[0];
         $('#spinner-animation').waitForDisplayed(90000, true);
