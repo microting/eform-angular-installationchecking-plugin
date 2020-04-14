@@ -6,31 +6,31 @@ export class CustomersSettingsPage extends Page {
     }
 
     public get deleteCustomerBtn() {
-        $('#cancelCreateBtn').waitForDisplayed(20000);
+        $('#cancelCreateBtn').waitForDisplayed({timeout: 20000});
         $('#cancelCreateBtn').waitForClickable({timeout: 20000});
         return $('#cancelCreateBtn');
     }
 
     public get saveEditBtn() {
-        $('#saveEditBtn').waitForDisplayed(20000);
+        $('#saveEditBtn').waitForDisplayed({timeout: 20000});
         $('#saveEditBtn').waitForClickable({timeout: 20000});
         return $('#saveEditBtn');
     }
 
     public get cancelEditBtn() {
-        $('#cancelEditBtn').waitForDisplayed(20000);
+        $('#cancelEditBtn').waitForDisplayed({timeout: 20000});
         $('#cancelEditBtn').waitForClickable({timeout: 20000});
         return $('#cancelEditBtn');
     }
 
     public get saveDeleteBtn() {
-        $('#saveDeleteBtn').waitForDisplayed(20000);
+        $('#saveDeleteBtn').waitForDisplayed({timeout: 20000});
         $('#saveDeleteBtn').waitForClickable({timeout: 20000});
         return $('#saveDeleteBtn');
     }
 
     public get cancelDeleteBtn() {
-        $('#cancelDeleteBtn').waitForDisplayed(20000);
+        $('#cancelDeleteBtn').waitForDisplayed({timeout: 20000});
         $('#cancelDeleteBtn').waitForClickable({timeout: 20000});
         return $('#cancelDeleteBtn');
     }
@@ -41,10 +41,10 @@ export class CustomersSettingsPage extends Page {
     public clickCheckboxById(id: string) {
         const el = $('#mat-checkbox' + id);
         el.click();
-        $('#spinner-animation').waitForDisplayed(90000, true);
+        $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     }
     public  getSearchField() {
-        $('.ng-input > input').waitForDisplayed(20000);
+        $('.ng-input > input').waitForDisplayed({timeout: 20000});
         $('.ng-input > input').waitForClickable({timeout: 20000});
         return $('.ng-input > input');
     }
@@ -58,7 +58,7 @@ export class CustomersSettingsPage extends Page {
     public saveSettings() {
         const saveSettingsBtn = $('#saveSettingsBtn');
         saveSettingsBtn.click();
-        $('#spinner-animation').waitForDisplayed(90000, true);
+        $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     }
 }
 

@@ -11,32 +11,32 @@ export class CustomersPage extends PageWithNavbarPage {
 
   public configureSearchableList(listName: string) {
     customersPage.Navbar.advancedDropdown();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     customersPage.Navbar.clickonSubMenuItem('Søgbar Lister');
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     const newSearchListBtn = $('#createEntitySearchBtn');
     const numberOfListsBefore = $$('#tableBody > tr').length;
     newSearchListBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     const fieldElement = $('#createName');
     fieldElement.addValue(listName);
     const confirmBtn = $('#entitySearchCreateSaveBtn');
     confirmBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     const numberOfListsAfter = $$('#tableBody > tr').length;
     expect(numberOfListsAfter, 'Number of rows is less than expected').equal(numberOfListsBefore + 1);
 
     // Configure List
     const nameOfList = 'My testing list';
     customersPage.goToCustomersPage();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     customersPage.settingsCustomerBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     const searchField = customersSettingsPage.getSearchField();
     searchField.addValue(nameOfList);
     const listChoices = customersSettingsPage.getListOfChoices();
     const choice = listChoices[0];
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     choice.click();
     const fieldToCheck = customersSettingsPage.selectedListField();
     expect(fieldToCheck.getText(), 'Searchable list is not selected').equal('My testing list');
@@ -46,8 +46,8 @@ export class CustomersPage extends PageWithNavbarPage {
   public createCustomer(companyName: string) {
     customersPage.goToCustomersPage();
     customersPage.newCustomerBtn.click();
-    $('#spinner-animation').waitForDisplayed(10000, true);
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     const customerObject = {
       createdBy: 'John Smith',
       customerNo: '1',
@@ -60,11 +60,11 @@ export class CustomersPage extends PageWithNavbarPage {
       email: 'user@user.com'
     };
     const rowCountBeforeCreation = customersPage.rowNum();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     customersModalPage.createCustomer(customerObject);
-    $('#spinner-animation').waitForDisplayed(10000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
     const rowCountAfterCreation = customersPage.rowNum();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     expect(rowCountAfterCreation, 'Number of rows hasn\'t changed after creating new user').equal(rowCountBeforeCreation + 1);
     const lastCustomer: CustomersRowObject = customersPage.getCustomer(customersPage.rowNum());
     expect(lastCustomer.createdBy, 'Created by of created customer is incorrect').equal(customerObject.createdBy);
@@ -76,7 +76,7 @@ export class CustomersPage extends PageWithNavbarPage {
     expect(lastCustomer.cityName, 'City name of created customer is incorrect').equal(customerObject.cityName);
     expect(lastCustomer.phone, 'Phone of created customer is incorrect').equal(customerObject.phone);
     expect(lastCustomer.email, 'Email of created customer is incorrect').equal(customerObject.email);
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
 
   public getListOfChoices() {
@@ -92,16 +92,16 @@ export class CustomersPage extends PageWithNavbarPage {
   }
   public clickIdSort() {
     $('#IdTableHeader').click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
   public clickContactSort() {
     $('#ContactPersonTableHeader').click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
 
   public clickCompanySort() {
     $('#CompanyNameTableHeader').click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
 
   public getCustomerValue(selector: any, row: number) {
@@ -118,61 +118,61 @@ export class CustomersPage extends PageWithNavbarPage {
   }
 
   public get newCustomerBtn() {
-    $('#newCustomerBtn').waitForDisplayed(20000);
+    $('#newCustomerBtn').waitForDisplayed({timeout: 20000});
     $('#newCustomerBtn').waitForClickable({timeout: 20000});
     return $('#newCustomerBtn');
   }
 
   public get customersSettingsBtn() {
-    $('#firstName').waitForDisplayed(20000);
+    $('#firstName').waitForDisplayed({timeout: 20000});
     $('#firstName').waitForClickable({timeout: 20000});
     return $('#firstName');
   }
 
   public get importCustomersSettingsBtn() {
-    $('#lastName').waitForDisplayed(20000);
+    $('#lastName').waitForDisplayed({timeout: 20000});
     $('#lastName').waitForClickable({timeout: 20000});
     return $('#lastName');
   }
 
   // same purpose as previous method?
   public  importCustomerBtn() {
-    $('#importCustomer').waitForDisplayed(20000);
+    $('#importCustomer').waitForDisplayed({timeout: 20000});
     $('#importCustomer').waitForClickable({timeout: 20000});
     return $('#importCustomer');
   }
 
   public  goToImportBtn() {
     this.importCustomerBtn().click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
 
   public get saveImportCustomersBtn() {
-    $('#saveCreateBtn').waitForDisplayed(20000);
+    $('#saveCreateBtn').waitForDisplayed({timeout: 20000});
     $('#saveCreateBtn').waitForClickable({timeout: 20000});
     return $('#saveCreateBtn');
   }
 
   public get cancelImportCustomersBtn() {
-    $('#saveCreateBtn').waitForDisplayed(20000);
+    $('#saveCreateBtn').waitForDisplayed({timeout: 20000});
     $('#saveCreateBtn').waitForClickable({timeout: 20000});
     return $('#saveCreateBtn');
   }
 
   public get deleteCustomerBtn() {
-    $('#cancelCreateBtn').waitForDisplayed(20000);
+    $('#cancelCreateBtn').waitForDisplayed({timeout: 20000});
     $('#cancelCreateBtn').waitForClickable({timeout: 20000});
     return $('#cancelCreateBtn');
   }
 
   public get editCustomerBtn() {
-    $('#editCustomerBtn').waitForDisplayed(20000);
+    $('#editCustomerBtn').waitForDisplayed({timeout: 20000});
     $('#editCustomerBtn').waitForClickable({timeout: 20000});
     return $('#editCustomerBtn');
   }
 
   public get customersButton() {
-    $('#customers-pn').waitForDisplayed(20000);
+    $('#customers-pn').waitForDisplayed({timeout: 20000});
     $('#customers-pn').waitForClickable({timeout: 20000});
     return $('#customers-pn');
   }
@@ -184,17 +184,17 @@ export class CustomersPage extends PageWithNavbarPage {
   public goToCustomerSettings() {
     const elem = $('button .btn .btn-danger');
     elem.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
 
   public goToCustomersPage() {
     this.customersButton.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     //browser.pause(20000);
   }
 
   public get saveDeleteBtn() {
-    $('#customerSaveDeleteBtn').waitForDisplayed(20000);
+    $('#customerSaveDeleteBtn').waitForDisplayed({timeout: 20000});
     $('#customerSaveDeleteBtn').waitForClickable({timeout: 20000});
     return $('#customerSaveDeleteBtn');
   }

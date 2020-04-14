@@ -27,49 +27,49 @@ describe('Installation Checking - Installation - Add', function () {
     installationsPage.goToInstallationsPage();
   });
   it('should create installation', function () {
-    $('#createInstallationBtn').waitForDisplayed(30000);
+    $('#createInstallationBtn').waitForDisplayed({timeout: 30000});
     installationPage.createInstallation(companyName);
     const installation = installationPage.getFirstRowObject();
     expect(installation.companyName).equal(companyName);
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     browser.refresh();
   });
   it('should not create installation', function () {
     const rowNumsBeforeCreate = installationPage.rowNum;
-    $('#spinner-animation').waitForDisplayed(90000, true);
-    $('#createInstallationBtn').waitForDisplayed(30000);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
+    $('#createInstallationBtn').waitForDisplayed({timeout: 30000});
     installationPage.createInstallation_Cancels();
     expect(rowNumsBeforeCreate).equal(installationPage.rowNum);
   });
   it('should not assign installation', function () {
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     const installation = installationPage.getFirstRowObject();
     const checkboxBeforeAssign = installation.assignCheckbox;
-    $('#installationAssignBtn').waitForDisplayed(30000);
+    $('#installationAssignBtn').waitForDisplayed({timeout: 30000});
     installationPage.assignInstallation_Cancels();
     expect(installation.assignCheckbox).equal(checkboxBeforeAssign);
   });
   it('should assign installation', function () {
-    $('#installationAssignBtn').waitForDisplayed(30000);
+    $('#installationAssignBtn').waitForDisplayed({timeout: 30000});
     installationPage.assignInstallation(deviceUserFullName);
-    $('#installationAssignBtn').waitForDisplayed(30000);
+    $('#installationAssignBtn').waitForDisplayed({timeout: 30000});
     const installation = installationPage.getFirstRowObject();
     expect(installation.assignedTo).equal(deviceUserFullName);
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     //browser.refresh();
   });
   it('should not retract installation', function () {
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     installationPage.retractInstallation_Cancels();
     const installation = installationPage.getFirstRowObject();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     expect(installation.assignedTo).equal(deviceUserFullName);
   });
   it('should retract installation', function () {
-      $('#spinner-animation').waitForDisplayed(90000, true);
+      $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
       installationPage.retractInstallation();
       const installation = installationPage.getFirstRowObject();
-      $('#spinner-animation').waitForDisplayed(90000, true);
+      $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
       expect(installation.assignedTo).equal('');
   });
 });

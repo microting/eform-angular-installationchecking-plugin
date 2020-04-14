@@ -4,7 +4,7 @@
   <div class="row pl-1">
     <div class="col-md-2">
       <div class="md-form">
-        <input mdbInputDirective [mdbValidate]="false"
+        <input mdbInput
                type="text" (input)="onSearchInputChanged($event)"
                class="form-control input-sm" id="searchInput">
         <label for="searchInput">{{'Search' | translate}}</label>
@@ -142,26 +142,26 @@
           </td>
           <td>
             <div class="d-flex flex-row justify-content-center">
-              <button class="btn btn-success btn-icon mb-2" *ngIf="installation.state === installationStates.Completed && installation.removalSdkCaseDbId && installation.removalFormId"
+              <button mdbBtn class="btn-success btn-icon mb-2" *ngIf="installation.state === installationStates.Completed && installation.removalSdkCaseDbId && installation.removalFormId"
                       [routerLink]="['../case/' + installation.installationSdkCaseDbId + '/' + installation.installationFormId + '/' + installation.id]"
                       id="showCaseLink_{{i}}" mdbTooltip="{{ 'Show case' | translate }}">
                 <fa-icon icon="briefcase" [fixedWidth]="true" size="lg"></fa-icon>
               </button>
-              <button class="btn btn-accent text-black-50 btn-icon mb-2"
+              <button mdbBtn class="btn-accent text-black-50 btn-icon mb-2"
                       mdbTooltip="{{ 'Retract installation' | translate }}"
                       id="installationRetractBtn_{{i}}"
                       *ngIf="installation.state === installationStates.Assigned && pluginClaimsHelper.check(installationCheckingPnClaims.assignInstallations)"
                       (click)="showRetractInstallationModal(installation)">
                 <fa-icon icon="times-circle" [fixedWidth]="true" size="lg"></fa-icon>
               </button>
-              <button class="btn btn-success btn-icon mb-2"
+              <button mdbBtn class="btn-success btn-icon mb-2"
                       mdbTooltip="{{ 'Export to excel' | translate }}"
                       id="installationExcelBtn_{{i}}"
                       *ngIf="installation.state === installationStates.Completed && pluginClaimsHelper.check(installationCheckingPnClaims.exportInstallations)"
                       (click)="saveExcel(installation.id)">
                 <fa-icon icon="file-excel" [fixedWidth]="true" size="lg"></fa-icon>
               </button>
-              <button class="btn btn-danger btn-icon mb-2"
+              <button mdbBtn class="btn-danger btn-icon mb-2"
                       mdbTooltip="{{ 'Archive installation' | translate }}"
                       id="installationArchiveBtn_{{i}}"
                       *ngIf="installation.state === installationStates.Completed && pluginClaimsHelper.check(installationCheckingPnClaims.archiveInstallations)"

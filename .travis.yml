@@ -8,8 +8,8 @@ addons:
 services:
   - mysql
 install:
-  - nvm install 11.0.0
-  - nvm use 11.0.0
+  - nvm install 12.16.2
+  - nvm use 12.16.2
   - sudo mkdir -p /var/www/microting/eform-angular-frontend/eFormAPI/eFormAPI.Web/out/output/datafolder/pdf/
   - sudo chown -R travis:travis /var/www/microting
   - pip install --user awscli
@@ -54,8 +54,9 @@ script:
   - ../../eform-angular-installationchecking-plugin/testinginstallpn.sh
   - ../../eform-angular-basecustomer-plugin/testinginstallpn.sh
   - npm start &
+  - sleep 75
   - dotnet run --project ../eFormAPI/eFormAPI.Web/eFormAPI.Web.csproj > dotnet_log 2>&1 &
-  - sleep 40
+  - sleep 75
   - npm run testheadless
   - npm run testheadlessplugin
   - aws s3 sync errorShots/ s3://$S3_STORAGE_FOLDER/InstallationChecking/$TRAVIS_BUILD_NUMBER || true

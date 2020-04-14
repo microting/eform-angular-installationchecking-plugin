@@ -13,8 +13,8 @@ describe('Application settings page - site header section', function () {
         loginPage.login();
         myEformsPage.Navbar.advancedDropdown();
         myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-        $('#plugin-name').waitForDisplayed(50000);
-        $('#spinner-animation').waitForDisplayed(10000, true);
+        $('#plugin-name').waitForDisplayed({timeout: 50000});
+        $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
 
         const plugin = pluginsPage.getFirstPluginRowObj();
         //expect(plugin.id).equal(1);
@@ -39,7 +39,7 @@ describe('Application settings page - site header section', function () {
         const plugin = pluginsPage.getFirstPluginRowObj();
         // pluginPage.pluginSettingsBtn.click();
         plugin.activateBtn.click();
-        $('#pluginOKBtn').waitForDisplayed(40000);
+        $('#pluginOKBtn').waitForDisplayed({timeout: 40000});
         pluginPage.pluginOKBtn.click();
         browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
         loginPage.open('/');
@@ -47,8 +47,8 @@ describe('Application settings page - site header section', function () {
         loginPage.login();
         myEformsPage.Navbar.advancedDropdown();
         myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-        $('#plugin-name').waitForDisplayed(50000);
-        $('#spinner-animation').waitForDisplayed(10000, true);
+        $('#plugin-name').waitForDisplayed({timeout: 50000});
+        $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
 
         const secondPlugin = pluginsPage.getSecondPluginRowObj();
         //expect(secondPlugin.id).equal(2);
@@ -57,7 +57,7 @@ describe('Application settings page - site header section', function () {
 
         // pluginPage.pluginSettingsBtn.click();
         secondPlugin.activateBtn.click();
-        $('#pluginOKBtn').waitForDisplayed(40000);
+        $('#pluginOKBtn').waitForDisplayed({timeout: 40000});
         pluginPage.pluginOKBtn.click();
         browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
         loginPage.open('/');
@@ -65,22 +65,22 @@ describe('Application settings page - site header section', function () {
         loginPage.login();
         myEformsPage.Navbar.advancedDropdown();
         myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-        $('#plugin-name').waitForDisplayed(50000);
-        $('#spinner-animation').waitForDisplayed(10000, true);
+        $('#plugin-name').waitForDisplayed({timeout: 50000});
+        $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
         // browser.pause(10000);
 
         const pluginToFind = pluginsPage.getFirstPluginRowObj();
         //expect(pluginToFind.id).equal(1);
         // expect(pluginToFind.name).equal('Microting InstallationChecking Plugin');
         expect(pluginToFind.version).equal('1.0.0.0');
-        $(`//*[contains(text(), 'Planlægning')]`).waitForDisplayed(20000);
-        $(`//*[contains(text(), 'Kunder')]`).waitForDisplayed(20000);
+        $(`//*[contains(text(), 'Planlægning')]`).waitForDisplayed({timeout: 20000});
+        $(`//*[contains(text(), 'Kunder')]`).waitForDisplayed({timeout: 20000});
     });
 
     // it('should activate the plugin', function () {
     //   let plugin = pluginsPage.getFirstPluginRowObj();
     //   plugin.activateBtn.click();
-    //   $('#pluginOKBtn').waitForDisplayed(40000);
+    //   $('#pluginOKBtn').waitForDisplayed({timeout: 40000});
     //   pluginPage.pluginOKBtn.click();
     //   browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
     //   browser.refresh();
@@ -88,12 +88,12 @@ describe('Application settings page - site header section', function () {
     //   loginPage.login();
     //   myEformsPage.Navbar.advancedDropdown();
     //   myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-    //   $('#plugin-name').waitForDisplayed(50000);
+    //   $('#plugin-name').waitForDisplayed({timeout: 50000});
     //   browser.pause(10000);
     //
     //   const pluginTwo = pluginsPage.getSecondPluginRowObj();
     //   pluginTwo.activateBtn.click();
-    //   $('#pluginOKBtn').waitForDisplayed(40000);
+    //   $('#pluginOKBtn').waitForDisplayed({timeout: 40000});
     //   pluginPage.pluginOKBtn.click();
     //   browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
     //   browser.refresh();
@@ -101,7 +101,7 @@ describe('Application settings page - site header section', function () {
     //   loginPage.login();
     //   myEformsPage.Navbar.advancedDropdown();
     //   myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-    //   $('#plugin-name').waitForDisplayed(50000);
+    //   $('#plugin-name').waitForDisplayed({timeout: 50000});
     //   browser.pause(10000);
     //   browser.pause(10000);
     //

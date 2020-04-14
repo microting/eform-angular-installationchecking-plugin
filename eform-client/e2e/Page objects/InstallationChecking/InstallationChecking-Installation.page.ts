@@ -11,107 +11,107 @@ export class InstallationCheckingInstallationPage extends Page {
     $(`//*[contains(@class, 'dropdown')]//*[contains(text(), 'Planlægning')]`).click();
   }
   public get installationBtn() {
-    $('#installationchecking-pn-installation').waitForDisplayed(20000);
+    $('#installationchecking-pn-installation').waitForDisplayed({timeout: 20000});
     $('#installationchecking-pn-installation').waitForClickable({timeout: 20000});
     return $('#installationchecking-pn-installation');
   }
   public get installationCreateBtn() {
-    $('#createInstallationBtn').waitForDisplayed(20000);
+    $('#createInstallationBtn').waitForDisplayed({timeout: 20000});
     $('#createInstallationBtn').waitForClickable({timeout: 20000});
     return $('#createInstallationBtn');
   }
   public get installationAssignBtn() {
-    $('#installationAssignBtn').waitForDisplayed(20000);
+    $('#installationAssignBtn').waitForDisplayed({timeout: 20000});
     $('#installationAssignBtn').waitForClickable({timeout: 20000});
     return $('#installationAssignBtn');
   }
   public get installationAssignBtnSave() {
-    $('#installationAssignBtnSave').waitForDisplayed(20000);
+    $('#installationAssignBtnSave').waitForDisplayed({timeout: 20000});
     $('#installationAssignBtnSave').waitForClickable({timeout: 20000});
     return $('#installationAssignBtnSave');
   }
   public get installationAssignBtnSaveCancel() {
-    $('#installationAssignBtnSaveCancel').waitForDisplayed(20000);
+    $('#installationAssignBtnSaveCancel').waitForDisplayed({timeout: 20000});
     $('#installationAssignBtnSaveCancel').waitForClickable({timeout: 20000});
     return $('#installationAssignBtnSaveCancel');
   }
   public get installationRetractBtn() {
-    $('#installationRetractBtn').waitForDisplayed(20000);
+    $('#installationRetractBtn').waitForDisplayed({timeout: 20000});
     $('#installationRetractBtn').waitForClickable({timeout: 20000});
     return $('#installationRetractBtn');
   }
   public get installationRetractSaveBtn() {
-    $('#installationRetractSaveBtn').waitForDisplayed(20000);
+    $('#installationRetractSaveBtn').waitForDisplayed({timeout: 20000});
     $('#installationRetractSaveBtn').waitForClickable({timeout: 20000});
     return $('#installationRetractSaveBtn');
   }
   public get installationRetractSaveCancelBtn() {
-    $('#installationRetractSaveCancelBtn').waitForDisplayed(20000);
+    $('#installationRetractSaveCancelBtn').waitForDisplayed({timeout: 20000});
     $('#installationRetractSaveCancelBtn').waitForClickable({timeout: 20000});
     return $('#installationRetractSaveCancelBtn');
   }
   public get installationCreateNameBox() {
-    $('#createInstallationName').waitForDisplayed(20000);
+    $('#createInstallationName').waitForDisplayed({timeout: 20000});
     $('#createInstallationName').waitForClickable({timeout: 20000});
     return $('#createInstallationName');
   }
   public get installationAssignCheckbox() {
-    $('#assignCheckbox').waitForDisplayed(20000);
+    $('#assignCheckbox').waitForDisplayed({timeout: 20000});
     $('#assignCheckbox').waitForClickable({timeout: 20000});
     return $('#assignCheckbox');
   }
   public get installationCreateSiteCheckbox() {
-    $('#checkbox').waitForDisplayed(20000);
+    $('#checkbox').waitForDisplayed({timeout: 20000});
     $('#checkbox').waitForClickable({timeout: 20000});
     return $('#checkbox');
   }
   public get installationCreateSaveBtn() {
-    $('#installationCreateSaveBtn').waitForDisplayed(20000);
+    $('#installationCreateSaveBtn').waitForDisplayed({timeout: 20000});
     $('#installationCreateSaveBtn').waitForClickable({timeout: 20000});
     return $('#installationCreateSaveBtn');
   }
   public get installationCreateCancelBtn() {
-    $('#installationCreateCancelBtn').waitForDisplayed(20000);
+    $('#installationCreateCancelBtn').waitForDisplayed({timeout: 20000});
     $('#installationCreateCancelBtn').waitForClickable({timeout: 20000});
     return $('#installationCreateCancelBtn');
   }
   public get installationUpdateNameBox() {
-    $('#updateInstallationName').waitForDisplayed(20000);
+    $('#updateInstallationName').waitForDisplayed({timeout: 20000});
     $('#updateInstallationName').waitForClickable({timeout: 20000});
     return $('#updateInstallationName');
   }
   public get installationUpdateSiteCheckbox() {
-    $('#checkbox').waitForDisplayed(20000);
+    $('#checkbox').waitForDisplayed({timeout: 20000});
     $('#checkbox').waitForClickable({timeout: 20000});
     return $('#checkbox');
   }
   public get installationUpdateSaveBtn() {
-    $('#installationUpdateSaveBtn').waitForDisplayed(20000);
+    $('#installationUpdateSaveBtn').waitForDisplayed({timeout: 20000});
     $('#installationUpdateSaveBtn').waitForClickable({timeout: 20000});
     return $('#installationUpdateSaveBtn');
   }
   public get installationUpdateCancelBtn() {
-    $('#installationUpdateCancelBtn').waitForDisplayed(20000);
+    $('#installationUpdateCancelBtn').waitForDisplayed({timeout: 20000});
     $('#installationUpdateCancelBtn').waitForClickable({timeout: 20000});
     return $('#installationUpdateCancelBtn');
   }
   public get installationDeleteId() {
-    $('#selectedInstallationId').waitForDisplayed(20000);
+    $('#selectedInstallationId').waitForDisplayed({timeout: 20000});
     $('#selectedInstallationId').waitForClickable({timeout: 20000});
     return $('#selectedInstallationId');
   }
   public get installationDeleteName() {
-    $('#selectedInstallationName').waitForDisplayed(20000);
+    $('#selectedInstallationName').waitForDisplayed({timeout: 20000});
     $('#selectedInstallationName').waitForClickable({timeout: 20000});
     return $('#selectedInstallationName');
   }
   public get installationDeleteDeleteBtn() {
-    $('#installationDeleteDeleteBtn').waitForDisplayed(20000);
+    $('#installationDeleteDeleteBtn').waitForDisplayed({timeout: 20000});
     $('#installationDeleteDeleteBtn').waitForClickable({timeout: 20000});
     return $('#installationDeleteDeleteBtn');
   }
   public get installationDeleteCancelBtn() {
-    $('#installationDeleteCancelBtn').waitForDisplayed(20000);
+    $('#installationDeleteCancelBtn').waitForDisplayed({timeout: 20000});
     $('#installationDeleteCancelBtn').waitForClickable({timeout: 20000});
     return $('#installationDeleteCancelBtn');
   }
@@ -120,48 +120,48 @@ export class InstallationCheckingInstallationPage extends Page {
   }
   goToInstallationsPage() {
     this.installationCheckingDropDown();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationBtn.click();
   }
 
   createInstallation(name: string) {
     this.installationCreateBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     const searchField = installationPage.getCustomerSearchField();
     searchField.addValue(name);
     browser.pause(500);
     const listChoices = installationPage.getCustomerListOfChoices();
     const choice = listChoices[0];
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     choice.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationCreateSaveBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
   createInstallation_Cancels() {
     this.installationCreateBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationCreateCancelBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
   retractInstallation() {
     const installation = installationPage.getFirstRowObject();
     installation.retractBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationRetractSaveBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
 
   retractInstallation_Cancels() {
     const installation = installationPage.getFirstRowObject();
     installation.retractBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationRetractSaveCancelBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
 
   public  getCustomerSearchField() {
-    $('#selectCustomer .ng-input > input').waitForDisplayed(20000);
+    $('#selectCustomer .ng-input > input').waitForDisplayed({timeout: 20000});
     $('#selectCustomer .ng-input > input').waitForClickable({timeout: 20000});
     return $('#selectCustomer .ng-input > input');
   }
@@ -173,7 +173,7 @@ export class InstallationCheckingInstallationPage extends Page {
   }
 
   public  getDeviceUserSearchField() {
-    $('#selectDeviceUser .ng-input > input').waitForDisplayed(20000);
+    $('#selectDeviceUser .ng-input > input').waitForDisplayed({timeout: 20000});
     $('#selectDeviceUser .ng-input > input').waitForClickable({timeout: 20000});
     return $('#selectDeviceUser .ng-input > input');
   }
@@ -184,30 +184,30 @@ export class InstallationCheckingInstallationPage extends Page {
   assignInstallation(deviceUserName: string) {
     const installation = installationPage.getFirstRowObject();
     installation.assignCheckbox.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationAssignBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     const searchField = installationPage.getDeviceUserSearchField();
     searchField.addValue(deviceUserName);
     const listChoices = installationPage.getDeviceUserListOfChoices();
     const choice = listChoices[0];
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     choice.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationAssignBtnSave.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
 
   assignInstallation_Cancels() {
     const installation = installationPage.getFirstRowObject();
     installation.assignCheckbox.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationAssignBtn.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationAssignBtnSaveCancel.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     installation.assignCheckbox.click();
-    $('#spinner-animation').waitForDisplayed(90000, true);
+    $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
   }
 
   getFirstRowObject(): InstallationPageRowObject {

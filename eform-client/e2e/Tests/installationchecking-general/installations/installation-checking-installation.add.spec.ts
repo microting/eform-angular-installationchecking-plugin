@@ -20,7 +20,7 @@ describe('Installation Checking - Installation - Add', function () {
     installationsPage.goToInstallationsPage();
   });
   it('Should create installation', function () {
-    $('#createInstallationBtn').waitForDisplayed(30000);
+    $('#createInstallationBtn').waitForDisplayed({timeout: 30000});
     installationPage.createInstallation(companyName);
     const installation = installationPage.getFirstRowObject();
     expect(installation.companyName).equal(companyName);
@@ -28,7 +28,7 @@ describe('Installation Checking - Installation - Add', function () {
   it('should not create installation', function () {
     const rowNumsBeforeCreate = installationPage.rowNum;
     browser.pause(8000);
-    $('#createInstallationBtn').waitForDisplayed(30000);
+    $('#createInstallationBtn').waitForDisplayed({timeout: 30000});
     installationPage.createInstallation_Cancels();
     expect(rowNumsBeforeCreate).equal(installationPage.rowNum);
   });
