@@ -92,7 +92,7 @@ export class CustomersModalPage extends Page {
 
     public get createCompanyAddress() {
         $('#createCompanyAddress').waitForDisplayed({timeout: 20000});
-        $('#createCompanyAddress').waitForClickable({timeout: 20000});
+        //$('#createCompanyAddress').waitForClickable({timeout: 20000});
         return $('#createCompanyAddress');
     }
 
