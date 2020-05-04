@@ -178,7 +178,9 @@ export class InstallationCheckingInstallationPage extends Page {
     return $('#selectDeviceUser .ng-input > input');
   }
   public getDeviceUserListOfChoices() {
-    return $$('#selectDeviceUser .ng-option');
+    const ele = $$('#selectDeviceUser .ng-option');
+    ele.waitForDisplayed({timeout: 20000});
+    return ele;
   }
 
   assignInstallation(deviceUserName: string) {
