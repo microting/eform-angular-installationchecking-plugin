@@ -22,7 +22,7 @@ export class InstallationCheckingSettingsComponent implements OnInit {
     this.installationcheckingPnSettingsService.getAllSettings().subscribe((data) => {
       if (data && data.success) {
         this.settingsModel = data.model;
-      } this.spinnerStatus = false;
+      }
     });
   }
 
@@ -31,7 +31,7 @@ export class InstallationCheckingSettingsComponent implements OnInit {
       .subscribe((data) => {
         if (data && data.success) {
 
-        } this.spinnerStatus = false;
+        }
       });
   }
 }
