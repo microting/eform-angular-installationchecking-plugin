@@ -25,7 +25,6 @@ export class RemovalPageComponent implements OnInit {
   installationsRequestModel: InstallationsRequestModel = new InstallationsRequestModel();
   installationsListModel: InstallationsListModel = new InstallationsListModel();
   states = [];
-  spinnerStatus = false;
   searchSubject = new Subject();
 
   get pluginClaimsHelper() {
@@ -85,7 +84,6 @@ export class RemovalPageComponent implements OnInit {
   }
 
   getRemovalsList() {
-    this.spinnerStatus = true;
     this.installationsRequestModel.isSortDsc = this.localPageSettings.isSortDsc;
     this.installationsRequestModel.sort = this.localPageSettings.sort;
     this.installationsRequestModel.pageSize = this.localPageSettings.pageSize;
@@ -95,17 +93,14 @@ export class RemovalPageComponent implements OnInit {
       if (data && data.success) {
         this.installationsListModel = data.model;
       }
-      this.spinnerStatus = false;
     });
   }
 
   archiveInstallation(id: number) {
-    this.spinnerStatus = true;
     this.installationsService.archive(id).subscribe((data) => {
       if (data && data.success) {
         this.getRemovalsList();
       }
-      this.spinnerStatus = false;
     });
   }
 
@@ -145,13 +140,10 @@ export class RemovalPageComponent implements OnInit {
   }
 
   saveExcel(id: number) {
-    this.spinnerStatus = true;
     this.installationsService.excel(id).subscribe(((data) => {
       saveAs(data, moment().format('YYYY-MM-DD') + '_installation_' + id + '.xlsx');
-      this.spinnerStatus = false;
     }), error => {
       this.toastrService.error(error);
-      this.spinnerStatus = false;
     });
   }
 

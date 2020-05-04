@@ -15,8 +15,6 @@ export class InstallationAssignComponent implements OnInit {
   installationIds: number[];
   selectedSiteId: number;
 
-  spinnerStatus = false;
-
   constructor(
     private installationsService: InstallationsService,
     private deviceUserService: DeviceUserService
@@ -39,7 +37,6 @@ export class InstallationAssignComponent implements OnInit {
   }
 
   assignInstallation() {
-    this.spinnerStatus = true;
     const assignModel = { employeeId: this.selectedSiteId, installationIds: this.installationIds } as InstallationsAssignModel;
 
     this.installationsService.assign(assignModel).subscribe((data) => {
@@ -47,7 +44,6 @@ export class InstallationAssignComponent implements OnInit {
         this.frame.hide();
         this.installationAssigned.emit();
       }
-      this.spinnerStatus = false;
     });
   }
 }

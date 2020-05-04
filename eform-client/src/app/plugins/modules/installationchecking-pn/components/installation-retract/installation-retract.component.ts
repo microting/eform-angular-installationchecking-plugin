@@ -12,8 +12,6 @@ export class InstallationRetractComponent implements OnInit {
   @Output() installationRetracted: EventEmitter<void> = new EventEmitter<void>();
   selectedModel: InstallationModel = new InstallationModel();
 
-  spinnerStatus = false;
-
   constructor(private installationsService: InstallationsService) { }
 
   ngOnInit() {
@@ -25,14 +23,12 @@ export class InstallationRetractComponent implements OnInit {
   }
 
   retractInstallation() {
-    this.spinnerStatus = true;
 
     this.installationsService.retract(this.selectedModel.id).subscribe((data) => {
       if (data && data.success) {
         this.frame.hide();
         this.installationRetracted.emit();
       }
-      this.spinnerStatus = false;
     });
   }
 }

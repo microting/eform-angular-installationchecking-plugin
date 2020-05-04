@@ -8,7 +8,6 @@ import {InstallationCheckingBaseSettingsModel} from '../../models';
   styleUrls: ['./installationchecking-settings.component.scss']
 })
 export class InstallationCheckingSettingsComponent implements OnInit {
-  spinnerStatus = false;
   settingsModel: InstallationCheckingBaseSettingsModel = new InstallationCheckingBaseSettingsModel();
 
   constructor(private installationcheckingPnSettingsService: InstallationCheckingPnSettingsService) {
@@ -20,7 +19,6 @@ export class InstallationCheckingSettingsComponent implements OnInit {
 
 
   getSettings() {
-    this.spinnerStatus = true;
     this.installationcheckingPnSettingsService.getAllSettings().subscribe((data) => {
       if (data && data.success) {
         this.settingsModel = data.model;
@@ -29,7 +27,6 @@ export class InstallationCheckingSettingsComponent implements OnInit {
   }
 
   updateSettings() {
-    this.spinnerStatus = true;
     this.installationcheckingPnSettingsService.updateSettings(this.settingsModel)
       .subscribe((data) => {
         if (data && data.success) {

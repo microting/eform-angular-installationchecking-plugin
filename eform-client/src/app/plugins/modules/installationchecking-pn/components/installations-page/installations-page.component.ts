@@ -24,7 +24,6 @@ export class InstallationsPageComponent implements OnInit {
   installationsListModel: InstallationsListModel = new InstallationsListModel();
   states = [];
   installationFormId: number;
-  spinnerStatus = false;
   searchSubject = new Subject();
 
   get pluginClaimsHelper() {
@@ -93,7 +92,6 @@ export class InstallationsPageComponent implements OnInit {
   }
 
   getInstallationsList() {
-    this.spinnerStatus = true;
     this.installationsRequestModel.isSortDsc = this.localPageSettings.isSortDsc;
     this.installationsRequestModel.sort = this.localPageSettings.sort;
     this.installationsRequestModel.pageSize = this.localPageSettings.pageSize;
@@ -103,7 +101,6 @@ export class InstallationsPageComponent implements OnInit {
       if (data && data.success) {
         this.installationsListModel = data.model;
       }
-      this.spinnerStatus = false;
     });
   }
 

@@ -23,8 +23,6 @@ export class InstallationCasePageComponent implements OnInit {
   currentTemplate: TemplateDto = new TemplateDto;
   currentInstallation: InstallationModel = new InstallationModel();
   replyElement: ReplyElementDto = new ReplyElementDto();
-
-  spinnerStatus = false;
   reverseRoute: string;
 
   get userClaims() {
@@ -57,13 +55,11 @@ export class InstallationCasePageComponent implements OnInit {
       if (operation && operation.success) {
         this.replyElement = operation.model;
       }
-      this.spinnerStatus = false;
     });
   }
 
   loadTemplateInfo() {
     if (this.templateId) {
-      this.spinnerStatus = true;
       this.eFormService.getSingle(this.templateId).subscribe(operation => {
         if (operation && operation.success) {
           this.currentTemplate = operation.model;
@@ -75,7 +71,6 @@ export class InstallationCasePageComponent implements OnInit {
 
   loadInstallationInfo() {
     if (this.installationId) {
-      this.spinnerStatus = true;
       this.installationsService.getSingle(this.installationId).subscribe(operation => {
         if (operation && operation.success) {
           this.currentInstallation = operation.model;

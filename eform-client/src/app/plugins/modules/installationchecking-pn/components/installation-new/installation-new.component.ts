@@ -16,8 +16,6 @@ export class InstallationNewComponent implements OnInit {
   selectedCustomerId: number;
   typeahead = new EventEmitter<string>();
 
-  spinnerStatus = false;
-
   constructor(
     private installationsService: InstallationsService,
     private cd: ChangeDetectorRef
@@ -49,14 +47,12 @@ export class InstallationNewComponent implements OnInit {
   }
 
   createInstallation() {
-    this.spinnerStatus = true;
 
     this.installationsService.create(this.selectedCustomerId).subscribe((data) => {
       if (data && data.success) {
         this.frame.hide();
         this.installationCreated.emit();
       }
-      this.spinnerStatus = false;
     });
   }
 
