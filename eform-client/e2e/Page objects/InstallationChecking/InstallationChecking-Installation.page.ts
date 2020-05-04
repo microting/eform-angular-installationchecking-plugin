@@ -178,9 +178,7 @@ export class InstallationCheckingInstallationPage extends Page {
     return $('#selectDeviceUser .ng-input > input');
   }
   public getDeviceUserListOfChoices() {
-    const ele = $$('#selectDeviceUser .ng-option');
-    ele.waitForDisplayed({timeout: 20000});
-    return ele;
+    return $$('#selectDeviceUser .ng-option');
   }
 
   assignInstallation(deviceUserName: string) {
@@ -194,6 +192,7 @@ export class InstallationCheckingInstallationPage extends Page {
     const listChoices = installationPage.getDeviceUserListOfChoices();
     const choice = listChoices[0];
     $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
+    choice.waitForDisplayed({timeout: 20000});
     choice.click();
     $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     this.installationAssignBtnSave.click();
