@@ -29,7 +29,8 @@ export const routes: Routes = [
       },
       {
         path: 'case',
-        loadChildren: './components/installation-case/installation-case.module#InstallationCaseModule'
+        loadChildren: () => import('./components/installation-case/installation-case.module')
+          .then(m => m.InstallationCaseModule)
       },
     ]
   }

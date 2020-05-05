@@ -1,7 +1,7 @@
 <div *ngIf="dataItemList">
   <ng-container *ngFor="let dataItem of dataItemList; let i = index">
-    <div class="card z-depth-2 mb-3" style="width: 100%" *ngIf="dataItem.fieldType != 'SaveButton'">
-      <div class="card-header"
+    <mdb-card class=" mb-3" *ngIf="dataItem.fieldType != 'SaveButton'">
+      <mdb-card-header
            [ngStyle]="{'background-color': dataItem.fieldValues.length > 0 ? (dataItem.fieldValues[0].color ? '#' + dataItem.fieldValues[0].color : '') : ''}"
            *ngIf="dataItem.fieldType != 'FieldContainer' && dataItem.fieldType != 'SaveButton'">
         {{dataItem.label}}
@@ -9,8 +9,8 @@
         <i>
           <div [innerHtml]="dataItem.description.inderValue"></div>
         </i>
-      </div>
-      <div class="card-body">
+      </mdb-card-header>
+      <mdb-card-body>
         <ng-container [ngSwitch]="dataItem.fieldType">
           <ng-container *ngSwitchCase="'Picture'">
             <element-picture [fieldValues]="dataItem.fieldValues"></element-picture>
@@ -62,8 +62,8 @@
           </ng-container>
           <div *ngSwitchDefault></div>
         </ng-container>
-      </div>
-    </div>
+      </mdb-card-body>
+    </mdb-card>
   </ng-container>
 </div>
 

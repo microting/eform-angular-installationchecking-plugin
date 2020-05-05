@@ -10,7 +10,6 @@ import { EformSharedModule } from '../../../common/modules/eform-shared/eform-sh
 import {InstallationCheckingPnLayoutComponent} from './layouts';
 
 import {InstallationCheckingPnRoutingModule} from './installationchecking-pn.routing.module';
-import {CasesModule} from '../../../modules';
 import {InstallationCheckingPnSettingsService, InstallationsService} from './services';
 import {
   InstallationAssignComponent,
@@ -31,8 +30,7 @@ import {
     FormsModule,
     NgSelectModule,
     EformSharedModule,
-    FontAwesomeModule,
-    CasesModule
+    FontAwesomeModule
   ],
   declarations: [
     InstallationCheckingPnLayoutComponent,
