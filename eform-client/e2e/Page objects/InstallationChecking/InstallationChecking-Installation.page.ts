@@ -164,9 +164,11 @@ export class InstallationCheckingInstallationPage extends Page {
     const ele = $('#selectCustomer .ng-input > input');
     ele.waitForDisplayed({timeout: 20000});
     ele.waitForClickable({timeout: 20000});
+    browser.pause(500);
     return ele;
   }
   public getCustomerListOfChoices() {
+    browser.pause(500);
     return $$('#selectCustomer .ng-option');
   }
   public  selectedListField() {
