@@ -56,7 +56,6 @@ describe('Installation Checking - Installation - Add', function () {
     const installation = installationPage.getFirstRowObject();
     expect(installation.assignedTo).equal(deviceUserFullName);
     $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
-    //browser.refresh();
   });
   it('should not retract installation', function () {
     $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
