@@ -162,7 +162,7 @@ export class InstallationCheckingInstallationPage extends Page {
 
   public  getCustomerSearchField() {
     // $('#selectCustomer .ng-input > input').waitForDisplayed({timeout: 20000});
-    $('#selectCustomer .ng-input > input').waitForClickable({timeout: 20000});
+    // $('#selectCustomer .ng-input > input').waitForClickable({timeout: 20000});
     return $('#selectCustomer .ng-input > input');
   }
   public getCustomerListOfChoices() {
@@ -174,7 +174,7 @@ export class InstallationCheckingInstallationPage extends Page {
 
   public  getDeviceUserSearchField() {
     // $('#selectDeviceUser .ng-input > input').waitForDisplayed({timeout: 20000});
-    $('#selectDeviceUser .ng-input > input').waitForClickable({timeout: 20000});
+    // $('#selectDeviceUser .ng-input > input').waitForClickable({timeout: 20000});
     return $('#selectDeviceUser .ng-input > input');
   }
   public getDeviceUserListOfChoices() {
