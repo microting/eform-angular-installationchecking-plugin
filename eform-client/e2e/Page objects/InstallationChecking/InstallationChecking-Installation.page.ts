@@ -5,6 +5,7 @@ export class InstallationCheckingInstallationPage extends Page {
     super();
   }
   public get rowNum(): number {
+    browser.pause(500);
     return $$('#tableBody > tr').length;
   }
   public installationCheckingDropDown() {
@@ -129,7 +130,6 @@ export class InstallationCheckingInstallationPage extends Page {
     $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     const searchField = installationPage.getCustomerSearchField();
     searchField.addValue(name);
-    browser.pause(500);
     const listChoices = installationPage.getCustomerListOfChoices();
     const choice = listChoices[0];
     $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
@@ -161,9 +161,10 @@ export class InstallationCheckingInstallationPage extends Page {
   }
 
   public  getCustomerSearchField() {
-    // $('#selectCustomer .ng-input > input').waitForDisplayed({timeout: 20000});
-    // $('#selectCustomer .ng-input > input').waitForClickable({timeout: 20000});
-    return $('#selectCustomer .ng-input > input');
+    const ele = $('#selectCustomer .ng-input > input');
+    ele.waitForDisplayed({timeout: 20000});
+    ele.waitForClickable({timeout: 20000});
+    return ele;
   }
   public getCustomerListOfChoices() {
     return $$('#selectCustomer .ng-option');

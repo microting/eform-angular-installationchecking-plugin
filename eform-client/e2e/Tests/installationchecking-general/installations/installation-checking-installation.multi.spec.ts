@@ -32,9 +32,10 @@ describe('Installation Checking - Installation - Add', function () {
     const installation = installationPage.getFirstRowObject();
     expect(installation.companyName).equal(companyName);
     $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
-    browser.refresh();
   });
   it('should not create installation', function () {
+    loginPage.open('/');
+    installationsPage.goToInstallationsPage();
     const rowNumsBeforeCreate = installationPage.rowNum;
     $('#spinner-animation').waitForDisplayed({timeout: 90000, reverse: true});
     $('#createInstallationBtn').waitForDisplayed({timeout: 30000});

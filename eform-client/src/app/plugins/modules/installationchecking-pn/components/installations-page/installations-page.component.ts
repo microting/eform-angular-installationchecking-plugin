@@ -43,6 +43,9 @@ export class InstallationsPageComponent implements OnInit {
   }
 
   get someAssign() {
+    if (this.installationsListModel.total === 0) {
+      return false;
+    }
     return this.installationsListModel.installations.some(x => x.assign);
   }
 
@@ -71,6 +74,7 @@ export class InstallationsPageComponent implements OnInit {
     this.settingsService.getAllSettings().subscribe((data) => {
       if (data && data.success) {
         this.installationFormId = data.model.installationFormId;
+        this.getInstallationsList();
       }
     });
   }
@@ -79,7 +83,6 @@ export class InstallationsPageComponent implements OnInit {
     this.localPageSettings = this.sharedPnService
       .getLocalPageSettings('installationCheckingPnSettings', 'Installations')
       .settings;
-    this.getInstallationsList();
   }
 
   updateLocalPageSettings() {
