@@ -4,7 +4,6 @@ import {Lightbox} from '@ngx-gallery/lightbox';
 import {FieldValueDto} from 'src/app/common/models';
 
 
-
 @Component({
   selector: 'element-signature',
   templateUrl: './element-signature.component.html',
@@ -15,19 +14,24 @@ export class ElementSignatureComponent implements OnChanges {
   images = [];
   galleryImages: GalleryItem[] = [];
 
-  constructor(public gallery: Gallery, public lightbox: Lightbox) { }
+  constructor(public gallery: Gallery, public lightbox: Lightbox) {
+  }
 
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && changes.fieldValues) {
       this.fieldValues.forEach(value => {
         if (value.uploadedDataObj) {
-          this.images.push({
-            src: '/api/template-files/get-image/' + value.uploadedDataObj.fileName,
-            thumbnail: '/api/template-files/get-image/' + value.uploadedDataObj.fileName,
-            fileName: value.uploadedDataObj.fileName,
-            text: value.id.toString(),
-            uploadedObjId: value.uploadedDataObj.id
+          this.imageSub$ = this.imageService.getImage(value.uploadedDataObj.fileName).subscribe(blob => {
+            const imageUrl = URL.createObjectURL(blob);
+            // TODO: CHECK
+            this.images.push({
+              src: imageUrl,
+              thumbnail: imageUrl,
+              fileName: value.uploadedDataObj.fileName,
+              text: value.id.toString(),
+              uploadedObjId: value.uploadedDataObj.id
+            });
           });
         }
       });
@@ -40,7 +44,7 @@ export class ElementSignatureComponent implements OnChanges {
   updateGallery() {
     this.galleryImages = [];
     this.images.forEach(value => {
-      this.galleryImages.push( new ImageItem({ src: value.src, thumb: value.thumbnail }));
+      this.galleryImages.push(new ImageItem({src: value.src, thumb: value.thumbnail}));
     });
   }
 

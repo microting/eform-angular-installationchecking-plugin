@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@an
 import {Gallery, GalleryItem, ImageItem} from '@ngx-gallery/core';
 import {Lightbox} from '@ngx-gallery/lightbox';
 import {FieldValueDto} from 'src/app/common/models';
-import {ImageService} from 'src/app/common/services/cases';
+import {TemplateFilesService} from 'src/app/common/services/cases';
 
 @Component({
   selector: 'element-picture',
@@ -16,7 +16,7 @@ export class ElementPictureComponent implements OnChanges {
   images = [];
   galleryImages: GalleryItem[] = [];
 
-  constructor(private imageService: ImageService, public gallery: Gallery, public lightbox: Lightbox) {
+  constructor(private imageService: TemplateFilesService, public gallery: Gallery, public lightbox: Lightbox) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -27,16 +27,20 @@ export class ElementPictureComponent implements OnChanges {
             lon: value.longitude,
             lat: value.latitude,
           });
-          this.images.push({
-            src: '/api/template-files/get-image/' + value.uploadedDataObj.fileName,
-            thumbnail: '/api/template-files/get-image/' + value.uploadedDataObj.fileName,
-            fileName: value.uploadedDataObj.fileName,
-            text: value.id.toString(),
-            googleMapsLat: value.latitude,
-            googleMapsLon: value.longitude,
-            googleMapsUrl: 'https://www.google.com/maps/place/' + value.latitude + ',' + value.longitude,
-            fieldId: value.fieldId,
-            uploadedObjId: value.uploadedDataObj.id
+          this.imageSub$ = this.imageService.getImage(value.uploadedDataObj.fileName).subscribe(blob => {
+            const imageUrl = URL.createObjectURL(blob);
+            // TODO: CHECK
+            this.images.push({
+              src: imageUrl,
+              thumbnail: imageUrl,
+              fileName: value.uploadedDataObj.fileName,
+              text: value.id.toString(),
+              googleMapsLat: value.latitude,
+              googleMapsLon: value.longitude,
+              googleMapsUrl: 'https://www.google.com/maps/place/' + value.latitude + ',' + value.longitude,
+              fieldId: value.fieldId,
+              uploadedObjId: value.uploadedDataObj.id
+            });
           });
         }
       });
@@ -49,7 +53,7 @@ export class ElementPictureComponent implements OnChanges {
   updateGallery() {
     this.galleryImages = [];
     this.images.forEach(value => {
-      this.galleryImages.push( new ImageItem({ src: value.src, thumb: value.thumbnail }));
+      this.galleryImages.push(new ImageItem({src: value.src, thumb: value.thumbnail}));
     });
   }
 
