@@ -1,20 +1,24 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {Gallery, GalleryItem, ImageItem} from '@ngx-gallery/core';
 import {Lightbox} from '@ngx-gallery/lightbox';
 import {FieldValueDto} from 'src/app/common/models';
 import {TemplateFilesService} from 'src/app/common/services/cases';
+import {Subscription} from 'rxjs';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
   selector: 'element-picture',
   templateUrl: './element-picture.component.html',
   styleUrls: ['./element-picture.component.scss']
 })
-export class ElementPictureComponent implements OnChanges {
+export class ElementPictureComponent implements OnChanges, OnDestroy {
   @Input() fieldValues: Array<FieldValueDto> = [];
   buttonsLocked = false;
   geoObjects = [];
   images = [];
   galleryImages: GalleryItem[] = [];
+  imageSub$: Subscription;
 
   constructor(private imageService: TemplateFilesService, public gallery: Gallery, public lightbox: Lightbox) {
   }
@@ -72,6 +76,9 @@ export class ElementPictureComponent implements OnChanges {
       this.gallery.ref('lightbox', {counter: false, loadingMode: 'indeterminate'}).load(this.galleryImages);
       this.lightbox.open(i);
     }
+  }
+
+  ngOnDestroy(): void {
   }
 
 }
