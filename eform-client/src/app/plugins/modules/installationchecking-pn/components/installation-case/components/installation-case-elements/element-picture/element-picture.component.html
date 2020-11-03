@@ -2,7 +2,7 @@
   <div class="col-md-3 col-sm-4 col-xs-12" *ngFor="let image of images; let i = index">
     <mdb-card class=" mb-3 mt-1">
       <img class="card-img-top card-img-adaptive z-depth-1" (click)="openPicture(i)"
-            [src]="image.src" alt="Card image cap">
+            [src]="image.src | authImage | async" alt="Card image cap">
       <mdb-card-body>
         <div class="d-flex justify-content-center">
           <button [disabled]="!image.googleMapsLat && !image.googleMapsLon || buttonsLocked"

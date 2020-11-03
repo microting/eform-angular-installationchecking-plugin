@@ -1,33 +1,41 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Gallery, GalleryComponent, GalleryItem, ImageItem} from '@ngx-gallery/core';
 import {Lightbox} from '@ngx-gallery/lightbox';
 import {FieldValueDto} from 'src/app/common/models';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {TemplateFilesService} from 'src/app/common/services';
+import {Subscription} from 'rxjs';
 
-
-
+@AutoUnsubscribe()
 @Component({
   selector: 'element-signature',
   templateUrl: './element-signature.component.html',
   styleUrls: ['./element-signature.component.scss']
 })
-export class ElementSignatureComponent implements OnChanges {
+export class ElementSignatureComponent implements OnChanges, OnDestroy {
   @Input() fieldValues: Array<FieldValueDto> = [];
   images = [];
   galleryImages: GalleryItem[] = [];
+  imageSub$: Subscription;
 
-  constructor(public gallery: Gallery, public lightbox: Lightbox) { }
+  constructor(public gallery: Gallery, public lightbox: Lightbox, private templateFilesService: TemplateFilesService) {
+  }
 
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes && changes.fieldValues) {
       this.fieldValues.forEach(value => {
         if (value.uploadedDataObj) {
-          this.images.push({
-            src: '/api/template-files/get-image/' + value.uploadedDataObj.fileName,
-            thumbnail: '/api/template-files/get-image/' + value.uploadedDataObj.fileName,
-            fileName: value.uploadedDataObj.fileName,
-            text: value.id.toString(),
-            uploadedObjId: value.uploadedDataObj.id
+          this.imageSub$ = this.templateFilesService.getImage(value.uploadedDataObj.fileName).subscribe(blob => {
+            const imageUrl = URL.createObjectURL(blob);
+            // TODO: CHECK
+            this.images.push({
+              src: imageUrl,
+              thumbnail: imageUrl,
+              fileName: value.uploadedDataObj.fileName,
+              text: value.id.toString(),
+              uploadedObjId: value.uploadedDataObj.id
+            });
           });
         }
       });
@@ -40,7 +48,7 @@ export class ElementSignatureComponent implements OnChanges {
   updateGallery() {
     this.galleryImages = [];
     this.images.forEach(value => {
-      this.galleryImages.push( new ImageItem({ src: value.src, thumb: value.thumbnail }));
+      this.galleryImages.push(new ImageItem({src: value.src, thumb: value.thumbnail}));
     });
   }
 
@@ -53,5 +61,8 @@ export class ElementSignatureComponent implements OnChanges {
       this.gallery.ref('lightbox', {counter: false, loadingMode: 'indeterminate'}).load(this.galleryImages);
       this.lightbox.open(i);
     }
+  }
+
+  ngOnDestroy(): void {
   }
 }
