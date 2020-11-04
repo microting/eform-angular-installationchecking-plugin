@@ -1,4 +1,4 @@
-/*
+﻿/*
 The MIT License (MIT)
 
 Copyright (c) 2007 - 2019 Microting A/S
@@ -49,6 +49,7 @@ using Microting.InstallationCheckingBase.Infrastructure.Models;
 
 namespace InstallationChecking.Pn
 {
+    using Microting.eFormApi.BasePn.Infrastructure.Consts;
     using Microting.eFormApi.BasePn.Infrastructure.Models.Application.NavigationMenu;
 
     public class EformInstallationCheckingPlugin : IEformPlugin
@@ -113,6 +114,161 @@ namespace InstallationChecking.Pn
             SeedDatabase(connectionString);
         }
 
+        public List<PluginMenuItemModel> GetNavigationMenu(IServiceProvider serviceProvider)
+        {
+            var pluginMenu = new List<PluginMenuItemModel>()
+                {
+                    new PluginMenuItemModel
+                    {
+                        Name = "Dropdown",
+                        E2EId = "installationchecking",
+                        Link = "",
+                        Type = MenuItemTypeEnum.Dropdown,
+                        Position = 0,
+                        Translations = new List<PluginMenuTranslationModel>()
+                        {
+                            new PluginMenuTranslationModel
+                            {
+                                 LocaleName = LocaleNames.English,
+                                 Name = "Installation checking",
+                                 Language = LanguageNames.English,
+                            },
+                            new PluginMenuTranslationModel
+                            {
+                                 LocaleName = LocaleNames.German,
+                                 Name = "Installation checking",
+                                 Language = LanguageNames.German,
+                            },
+                            new PluginMenuTranslationModel
+                            {
+                                 LocaleName = LocaleNames.Danish,
+                                 Name = "Installation checking",
+                                 Language = LanguageNames.Danish,
+                            }
+                        },
+                        ChildItems = new List<PluginMenuItemModel>()
+                        {
+                            new PluginMenuItemModel
+                            {
+                                Name = "Installation",
+                                E2EId = "installationchecking-pn-installation",
+                                Link = "/plugins/installationchecking-pn/installation",
+                                Type = MenuItemTypeEnum.Link,
+                                Position = 0,
+                                MenuTemplate = new PluginMenuTemplateModel()
+                                {
+                                    Name = "Installation",
+                                    E2EId = "installationchecking-pn-installation",
+                                    DefaultLink = "/plugins/installationchecking-pn/installation",
+                                    Permissions = new List<PluginMenuTemplatePermissionModel>(),
+                                    Translations = new List<PluginMenuTranslationModel>
+                                    {
+                                        new PluginMenuTranslationModel
+                                        {
+                                            LocaleName = LocaleNames.English,
+                                            Name = "Installation",
+                                            Language = LanguageNames.English,
+                                        },
+                                        new PluginMenuTranslationModel
+                                        {
+                                            LocaleName = LocaleNames.German,
+                                            Name = "Installation",
+                                            Language = LanguageNames.German,
+                                        },
+                                        new PluginMenuTranslationModel
+                                        {
+                                            LocaleName = LocaleNames.Danish,
+                                            Name = "Installation",
+                                            Language = LanguageNames.Danish,
+                                        },
+                                    }
+                                },
+                                Translations = new List<PluginMenuTranslationModel>
+                                {
+                                    new PluginMenuTranslationModel
+                                {
+                                    LocaleName = LocaleNames.English,
+                                    Name = "Installation",
+                                    Language = LanguageNames.English,
+                                },
+                                    new PluginMenuTranslationModel
+                                {
+                                    LocaleName = LocaleNames.German,
+                                    Name = "Installation",
+                                    Language = LanguageNames.German,
+                                },
+                                    new PluginMenuTranslationModel
+                                {
+                                    LocaleName = LocaleNames.Danish,
+                                    Name = "Installation",
+                                    Language = LanguageNames.Danish,
+                                },
+                                }
+                            },
+                            new PluginMenuItemModel
+                            {
+                                Name = "Removal",
+                                E2EId = "installationchecking-pn-removal",
+                                Link = "/plugins/installationchecking-pn/removal",
+                                Type = MenuItemTypeEnum.Link,
+                                Position = 1,
+                                MenuTemplate = new PluginMenuTemplateModel()
+                                {
+                                    Name = "Removal",
+                                    E2EId = "items-planning-pn-reports",
+                                    DefaultLink = "/plugins/items-planning-pn/reports",
+                                    Permissions = new List<PluginMenuTemplatePermissionModel>(),
+                                    Translations = new List<PluginMenuTranslationModel>
+                                    {
+                                        new PluginMenuTranslationModel
+                                        {
+                                            LocaleName = LocaleNames.English,
+                                            Name = "Removal",
+                                            Language = LanguageNames.English,
+                                        },
+                                        new PluginMenuTranslationModel
+                                        {
+                                            LocaleName = LocaleNames.German,
+                                            Name = "Removal",
+                                            Language = LanguageNames.German,
+                                        },
+                                        new PluginMenuTranslationModel
+                                        {
+                                            LocaleName = LocaleNames.Danish,
+                                            Name = "Fjernelse",
+                                            Language = LanguageNames.Danish,
+                                        },
+                                    }
+                                },
+                                Translations = new List<PluginMenuTranslationModel>
+                                {
+                                    new PluginMenuTranslationModel
+                                    {
+                                        LocaleName = LocaleNames.English,
+                                        Name = "Removal",
+                                        Language = LanguageNames.English,
+                                    },
+                                    new PluginMenuTranslationModel
+                                    {
+                                        LocaleName = LocaleNames.German,
+                                        Name = "Removal",
+                                        Language = LanguageNames.German,
+                                    },
+                                    new PluginMenuTranslationModel
+                                    {
+                                        LocaleName = LocaleNames.Danish,
+                                        Name = "Fjernelse",
+                                        Language = LanguageNames.Danish,
+                                    },
+                                }
+                            }
+                        }
+                    }
+                };
+
+            return pluginMenu;
+        }
+
         public MenuModel HeaderMenu(IServiceProvider serviceProvider)
         {
             var localizationService = serviceProvider
@@ -144,11 +300,6 @@ namespace InstallationChecking.Pn
                 }
             });
             return result;
-        }
-
-        public List<PluginMenuItemModel> GetNavigationMenu(IServiceProvider serviceProvider)
-        {
-            throw new NotImplementedException();
         }
 
         public void SeedDatabase(string connectionString)
