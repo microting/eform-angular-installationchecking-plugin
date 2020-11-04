@@ -86,6 +86,16 @@ namespace InstallationChecking.Pn.Helpers
 
         public static async Task<int> CreateInstallationForm(Core core)
         {
+            string timeZone = "Europe/Copenhagen";
+            TimeZoneInfo timeZoneInfo;
+            try
+            {
+                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            }
+            catch
+            {
+                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time");
+            }
 
             int roomTypeListId = await CreateRoomTypeList(core);
             int cadastralTypeId = await CreateCadastralTypeList(core);
@@ -94,7 +104,8 @@ namespace InstallationChecking.Pn.Helpers
                 "eform-angular-installationchecking-plugin-installation",
                 false,
                 "",
-                new List<int>()
+                new List<int>(),
+                timeZoneInfo
                 );
 
             if (templatesDto.Count > 0)
@@ -359,13 +370,24 @@ namespace InstallationChecking.Pn.Helpers
         }
 
         public static async Task<int> CreateRemovalForm(Core core)
-        { 
+        {
+            string timeZone = "Europe/Copenhagen";
+            TimeZoneInfo timeZoneInfo;
+            try
+            {
+                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            }
+            catch
+            {
+                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time");
+            }
             var templatesDto = await core.TemplateItemReadAll(false,
                 "",
                 "eform-angular-installationchecking-plugin-removal",
                 false,
                 "",
-                new List<int>()
+                new List<int>(),
+                timeZoneInfo
             );
 
             if (templatesDto.Count > 0)

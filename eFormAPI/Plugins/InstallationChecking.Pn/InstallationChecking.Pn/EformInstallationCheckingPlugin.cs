@@ -49,6 +49,8 @@ using Microting.InstallationCheckingBase.Infrastructure.Models;
 
 namespace InstallationChecking.Pn
 {
+    using Microting.eFormApi.BasePn.Infrastructure.Models.Application.NavigationMenu;
+
     public class EformInstallationCheckingPlugin : IEformPlugin
     {
         public string Name => "Microting InstallationChecking Plugin";
@@ -142,6 +144,11 @@ namespace InstallationChecking.Pn
                 }
             });
             return result;
+        }
+
+        public List<PluginMenuItemModel> GetNavigationMenu(IServiceProvider serviceProvider)
+        {
+            throw new NotImplementedException();
         }
 
         public void SeedDatabase(string connectionString)
