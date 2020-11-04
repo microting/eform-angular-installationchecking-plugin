@@ -26,6 +26,7 @@ using Microting.eFormApi.BasePn.Infrastructure.Helpers;
 using Microting.InstallationCheckingBase.Infrastructure.Models;
 using OpenStack.NetCoreSwiftClient.Extensions;
 using Constants = Microting.eForm.Infrastructure.Constants.Constants;
+using Number = Microting.eForm.Infrastructure.Models.Number;
 
 namespace InstallationChecking.Pn.Services
 {
@@ -386,7 +387,7 @@ namespace InstallationChecking.Pn.Services
                             mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
                             mainElement.StartDate = DateTime.Now.ToUniversalTime();
                             installation.InstallationEmployeeId = installationsAssignModel.EmployeeId;
-                            installation.InstallationSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
+                            installation.InstallationSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId, null);
                             installation.State = InstallationState.Assigned;
                             installation.UpdatedByUserId = UserId;
 
@@ -539,7 +540,7 @@ namespace InstallationChecking.Pn.Services
                             mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
                             mainElement.StartDate = DateTime.Now.ToUniversalTime();
                             installation.RemovalEmployeeId = installationsAssignModel.EmployeeId;
-                            installation.RemovalSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId);
+                            installation.RemovalSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId, null);
                             installation.State = InstallationState.Assigned;
                             installation.UpdatedByUserId = UserId;
 
