@@ -22,7 +22,7 @@
       <!--<PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.8" />-->
       <PackageReference Include="Microting.eForm" Version="4.2.5" />
       <PackageReference Include="Microting.eFormApi.BasePn" Version="2.0.82" />
-      <PackageReference Include="Microting.eFormBaseCustomerBase" Version="2.0.81" />
+      <PackageReference Include="Microting.eFormBaseCustomerBase" Version="2.0.82" />
       <PackageReference Include="Microting.InstallationCheckingBase" Version="2.0.77" />
     </ItemGroup>
 
