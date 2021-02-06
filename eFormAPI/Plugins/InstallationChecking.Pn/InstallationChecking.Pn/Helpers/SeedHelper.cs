@@ -1,19 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using eFormCore;
-using Microting.eForm.Infrastructure.Constants;
-using Microting.eForm.Infrastructure.Models;
-using KeyValuePair = Microting.eForm.Dto.KeyValuePair;
+/*
+The MIT License (MIT)
+
+Copyright (c) 2007 - 2021 Microting A/S
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 namespace InstallationChecking.Pn.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using eFormCore;
+    using Microsoft.EntityFrameworkCore;
+    using Microting.eForm.Infrastructure.Constants;
+    using Microting.eForm.Infrastructure.Models;
     public class SeedHelper
     {
         private static async Task<int> CreateCadastralTypeList(Core core)
         {
-            EntityGroupList model = await core.Advanced_EntityGroupAll(
+            var model = await core.Advanced_EntityGroupAll(
                 "id", 
                 "eform-angular-installationchecking-plugin-editable-CadastralType",
                 0, 1, Constants.FieldTypes.EntitySelect,
@@ -25,9 +48,10 @@ namespace InstallationChecking.Pn.Helpers
             if (!model.EntityGroups.Any())
             {
                 group = await core.EntityGroupCreate(Constants.FieldTypes.EntitySelect, 
-                    "eform-angular-installationchecking-plugin-editable-CadastralType");
+                    "eform-angular-installationchecking-plugin-editable-CadastralType",
+                    "");// TODO description is empty string
 
-                List<string> roomTypes = new List<string>()
+                var roomTypes = new List<string>()
                 {
                     "Arbejdsplads", "Boligblok", "Boligbyggeri", "Butikker", "Delvist fritliggende hus", "Feriehus",
                     "Fritliggende hus", "Generelle faciliteter", "Hospital", "Hotel", "Hus i klippe",
@@ -35,8 +59,8 @@ namespace InstallationChecking.Pn.Helpers
                     "Rækkehuse forbundet med garage", "Skole/institution", "Slot", "Stort hus", "Vandværk"
                 };
 
-                int i = 0;
-                foreach (string roomType in roomTypes)
+                const int i = 0;
+                foreach (var roomType in roomTypes)
                 {
                     await core.EntitySelectItemCreate(group.Id,roomType,i,i.ToString());
                 }
@@ -51,7 +75,7 @@ namespace InstallationChecking.Pn.Helpers
         
         private static async Task<int> CreateRoomTypeList(Core core)
         {
-            EntityGroupList model = await core.Advanced_EntityGroupAll(
+            var model = await core.Advanced_EntityGroupAll(
                 "id", 
                 "eform-angular-installationchecking-plugin-editable-RoomType",
                 0, 1, Constants.FieldTypes.EntitySelect,
@@ -63,15 +87,16 @@ namespace InstallationChecking.Pn.Helpers
             if (!model.EntityGroups.Any())
             {
                 group = await core.EntityGroupCreate(Constants.FieldTypes.EntitySelect, 
-                    "eform-angular-installationchecking-plugin-editable-RoomType");
-                
-                List<string> roomTypes = new List<string>()
+                    "eform-angular-installationchecking-plugin-editable-RoomType",
+                    "");// TODO description is empty string
+
+                var roomTypes = new List<string>()
                 {
                     "Soveværelse","Stue","Hobbyrum","Gang","Køkken","Kontor","Kælder","Andre lukkede rum"
                 };
 
-                int i = 0;
-                foreach (string roomType in roomTypes)
+                var i = 0;
+                foreach (var roomType in roomTypes)
                 {
                     await core.EntitySelectItemCreate(group.Id,roomType,i,i.ToString());
                 }
@@ -86,7 +111,7 @@ namespace InstallationChecking.Pn.Helpers
 
         public static async Task<int> CreateInstallationForm(Core core)
         {
-            string timeZone = "Europe/Copenhagen";
+            const string timeZone = "Europe/Copenhagen";
             TimeZoneInfo timeZoneInfo;
             try
             {
@@ -96,16 +121,17 @@ namespace InstallationChecking.Pn.Helpers
             {
                 timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time");
             }
-
-            int roomTypeListId = await CreateRoomTypeList(core);
-            int cadastralTypeId = await CreateCadastralTypeList(core);
+            var language = await core.DbContextHelper.GetDbContext().Languages.SingleAsync(x => x.LanguageCode.ToLower() == "da");
+            var roomTypeListId = await CreateRoomTypeList(core);
+            var cadastralTypeId = await CreateCadastralTypeList(core);
             var templatesDto = await core.TemplateItemReadAll(false,
                 "",
                 "eform-angular-installationchecking-plugin-installation",
                 false,
                 "",
                 new List<int>(),
-                timeZoneInfo
+                timeZoneInfo,
+                language
                 );
 
             if (templatesDto.Count > 0)
@@ -256,7 +282,7 @@ namespace InstallationChecking.Pn.Helpers
                 for (var i = 1; i <= 50; i++)
                 {
                     var inc = (i - 1) * 5;
-                    string color = (inc % 2 == 0) ? "fff6df" : "e8eaf6";
+                    var color = (inc % 2 == 0) ? "fff6df" : "e8eaf6";
                     
                     dataItems.Add(new Text(
                             inc + 9,
@@ -371,7 +397,7 @@ namespace InstallationChecking.Pn.Helpers
 
         public static async Task<int> CreateRemovalForm(Core core)
         {
-            string timeZone = "Europe/Copenhagen";
+            var timeZone = "Europe/Copenhagen";
             TimeZoneInfo timeZoneInfo;
             try
             {
@@ -381,13 +407,15 @@ namespace InstallationChecking.Pn.Helpers
             {
                 timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time");
             }
+            var language = await core.DbContextHelper.GetDbContext().Languages.SingleAsync(x => x.LanguageCode.ToLower() == "da");
             var templatesDto = await core.TemplateItemReadAll(false,
                 "",
                 "eform-angular-installationchecking-plugin-removal",
                 false,
                 "",
                 new List<int>(),
-                timeZoneInfo
+                timeZoneInfo,
+                language
             );
 
             if (templatesDto.Count > 0)
@@ -398,8 +426,8 @@ namespace InstallationChecking.Pn.Helpers
             {
                 var entityGroup = await core.EntityGroupCreate(
                     Constants.FieldTypes.EntitySearch,
-                    $"eform-angular-installationchecking-plugin_0"
-                );
+                    $"eform-angular-installationchecking-plugin_0",
+                    "");// TODO description is empty string
                 
                 
                 var removalForm = new MainElement
@@ -439,7 +467,7 @@ namespace InstallationChecking.Pn.Helpers
                     false,
                     "GEM DATA"
                 ));
-                for (int i = 1; i < 51; i++)
+                for (var i = 1; i < 51; i++)
                 {
                     dataItems.Add(new EntitySearch(
                         3 + i,

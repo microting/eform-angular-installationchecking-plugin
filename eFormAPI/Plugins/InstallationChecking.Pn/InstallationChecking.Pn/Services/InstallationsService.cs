@@ -1,35 +1,57 @@
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using InstallationChecking.Pn.Abstractions;
-using InstallationChecking.Pn.Infrastructure.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microting.InstallationCheckingBase.Infrastructure.Data;
-using Microting.eFormApi.BasePn.Abstractions;
-using Microting.eFormApi.BasePn.Infrastructure.Models.API;
-using Microting.eFormBaseCustomerBase.Infrastructure.Data;
-using Microting.InstallationCheckingBase.Infrastructure.Data.Entities;
-using Microting.InstallationCheckingBase.Infrastructure.Enums;
-using InstallationChecking.Pn.Infrastructure.Extensions;
-using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
-using OfficeOpenXml;
-using System.Reflection;
-using System.IO;
-using Castle.Core.Internal;
-using ImageMagick;
-using Microting.eForm.Dto;
-using Microting.eForm.Infrastructure.Models;
-using Microting.eFormApi.BasePn.Infrastructure.Helpers;
-using Microting.InstallationCheckingBase.Infrastructure.Models;
-using OpenStack.NetCoreSwiftClient.Extensions;
-using Constants = Microting.eForm.Infrastructure.Constants.Constants;
-using Number = Microting.eForm.Infrastructure.Models.Number;
+/*
+The MIT License (MIT)
+
+Copyright (c) 2007 - 2021 Microting A/S
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 namespace InstallationChecking.Pn.Services
 {
+    using System;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using Abstractions;
+    using Infrastructure.Models;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.EntityFrameworkCore;
+    using Microting.InstallationCheckingBase.Infrastructure.Data;
+    using Microting.eFormApi.BasePn.Abstractions;
+    using Microting.eFormApi.BasePn.Infrastructure.Models.API;
+    using Microting.eFormBaseCustomerBase.Infrastructure.Data;
+    using Microting.InstallationCheckingBase.Infrastructure.Data.Entities;
+    using Microting.InstallationCheckingBase.Infrastructure.Enums;
+    using Infrastructure.Extensions;
+    using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
+    using OfficeOpenXml;
+    using System.Reflection;
+    using System.IO;
+    using Microting.eForm.Dto;
+    using Microting.eForm.Infrastructure.Models;
+    using Microting.eFormApi.BasePn.Infrastructure.Helpers;
+    using Microting.InstallationCheckingBase.Infrastructure.Models;
+    using OpenStack.NetCoreSwiftClient.Extensions;
+    using Constants = Microting.eForm.Infrastructure.Constants.Constants;
+    using Number = Microting.eForm.Infrastructure.Models.Number;
+
     public class InstallationsService : IInstallationsService
     {
         private readonly IInstallationCheckingLocalizationService _localizationService;
@@ -134,7 +156,7 @@ namespace InstallationChecking.Pn.Services
                         {
                             var sdkCaseId = (int) item.InstallationSdkCaseId;
                             var caseLookup = await core.CaseLookupMUId(sdkCaseId);
-                            if (caseLookup?.CheckUId != null && caseLookup?.CheckUId != 0)
+                            if (caseLookup?.CheckUId != null && caseLookup.CheckUId != 0)
                             {
                                 item.InstallationSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
                             }
@@ -182,49 +204,47 @@ namespace InstallationChecking.Pn.Services
 
         public async Task<OperationResult> Create(int customerId)
         {
-            using (var transaction = await _installationCheckingContext.Database.BeginTransactionAsync())
+            await using var transaction = await _installationCheckingContext.Database.BeginTransactionAsync();
+            try
             {
-                try
+                var customer = await _customersContext.Customers.FirstOrDefaultAsync(c => c.Id == customerId);
+
+                if (customer == null)
                 {
-                    var customer = await _customersContext.Customers.FirstOrDefaultAsync(c => c.Id == customerId);
-
-                    if (customer == null)
-                    {
-                        return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("CustomerNotFound"));
-                    }
-
-                    var installation = new Installation()
-                    {
-                        CompanyName = customer.CompanyName,
-                        CompanyAddress = customer.CompanyAddress,
-                        CompanyAddress2 = customer.CompanyAddress2,
-                        CityName = customer.CityName,
-                        CountryCode = customer.CountryCode,
-                        ZipCode = customer.ZipCode,
-                        State = InstallationState.NotAssigned,
-                        Type = InstallationType.Installation,
-                        CadastralNumber = customer.CadastralNumber,
-                        ApartmentNumber = customer.ApartmentNumber != null ? customer.ApartmentNumber.ToString() : "",
-                        PropertyNumber = customer.PropertyNumber != null ? customer.PropertyNumber.ToString() : "",
-                        YearBuilt = customer.CompletionYear,
-                        LivingFloorsNumber = customer.FloorsWithLivingSpace,
-//                        CadastralType = customer.CadastralType != null ? customer.CadastralType.ToString() : "",
-                        CustomerId = customer.Id,
-                        CreatedByUserId = UserId,
-                        UpdatedByUserId = UserId,
-                    };
-
-                    await installation.Create(_installationCheckingContext);
-
-                    transaction.Commit();
-                    return new OperationResult(true, _localizationService.GetString("InstallationCreatedSuccessfully"));
+                    return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("CustomerNotFound"));
                 }
-                catch (Exception e)
+
+                var installation = new Installation()
                 {
-                    transaction.Rollback();
-                    Trace.TraceError(e.Message);
-                    return new OperationResult(false, _localizationService.GetString("ErrorWhileCreatingInstallation"));
-                }
+                    CompanyName = customer.CompanyName,
+                    CompanyAddress = customer.CompanyAddress,
+                    CompanyAddress2 = customer.CompanyAddress2,
+                    CityName = customer.CityName,
+                    CountryCode = customer.CountryCode,
+                    ZipCode = customer.ZipCode,
+                    State = InstallationState.NotAssigned,
+                    Type = InstallationType.Installation,
+                    CadastralNumber = customer.CadastralNumber,
+                    ApartmentNumber = customer.ApartmentNumber != null ? customer.ApartmentNumber.ToString() : "",
+                    PropertyNumber = customer.PropertyNumber != null ? customer.PropertyNumber.ToString() : "",
+                    YearBuilt = customer.CompletionYear,
+                    LivingFloorsNumber = customer.FloorsWithLivingSpace,
+                    // CadastralType = customer.CadastralType != null ? customer.CadastralType.ToString() : "",
+                    CustomerId = customer.Id,
+                    CreatedByUserId = UserId,
+                    UpdatedByUserId = UserId,
+                };
+
+                await installation.Create(_installationCheckingContext);
+
+                await transaction.CommitAsync();
+                return new OperationResult(true, _localizationService.GetString("InstallationCreatedSuccessfully"));
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                Trace.TraceError(e.Message);
+                return new OperationResult(false, _localizationService.GetString("ErrorWhileCreatingInstallation"));
             }
         }
         
@@ -232,7 +252,7 @@ namespace InstallationChecking.Pn.Services
         {
             try
             {
-                var options = _options.Value;
+                //var options = _options.Value;
                 var installationModel = await _installationCheckingContext.Installations.AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed && x.Id == id)
                     .Select(x => new InstallationModel
@@ -260,7 +280,6 @@ namespace InstallationChecking.Pn.Services
 
                 if (installationModel == null)
                 {
-                    installationModel.InstallationFormId = int.Parse(options.InstallationFormId);
                     return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("InstallationNotFound"));
                 }
 
@@ -327,7 +346,8 @@ namespace InstallationChecking.Pn.Services
 
                         if (installation.Type == InstallationType.Installation)
                         {
-                            mainElement = await core.TemplateRead(int.Parse(options.InstallationFormId));
+                            var language = await core.DbContextHelper.GetDbContext().Languages.SingleAsync(x => x.LanguageCode.ToLower() == "da");
+                            mainElement = await core.ReadeForm(int.Parse(options.InstallationFormId), language);
                             mainElement.Label = installation.CompanyName;
                             var dataElement = (DataElement) mainElement.ElementList[0];
                             dataElement.Label = installation.CompanyName;
@@ -356,14 +376,14 @@ namespace InstallationChecking.Pn.Services
 
                             var dataItemSelect = (EntitySelect) dataElement.DataItemList[3];
                             
-                            EntityGroupList model = await core.Advanced_EntityGroupAll(
+                            var model = await core.Advanced_EntityGroupAll(
                                 "id", 
                                 "eform-angular-installationchecking-plugin-editable-CadastralType",
                                 0, 1, Constants.FieldTypes.EntitySelect,
                                 false,
                                 Constants.WorkflowStates.NotRemoved);
 
-                            foreach (EntityItem entityItem in model.EntityGroups.First().EntityGroupItemLst)
+                            foreach (var entityItem in model.EntityGroups.First().EntityGroupItemLst)
                             {
                                 if (entityItem.Id == int.Parse(installation.CadastralType))
                                 {
@@ -396,7 +416,8 @@ namespace InstallationChecking.Pn.Services
                         }
                         else
                         {
-                            mainElement = await core.TemplateRead(int.Parse(options.RemovalFormId));
+                            var language = await core.DbContextHelper.GetDbContext().Languages.SingleAsync(x => x.LanguageCode.ToLower() == "da");
+                            mainElement = await core.ReadeForm(int.Parse(options.RemovalFormId), language);
                             mainElement.Label = installation.CompanyName;
 
                             var dataElement = (DataElement) mainElement.ElementList[0];
@@ -417,7 +438,7 @@ namespace InstallationChecking.Pn.Services
                                 : $"<br>{installation.CountryCode}";
                             dataElement.Description.InderValue += $"<br><b>Nedtagningsdato: {removalDate}</b>";
                             
-                            EntityGroupList model = await core.Advanced_EntityGroupAll(
+                            var model = await core.Advanced_EntityGroupAll(
                                 "id", 
                                 $"eform-angular-installationchecking-plugin_{installation.Id}_hidden",
                                 0, 1, Constants.FieldTypes.EntitySearch,
@@ -430,8 +451,8 @@ namespace InstallationChecking.Pn.Services
                             {
                                 entityGroup = await core.EntityGroupCreate(
                                     Constants.FieldTypes.EntitySearch,
-                                    $"eform-angular-installationchecking-plugin_{installation.Id}_hidden"
-                                );
+                                    $"eform-angular-installationchecking-plugin_{installation.Id}_hidden",
+                                    "");// TODO description is empty string
                             }
                             else
                             {
@@ -443,8 +464,8 @@ namespace InstallationChecking.Pn.Services
 
                             try
                             {
-                                string filename = installation.InstallationImageName.Replace(",", "");
-                                string tempFilePath = Path.Combine("tmp", filename);
+                                var filename = installation.InstallationImageName.Replace(",", "");
+                                var tempFilePath = Path.Combine("tmp", filename);
                                 Directory.CreateDirectory("tmp");
                                 Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: tempFilePath is {tempFilePath}");
 
@@ -476,7 +497,7 @@ namespace InstallationChecking.Pn.Services
                                     }
                                 }
 
-                                using (MagickImage image = new MagickImage(tempFilePath))
+                                using (var image = new ImageMagick.MagickImage(tempFilePath))
                                 {
                                     Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: MagickImage converting");
                                     // Create pdf file with a single page
@@ -492,7 +513,7 @@ namespace InstallationChecking.Pn.Services
                                     .Replace("jpg", "pdf")
                                     .Replace("jpeg", "pdf"));
 
-                                ShowPdf showPdf = (ShowPdf) dataElement.DataItemList[0];
+                                var showPdf = (ShowPdf) dataElement.DataItemList[0];
                                 showPdf.Value = resultId;
                                 Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: PDF set for field");
 
@@ -512,19 +533,19 @@ namespace InstallationChecking.Pn.Services
                                     "",
                                     i.ToString()
                                 );
-                                EntitySearch entity = (EntitySearch)dataElement.DataItemList[i];
+                                var entity = (EntitySearch)dataElement.DataItemList[i];
                                 entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);
                                 entity.DisplayOrder = i;
                                 i += 1;
                             }
 
-                            int validFields = installation.Meters.Count(x => !x.QR.IsNullOrEmpty()) + 2;
+                            var validFields = installation.Meters.Count(x => !x.QR.IsNullOrEmpty()) + 2;
 
                             try
                             {
-                                for (int j = validFields; j < 52; j++)
+                                for (var j = validFields; j < 52; j++)
                                 {
-                                    EntitySearch dataItem = (EntitySearch) dataElement.DataItemList[validFields];
+                                    var dataItem = (EntitySearch) dataElement.DataItemList[validFields];
                                     dataElement.DataItemList.Remove(dataItem);
                                 }
                             }
