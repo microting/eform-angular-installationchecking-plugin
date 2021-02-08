@@ -12,7 +12,6 @@ describe('Installation Checking - Installation - Add', function () {
     loginPage.open('/auth');
     loginPage.login();
     // Setup customer
-    // customersPage.configureSearchableList();
     customersPage.createCustomer(companyName);
     // Setup device user
     deviceUsers.createNewDeviceUser();
