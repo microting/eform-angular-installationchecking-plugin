@@ -1,119 +1,52 @@
 import loginPage from '../../Page objects/Login.page';
 import myEformsPage from '../../Page objects/MyEforms.page';
-import pluginPage from '../../Page objects/Plugin.page';
-
-import {expect} from 'chai';
 import pluginsPage from './application-settings.plugins.page';
 
+import {expect} from 'chai';
+
 describe('Application settings page - site header section', function () {
-    before(function () {
-        loginPage.open('/auth');
-    });
-    it('should go to plugin settings page', function () {
-        loginPage.login();
-        myEformsPage.Navbar.advancedDropdown();
-        myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-        $('#plugin-name').waitForDisplayed({timeout: 50000});
-        $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
+  before(function () {
+    loginPage.open('/auth');
+  });
+  it('should go to plugin settings page', function () {
+    loginPage.login();
+    myEformsPage.Navbar.goToPluginsPage();
+    $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
+    pluginsPage.pluginName.waitForDisplayed({timeout: 50000});
 
-        const plugin = pluginsPage.getFirstPluginRowObj();
-        //expect(plugin.id).equal(1);
-        if (plugin.name === 'Microting InstallationChecking Plugin') {
-            expect(plugin.name).equal('Microting InstallationChecking Plugin');
-        } else {
-            expect(plugin.name).equal('Microting Customers Plugin');
-        }
-        expect(plugin.version).equal('1.0.0.0');
+    const pluginOne = pluginsPage.getFirstPluginRowObj();
+    // expect(plugin.id).equal(1);
+    expect(pluginOne.name).equal('Microting Customers Plugin');
+    expect(pluginOne.version).equal('1.0.0.0');
 
-        const pluginTwo = pluginsPage.getSecondPluginRowObj();
-        //expect(pluginTwo.id).equal(2);
-        if (pluginTwo.name === 'Microting InstallationChecking Plugin') {
-            expect(pluginTwo.name).equal('Microting InstallationChecking Plugin');
-        } else {
-            expect(pluginTwo.name).equal('Microting Customers Plugin');
-        }
-        expect(pluginTwo.version).equal('1.0.0.0');
+    const pluginTwo = pluginsPage.getSecondPluginRowObj();
+    // expect(pluginTwo.id).equal(2);
+    expect(pluginTwo.name).equal('Microting InstallationChecking Plugin');
+    expect(pluginTwo.version).equal('1.0.0.0');
 
-    });
-    it('should activate the customer plugin', function () {
-        const plugin = pluginsPage.getFirstPluginRowObj();
-        // pluginPage.pluginSettingsBtn.click();
-        plugin.activateBtn.click();
-        $('#pluginOKBtn').waitForDisplayed({timeout: 40000});
-        pluginPage.pluginOKBtn.click();
-        browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
-        loginPage.open('/');
+  });
+  it('should activate the customer plugin and installationChecking plugin', function () {
+    const spinnerAnimation = $('#spinner-animation');
+    let firstPlugin = pluginsPage.getFirstPluginRowObj();
+    firstPlugin.activatePlugin();
 
-        loginPage.login();
-        myEformsPage.Navbar.advancedDropdown();
-        myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-        $('#plugin-name').waitForDisplayed({timeout: 50000});
-        $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
+    loginPage.login();
+    myEformsPage.Navbar.goToPluginsPage();
+    spinnerAnimation.waitForDisplayed({timeout: 10000, reverse: true});
+    pluginsPage.pluginName.waitForDisplayed({timeout: 50000});
 
-        const secondPlugin = pluginsPage.getSecondPluginRowObj();
-        //expect(secondPlugin.id).equal(2);
-        // expect(secondPlugin.name).equal('Microting Customers Plugin');
-        expect(secondPlugin.version).equal('1.0.0.0');
+    let secondPlugin = pluginsPage.getSecondPluginRowObj();
+    secondPlugin.activatePlugin();
 
-        // pluginPage.pluginSettingsBtn.click();
-        secondPlugin.activateBtn.click();
-        $('#pluginOKBtn').waitForDisplayed({timeout: 40000});
-        pluginPage.pluginOKBtn.click();
-        browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
-        loginPage.open('/');
+    loginPage.login();
+    myEformsPage.Navbar.goToPluginsPage();
+    pluginsPage.pluginName.waitForDisplayed({timeout: 50000});
+    spinnerAnimation.waitForDisplayed({timeout: 10000, reverse: true});
 
-        loginPage.login();
-        myEformsPage.Navbar.advancedDropdown();
-        myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-        $('#plugin-name').waitForDisplayed({timeout: 50000});
-        $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
-        // browser.pause(10000);
+    firstPlugin = pluginsPage.getFirstPluginRowObj();
+    secondPlugin = pluginsPage.getSecondPluginRowObj();
 
-        const pluginToFind = pluginsPage.getFirstPluginRowObj();
-        //expect(pluginToFind.id).equal(1);
-        // expect(pluginToFind.name).equal('Microting InstallationChecking Plugin');
-        expect(pluginToFind.version).equal('1.0.0.0');
-        $(`//*[contains(text(), 'Planlægning')]`).waitForDisplayed({timeout: 20000});
-        $(`//*[contains(text(), 'Kunder')]`).waitForDisplayed({timeout: 20000});
-    });
-
-    // it('should activate the plugin', function () {
-    //   let plugin = pluginsPage.getFirstPluginRowObj();
-    //   plugin.activateBtn.click();
-    //   $('#pluginOKBtn').waitForDisplayed({timeout: 40000});
-    //   pluginPage.pluginOKBtn.click();
-    //   browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
-    //   browser.refresh();
-    //
-    //   loginPage.login();
-    //   myEformsPage.Navbar.advancedDropdown();
-    //   myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-    //   $('#plugin-name').waitForDisplayed({timeout: 50000});
-    //   browser.pause(10000);
-    //
-    //   const pluginTwo = pluginsPage.getSecondPluginRowObj();
-    //   pluginTwo.activateBtn.click();
-    //   $('#pluginOKBtn').waitForDisplayed({timeout: 40000});
-    //   pluginPage.pluginOKBtn.click();
-    //   browser.pause(50000); // We need to wait 50 seconds for the plugin to create db etc.
-    //   browser.refresh();
-    //
-    //   loginPage.login();
-    //   myEformsPage.Navbar.advancedDropdown();
-    //   myEformsPage.Navbar.clickonSubMenuItem('Plugins');
-    //   $('#plugin-name').waitForDisplayed({timeout: 50000});
-    //   browser.pause(10000);
-    //   browser.pause(10000);
-    //
-    //   plugin = pluginsPage.getFirstPluginRowObj();
-    //   expect(plugin.id).equal(1);
-    //   expect(plugin.name).equal('Microting InstallationChecking Plugin');
-    //   expect(plugin.version).equal('1.0.0.0');
-    //
-    //
-    //   expect(pluginTwo.id).equal(2);
-    //   expect(pluginTwo.name).equal('Microting Customers Plugin');
-    //   expect(pluginTwo.version).equal('1.0.0.0');
-    //   expect(browser.element(`//*[contains(@class, 'dropdown')]//*[contains(text(), 'Planlægning')]`).isExisting()).equal(true);
-    // });
+    expect(firstPlugin.activateBtn.classList.contains('btn-success'), `${firstPlugin.name} plugin not activate`).eq(true);
+    expect(secondPlugin.activateBtn.classList.contains('btn-success'), `${secondPlugin.name} plugin not activate`).eq(true);
+  });
 });
