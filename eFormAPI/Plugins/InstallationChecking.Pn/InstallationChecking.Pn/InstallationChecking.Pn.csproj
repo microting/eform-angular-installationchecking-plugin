@@ -20,10 +20,10 @@
       <PackageReference Include="Magick.NET-Q8-x64" Version="7.23.1" />
       <!--<PackageReference Include="Magick.NET-Q16-x64" Version="7.22.1" />-->
       <!--<PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.8" />-->
-      <PackageReference Include="Microting.eForm" Version="4.3.12" />
-      <PackageReference Include="Microting.eFormApi.BasePn" Version="2.0.91" />
-      <PackageReference Include="Microting.eFormBaseCustomerBase" Version="2.0.90" />
-      <PackageReference Include="Microting.InstallationCheckingBase" Version="2.0.86" />
+      <PackageReference Include="Microting.eForm" Version="4.3.14" />
+      <PackageReference Include="Microting.eFormApi.BasePn" Version="2.0.92" />
+      <PackageReference Include="Microting.eFormBaseCustomerBase" Version="2.0.91" />
+      <PackageReference Include="Microting.InstallationCheckingBase" Version="2.0.87" />
     </ItemGroup>
 
     <ItemGroup>
