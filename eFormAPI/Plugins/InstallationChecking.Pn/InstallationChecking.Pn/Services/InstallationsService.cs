@@ -41,7 +41,6 @@ namespace InstallationChecking.Pn.Services
     using Microting.InstallationCheckingBase.Infrastructure.Enums;
     using Infrastructure.Extensions;
     using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
-    using OfficeOpenXml;
     using System.Reflection;
     using System.IO;
     using Microting.eForm.Dto;
@@ -51,6 +50,7 @@ namespace InstallationChecking.Pn.Services
     using OpenStack.NetCoreSwiftClient.Extensions;
     using Constants = Microting.eForm.Infrastructure.Constants.Constants;
     using Number = Microting.eForm.Infrastructure.Models.Number;
+    using ClosedXML.Excel;
 
     public class InstallationsService : IInstallationsService
     {
@@ -77,7 +77,7 @@ namespace InstallationChecking.Pn.Services
             _httpContextAccessor = httpContextAccessor;
             _coreHelper = coreHelper;
         }
-        
+
         public async Task<OperationDataResult<InstallationsListModel>> Index(InstallationsRequestModel requestModel)
         {
             try
@@ -123,28 +123,28 @@ namespace InstallationChecking.Pn.Services
                     .Skip(requestModel.Offset)
                     .Take(requestModel.PageSize)
                     .Select(x => new InstallationModel()
-                        {
-                            Id = x.Id,
-                            CompanyName = x.CompanyName,
-                            CompanyAddress = x.CompanyAddress,
-                            CompanyAddress2 = x.CompanyAddress2,
-                            CityName = x.CityName,
-                            CountryCode = x.CountryCode,
-                            ZipCode = x.ZipCode,
-                            State = x.State,
-                            Type = x.Type,
-                            DateInstall = x.DateInstall,
-                            DateRemove = x.DateRemove,
-                            DateActRemove = x.DateActRemove,
-                            InstallationEmployeeId = x.InstallationEmployeeId,
-                            RemovalEmployeeId = x.RemovalEmployeeId,
-                            CustomerId = x.CustomerId,
-                            InstallationSdkCaseId = x.InstallationSdkCaseId,
-                            RemovalSdkCaseId = x.RemovalSdkCaseId,
-                            RemovalFormId = x.RemovalFormId
-                        }
+                    {
+                        Id = x.Id,
+                        CompanyName = x.CompanyName,
+                        CompanyAddress = x.CompanyAddress,
+                        CompanyAddress2 = x.CompanyAddress2,
+                        CityName = x.CityName,
+                        CountryCode = x.CountryCode,
+                        ZipCode = x.ZipCode,
+                        State = x.State,
+                        Type = x.Type,
+                        DateInstall = x.DateInstall,
+                        DateRemove = x.DateRemove,
+                        DateActRemove = x.DateActRemove,
+                        InstallationEmployeeId = x.InstallationEmployeeId,
+                        RemovalEmployeeId = x.RemovalEmployeeId,
+                        CustomerId = x.CustomerId,
+                        InstallationSdkCaseId = x.InstallationSdkCaseId,
+                        RemovalSdkCaseId = x.RemovalSdkCaseId,
+                        RemovalFormId = x.RemovalFormId
+                    }
                     ).ToListAsync();
-                
+
                 foreach (var item in list.Where(x => x.InstallationEmployeeId != null))
                 {
                     item.InstallationFormId = int.Parse(options.InstallationFormId);
@@ -154,13 +154,13 @@ namespace InstallationChecking.Pn.Services
                         item.AssignedTo = site.FirstName + " " + site.LastName;
                         if (item.InstallationSdkCaseId != null)
                         {
-                            var sdkCaseId = (int) item.InstallationSdkCaseId;
+                            var sdkCaseId = (int)item.InstallationSdkCaseId;
                             var caseLookup = await core.CaseLookupMUId(sdkCaseId);
                             if (caseLookup?.CheckUId != null && caseLookup.CheckUId != 0)
                             {
                                 item.InstallationSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
                             }
-                        }    
+                        }
                     }
                 }
                 foreach (var item in list.Where(x => x.RemovalEmployeeId != null))
@@ -172,7 +172,7 @@ namespace InstallationChecking.Pn.Services
                         item.AssignedTo = site.FirstName + " " + site.LastName;
                         if (item.RemovalSdkCaseId != null)
                         {
-                            var sdkCaseId = (int) item.RemovalSdkCaseId;
+                            var sdkCaseId = (int)item.RemovalSdkCaseId;
                             var caseLookup = await core.CaseLookupMUId(sdkCaseId);
                             if (caseLookup?.CheckUId != null && caseLookup?.CheckUId != 0)
                             {
@@ -181,13 +181,13 @@ namespace InstallationChecking.Pn.Services
                         }
                         if (item.InstallationSdkCaseId != null)
                         {
-                            var sdkCaseId = (int) item.InstallationSdkCaseId;
+                            var sdkCaseId = (int)item.InstallationSdkCaseId;
                             var caseLookup = await core.CaseLookupMUId(sdkCaseId);
                             if (caseLookup?.CheckUId != null && caseLookup?.CheckUId != 0)
                             {
                                 item.InstallationSdkCaseDbId = await core.CaseIdLookup(sdkCaseId, (int)caseLookup.CheckUId);
                             }
-                        }  
+                        }
                     }
                 }
 
@@ -247,7 +247,7 @@ namespace InstallationChecking.Pn.Services
                 return new OperationResult(false, _localizationService.GetString("ErrorWhileCreatingInstallation"));
             }
         }
-        
+
         public async Task<OperationDataResult<InstallationModel>> Read(int id)
         {
             try
@@ -256,26 +256,26 @@ namespace InstallationChecking.Pn.Services
                 var installationModel = await _installationCheckingContext.Installations.AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed && x.Id == id)
                     .Select(x => new InstallationModel
-                        {
-                            Id = x.Id,
-                            CompanyName = x.CompanyName,
-                            CompanyAddress = x.CompanyAddress,
-                            CompanyAddress2 = x.CompanyAddress2,
-                            CityName = x.CityName,
-                            CountryCode = x.CountryCode,
-                            ZipCode = x.ZipCode,
-                            State = x.State,
-                            Type = x.Type,
-                            DateInstall = x.DateInstall,
-                            DateRemove = x.DateRemove,
-                            DateActRemove = x.DateActRemove,
-                            InstallationEmployeeId = x.InstallationEmployeeId,
-                            RemovalEmployeeId = x.RemovalEmployeeId,
-                            CustomerId = x.CustomerId,
-                            InstallationSdkCaseId = x.InstallationSdkCaseId,
-                            RemovalSdkCaseId = x.RemovalSdkCaseId,
-                            RemovalFormId = x.RemovalFormId,
-                        }
+                    {
+                        Id = x.Id,
+                        CompanyName = x.CompanyName,
+                        CompanyAddress = x.CompanyAddress,
+                        CompanyAddress2 = x.CompanyAddress2,
+                        CityName = x.CityName,
+                        CountryCode = x.CountryCode,
+                        ZipCode = x.ZipCode,
+                        State = x.State,
+                        Type = x.Type,
+                        DateInstall = x.DateInstall,
+                        DateRemove = x.DateRemove,
+                        DateActRemove = x.DateActRemove,
+                        InstallationEmployeeId = x.InstallationEmployeeId,
+                        RemovalEmployeeId = x.RemovalEmployeeId,
+                        CustomerId = x.CustomerId,
+                        InstallationSdkCaseId = x.InstallationSdkCaseId,
+                        RemovalSdkCaseId = x.RemovalSdkCaseId,
+                        RemovalFormId = x.RemovalFormId,
+                    }
                     ).FirstOrDefaultAsync();
 
                 if (installationModel == null)
@@ -298,7 +298,7 @@ namespace InstallationChecking.Pn.Services
                         }
                     }
                 }
-                
+
                 if (installationModel.RemovalEmployeeId != null && installationModel.Type == InstallationType.Removal)
                 {
                     var core = await _coreHelper.GetCore();
@@ -322,7 +322,7 @@ namespace InstallationChecking.Pn.Services
                 return new OperationDataResult<InstallationModel>(false, _localizationService.GetString("ErrorGettingInstallation"));
             }
         }
-        
+
         public async Task<OperationResult> AssignInstallations(InstallationsAssignModel installationsAssignModel)
         {
             using (var transaction = await _installationCheckingContext.Database.BeginTransactionAsync())
@@ -349,7 +349,7 @@ namespace InstallationChecking.Pn.Services
                             var language = await core.DbContextHelper.GetDbContext().Languages.SingleAsync(x => x.LanguageCode.ToLower() == "da");
                             mainElement = await core.ReadeForm(int.Parse(options.InstallationFormId), language);
                             mainElement.Label = installation.CompanyName;
-                            var dataElement = (DataElement) mainElement.ElementList[0];
+                            var dataElement = (DataElement)mainElement.ElementList[0];
                             dataElement.Label = installation.CompanyName;
                             dataElement.Description.InderValue = installation.CompanyAddress;
                             dataElement.Description.InderValue += string.IsNullOrEmpty(installation.CompanyAddress2)
@@ -365,19 +365,19 @@ namespace InstallationChecking.Pn.Services
                                 ? ""
                                 : $"<br>{installation.CountryCode}";
 
-                            var dataItem = (Text) dataElement.DataItemList[0];
+                            var dataItem = (Text)dataElement.DataItemList[0];
                             dataItem.Value = installation.CadastralNumber;
-                            
-                            dataItem = (Text) dataElement.DataItemList[1];
+
+                            dataItem = (Text)dataElement.DataItemList[1];
                             dataItem.Value = installation.PropertyNumber;
-                            
-                            dataItem = (Text) dataElement.DataItemList[2];
+
+                            dataItem = (Text)dataElement.DataItemList[2];
                             dataItem.Value = installation.ApartmentNumber;
 
-                            var dataItemSelect = (EntitySelect) dataElement.DataItemList[3];
-                            
+                            var dataItemSelect = (EntitySelect)dataElement.DataItemList[3];
+
                             var model = await core.Advanced_EntityGroupAll(
-                                "id", 
+                                "id",
                                 "eform-angular-installationchecking-plugin-editable-CadastralType",
                                 0, 1, Constants.FieldTypes.EntitySelect,
                                 false,
@@ -390,14 +390,14 @@ namespace InstallationChecking.Pn.Services
                                     dataItemSelect.DefaultValue = entityItem.Id;
                                 }
                             }
-                            
-                            var dataItemNumber = (Number) dataElement.DataItemList[4];
+
+                            var dataItemNumber = (Number)dataElement.DataItemList[4];
                             if (installation.YearBuilt != null)
                             {
                                 dataItemNumber.DefaultValue = (int)installation.YearBuilt;
                             }
-                            
-                            dataItemNumber = (Number) dataElement.DataItemList[5];
+
+                            dataItemNumber = (Number)dataElement.DataItemList[5];
                             if (installation.LivingFloorsNumber != null)
                             {
                                 dataItemNumber.DefaultValue = (int)installation.LivingFloorsNumber;
@@ -420,7 +420,7 @@ namespace InstallationChecking.Pn.Services
                             mainElement = await core.ReadeForm(int.Parse(options.RemovalFormId), language);
                             mainElement.Label = installation.CompanyName;
 
-                            var dataElement = (DataElement) mainElement.ElementList[0];
+                            var dataElement = (DataElement)mainElement.ElementList[0];
                             var removalDate = DateTime.UtcNow.ToString("yyyy-MM-dd");
                             dataElement.Label = installation.CompanyName;
                             dataElement.Description.InderValue = installation.CompanyAddress;
@@ -437,16 +437,16 @@ namespace InstallationChecking.Pn.Services
                                 ? ""
                                 : $"<br>{installation.CountryCode}";
                             dataElement.Description.InderValue += $"<br><b>Nedtagningsdato: {removalDate}</b>";
-                            
+
                             var model = await core.Advanced_EntityGroupAll(
-                                "id", 
+                                "id",
                                 $"eform-angular-installationchecking-plugin_{installation.Id}_hidden",
                                 0, 1, Constants.FieldTypes.EntitySearch,
                                 false,
                                 Constants.WorkflowStates.NotRemoved);
-                            
+
                             EntityGroup entityGroup;
-                            
+
                             if (!model.EntityGroups.Any())
                             {
                                 entityGroup = await core.EntityGroupCreate(
@@ -513,7 +513,7 @@ namespace InstallationChecking.Pn.Services
                                     .Replace("jpg", "pdf")
                                     .Replace("jpeg", "pdf"));
 
-                                var showPdf = (ShowPdf) dataElement.DataItemList[0];
+                                var showPdf = (ShowPdf)dataElement.DataItemList[0];
                                 showPdf.Value = resultId;
                                 Log.LogEvent($"[DBG] InstallationsService.AssignInstallations: PDF set for field");
 
@@ -523,7 +523,7 @@ namespace InstallationChecking.Pn.Services
                                 Log.LogException($"[ERR] InstallationsService.AssignInstallations convert image to pdf failed and got exception : {ex.Message}");
                             }
                             #endregion
-                            
+
                             var i = 2;
                             foreach (var meter in installation.Meters.Where(x => !x.QR.IsNullOrEmpty()))
                             {
@@ -545,7 +545,7 @@ namespace InstallationChecking.Pn.Services
                             {
                                 for (var j = validFields; j < 52; j++)
                                 {
-                                    var dataItem = (EntitySearch) dataElement.DataItemList[validFields];
+                                    var dataItem = (EntitySearch)dataElement.DataItemList[validFields];
                                     dataElement.DataItemList.Remove(dataItem);
                                 }
                             }
@@ -553,10 +553,10 @@ namespace InstallationChecking.Pn.Services
                             {
                                 Log.LogException(ex.Message);
                             }
-                            
-                            
+
+
                             installation.RemovalFormId = int.Parse(options.RemovalFormId);
-                        
+
                             mainElement.Repeated = 1;
                             mainElement.EndDate = DateTime.Now.AddYears(10).ToUniversalTime();
                             mainElement.StartDate = DateTime.Now.ToUniversalTime();
@@ -598,7 +598,7 @@ namespace InstallationChecking.Pn.Services
 
                     if (installation.Type == InstallationType.Installation)
                     {
-                        await core.CaseDelete(installation.InstallationSdkCaseId.GetValueOrDefault());   
+                        await core.CaseDelete(installation.InstallationSdkCaseId.GetValueOrDefault());
 
 
                         installation.InstallationEmployeeId = null;
@@ -608,7 +608,7 @@ namespace InstallationChecking.Pn.Services
                         await installation.Update(_installationCheckingContext);
 
                         transaction.Commit();
-                        return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));                     
+                        return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));
                     }
                     else
                     {
@@ -687,55 +687,70 @@ namespace InstallationChecking.Pn.Services
                 var assembly = Assembly.GetExecutingAssembly();
                 var assemblyName = assembly.GetName().Name;
 
-                using (var templateStream = assembly.GetManifestResourceStream($"{assemblyName}.Resources.export-template.xlsx"))
-                using (var stream = new MemoryStream())
+                await using var templateStream =
+                    assembly.GetManifestResourceStream($"{assemblyName}.Resources.export-template.xlsx");
+
+                var timeStamp = $"{DateTime.UtcNow:yyyyMMdd}_{DateTime.UtcNow:hhmmss}";
+                var resultDocument = Path.Combine(Path.GetTempPath(), "results", $"{timeStamp}_{installationId}.xlsx");
+                await using var stream = new MemoryStream();
+
+                var wb = new XLWorkbook(templateStream);
+
+                var worksheet = wb.Worksheets.Add($"Data_{installationId}");
+                var row = 12;
+
+                foreach (var meter in installation.Meters.Where(x => !x.QR.IsNullOrEmpty()))
                 {
-                    var package = new ExcelPackage(stream, templateStream);
-                
-                    var worksheet = package.Workbook.Worksheets[0];
-                    var row = 12;
+                    worksheet.Cell(row, 1).Value = installation.CadastralNumber;
+                    worksheet.Cell(row, 2).Value = installation.PropertyNumber;
+                    worksheet.Cell(row, 3).Value = installation.CompanyName;
+                    worksheet.Cell(row, 4).Value = installation.ApartmentNumber;
+                    worksheet.Cell(row, 5).Value = installation.CompanyAddress;
+                    worksheet.Cell(row, 6).Value = installation.CompanyAddress2;
+                    worksheet.Cell(row, 7).Value = installation.ZipCode;
+                    worksheet.Cell(row, 8).Value = installation.CityName;
+                    worksheet.Cell(row, 9).Value = installation.CountryCode;
+                    worksheet.Cell(row, 10).Value = installation.CadastralType;
+                    worksheet.Cell(row, 11).Value = ""; // Foundation type
+                    worksheet.Cell(row, 12).Value = ""; // Ventilation
+                    worksheet.Cell(row, 13).Value = ""; // Household water
+                    worksheet.Cell(row, 14).Value = installation.YearBuilt;
+                    worksheet.Cell(row, 15).Value = ""; // Renovated
+                    worksheet.Cell(row, 16).Value = ""; // Swedish "blue concrete"
+                    worksheet.Cell(row, 17).Value = ""; // Visit by a professional
+                    worksheet.Cell(row, 18).Value = installation.LivingFloorsNumber;
+                    worksheet.Cell(row, 19).Value = meter.QR;
+                    worksheet.Cell(row, 20).Value = meter.RoomType;
+                    worksheet.Cell(row, 21).Value = meter.Floor;
+                    worksheet.Cell(row, 22).Value = meter.RoomName;
+                    worksheet.Cell(row, 23).Value = installation.DateInstall?.ToString("dd-MM-yyyy");
+                    worksheet.Cell(row, 23).Style.NumberFormat.Format = "dd-MM-yyyy";
+                    worksheet.Cell(row, 24).Value = installation.DateActRemove?.ToString("dd-MM-yyyy");
+                    worksheet.Cell(row, 24).Style.NumberFormat.Format = "dd-MM-yyyy";
 
-                    foreach (var meter in installation.Meters.Where(x => !x.QR.IsNullOrEmpty()))
-                    {
-                        worksheet.Cells[row, 1].Value = installation.CadastralNumber;
-                        worksheet.Cells[row, 2].Value = installation.PropertyNumber;
-                        worksheet.Cells[row, 3].Value = installation.CompanyName;
-                        worksheet.Cells[row, 4].Value = installation.ApartmentNumber;
-                        worksheet.Cells[row, 5].Value = installation.CompanyAddress;
-                        worksheet.Cells[row, 6].Value = installation.CompanyAddress2;
-                        worksheet.Cells[row, 7].Value = installation.ZipCode;
-                        worksheet.Cells[row, 8].Value = installation.CityName;
-                        worksheet.Cells[row, 9].Value = installation.CountryCode;
-                        worksheet.Cells[row, 10].Value = installation.CadastralType;
-                        worksheet.Cells[row, 11].Value = ""; // Foundation type
-                        worksheet.Cells[row, 12].Value = ""; // Ventilation
-                        worksheet.Cells[row, 13].Value = ""; // Household water
-                        worksheet.Cells[row, 14].Value = installation.YearBuilt;
-                        worksheet.Cells[row, 15].Value = ""; // Renovated
-                        worksheet.Cells[row, 16].Value = ""; // Swedish "blue concrete"
-                        worksheet.Cells[row, 17].Value = ""; // Visit by a professional
-                        worksheet.Cells[row, 18].Value = installation.LivingFloorsNumber;
-                        worksheet.Cells[row, 19].Value = meter.QR;
-                        worksheet.Cells[row, 20].Value = meter.RoomType; 
-                        worksheet.Cells[row, 21].Value = meter.Floor;
-                        worksheet.Cells[row, 22].Value = meter.RoomName;
-                        worksheet.Cells[row, 23].Value = installation.DateInstall?.ToString("dd-MM-yyyy");
-                        worksheet.Cells[row, 23].Style.Numberformat.Format = "dd-MM-yyyy";
-                        worksheet.Cells[row, 24].Value = installation.DateActRemove?.ToString("dd-MM-yyyy");
-                        worksheet.Cells[row, 24].Style.Numberformat.Format = "dd-MM-yyyy";
+                    var site = await core.SiteRead(installation.RemovalEmployeeId.GetValueOrDefault());
+                    worksheet.Cell(row, 25).Value = site.FirstName + " " + site.LastName;
 
-                        var site = await core.SiteRead(installation.RemovalEmployeeId.GetValueOrDefault());
-                        worksheet.Cells[row, 25].Value = site.FirstName + " " + site.LastName;
-
-                        row++;
-                    }
-                    
-                    package.Save();
-                    package.Dispose();
-                    var bytes = stream.ToArray();
-
-                    return new OperationDataResult<byte[]>(true, bytes);
+                    row++;
                 }
+
+                wb.SaveAs(templateStream);
+                wb.Dispose();
+
+                Stream input = File.Open(resultDocument, FileMode.Open);
+
+                var buffer = new byte[16 * 1024];
+                await using var ms = new MemoryStream();
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+
+                var bytes = ms.ToArray();
+                await ms.DisposeAsync();
+
+                return new OperationDataResult<byte[]>(true, bytes);
             }
             catch (Exception e)
             {
