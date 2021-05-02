@@ -17,7 +17,7 @@
 
   <ItemGroup>
       <PackageReference Include="EPPlus" Version="5.4.0" />
-      <PackageReference Include="Magick.NET-Q16-x64" Version="7.23.2" />
+      <PackageReference Include="Magick.NET-Q16-x64" Version="7.23.4" />
       <!--<PackageReference Include="Microsoft.AspNetCore.All" Version="2.2.8" />-->
       <PackageReference Include="Microting.eForm" Version="5.0.2" />
       <PackageReference Include="Microting.eFormApi.BasePn" Version="3.0.0" />
