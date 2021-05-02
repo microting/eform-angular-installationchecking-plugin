@@ -99,7 +99,7 @@ namespace InstallationChecking.Pn
             }
             else
             {
-                services.AddDbContext<InstallationCheckingPnDbContext>(o => o.UseSqlServer(connectionString,
+                services.AddDbContext<InstallationCheckingPnDbContext>(o => o.UseMySql(connectionString,
                     b => b.MigrationsAssembly(PluginAssembly().FullName)));
 
                 services.AddDbContext<CustomersPnDbAnySql>(o => o.UseMySql(customersConnectionString,

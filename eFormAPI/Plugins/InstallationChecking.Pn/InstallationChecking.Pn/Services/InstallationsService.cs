@@ -27,11 +27,9 @@ namespace InstallationChecking.Pn.Services
     using System;
     using System.Diagnostics;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
     using Abstractions;
     using Infrastructure.Models;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.EntityFrameworkCore;
     using Microting.InstallationCheckingBase.Infrastructure.Data;
     using Microting.eFormApi.BasePn.Abstractions;
@@ -39,7 +37,6 @@ namespace InstallationChecking.Pn.Services
     using Microting.eFormBaseCustomerBase.Infrastructure.Data;
     using Microting.InstallationCheckingBase.Infrastructure.Data.Entities;
     using Microting.InstallationCheckingBase.Infrastructure.Enums;
-    using Infrastructure.Extensions;
     using Microting.eFormApi.BasePn.Infrastructure.Helpers.PluginDbOptions;
     using System.Reflection;
     using System.IO;
@@ -48,9 +45,9 @@ namespace InstallationChecking.Pn.Services
     using Microting.eFormApi.BasePn.Infrastructure.Helpers;
     using Microting.InstallationCheckingBase.Infrastructure.Models;
     using OpenStack.NetCoreSwiftClient.Extensions;
-    using Constants = Microting.eForm.Infrastructure.Constants.Constants;
-    using Number = Microting.eForm.Infrastructure.Models.Number;
+    using Microting.eForm.Infrastructure.Constants;
     using ClosedXML.Excel;
+    using Microting.eFormApi.BasePn.Infrastructure.Models.Common;
 
     public class InstallationsService : IInstallationsService
     {
@@ -59,14 +56,14 @@ namespace InstallationChecking.Pn.Services
         private readonly CustomersPnDbAnySql _customersContext;
         private readonly IPluginDbOptions<InstallationCheckingBaseSettings> _options;
         private readonly IEFormCoreService _coreHelper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserService _userService;
 
         public InstallationsService(
             InstallationCheckingPnDbContext installationCheckingContext,
             CustomersPnDbAnySql customersContext,
             IPluginDbOptions<InstallationCheckingBaseSettings> options,
             IInstallationCheckingLocalizationService localizationService,
-            IHttpContextAccessor httpContextAccessor,
+            IUserService userService,
             IEFormCoreService coreHelper
         )
         {
@@ -74,18 +71,20 @@ namespace InstallationChecking.Pn.Services
             _customersContext = customersContext;
             _options = options;
             _localizationService = localizationService;
-            _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
             _coreHelper = coreHelper;
         }
 
-        public async Task<OperationDataResult<InstallationsListModel>> Index(InstallationsRequestModel requestModel)
+        public async Task<OperationDataResult<Paged<InstallationModel>>> Index(InstallationsRequestModel requestModel)
         {
             try
             {
                 var core = await _coreHelper.GetCore();
                 var options = _options.Value;
+                var listModel = new Paged<InstallationModel>();
 
-                var listQuery = _installationCheckingContext.Installations.AsNoTracking()
+                var listQuery = _installationCheckingContext.Installations
+                    .AsNoTracking()
                     .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed);
 
                 if (requestModel.State != null)
@@ -98,52 +97,21 @@ namespace InstallationChecking.Pn.Services
                     listQuery = listQuery.Where(x => x.Type == requestModel.Type);
                 }
 
-                if (!string.IsNullOrWhiteSpace(requestModel.SearchString))
+                if (!string.IsNullOrWhiteSpace(requestModel.NameFilter))
                 {
-                    listQuery = listQuery.Where(x => x.CompanyName.Contains(requestModel.SearchString));
+                    listQuery = listQuery.Where(x => x.CompanyName.Contains(requestModel.NameFilter));
                 }
 
-                if (!string.IsNullOrEmpty(requestModel.Sort))
-                {
-                    if (requestModel.IsSortDsc)
-                    {
-                        listQuery = listQuery.OrderByDescending(requestModel.Sort);
-                    }
-                    else
-                    {
-                        listQuery = listQuery.OrderBy(requestModel.Sort);
-                    }
-                }
-                else
-                {
-                    listQuery = listQuery.OrderBy(x => x.Id);
-                }
+                listQuery = QueryHelper.AddSortToQuery(listQuery, requestModel.Sort, requestModel.IsSortDsc);
 
-                var list = await listQuery
+                listModel.Total = await listQuery.Select(x => x.Id).CountAsync();
+
+                listQuery = listQuery
                     .Skip(requestModel.Offset)
-                    .Take(requestModel.PageSize)
-                    .Select(x => new InstallationModel()
-                    {
-                        Id = x.Id,
-                        CompanyName = x.CompanyName,
-                        CompanyAddress = x.CompanyAddress,
-                        CompanyAddress2 = x.CompanyAddress2,
-                        CityName = x.CityName,
-                        CountryCode = x.CountryCode,
-                        ZipCode = x.ZipCode,
-                        State = x.State,
-                        Type = x.Type,
-                        DateInstall = x.DateInstall,
-                        DateRemove = x.DateRemove,
-                        DateActRemove = x.DateActRemove,
-                        InstallationEmployeeId = x.InstallationEmployeeId,
-                        RemovalEmployeeId = x.RemovalEmployeeId,
-                        CustomerId = x.CustomerId,
-                        InstallationSdkCaseId = x.InstallationSdkCaseId,
-                        RemovalSdkCaseId = x.RemovalSdkCaseId,
-                        RemovalFormId = x.RemovalFormId
-                    }
-                    ).ToListAsync();
+                    .Take(requestModel.PageSize);
+
+
+                var list = await AddSelectToQuery(listQuery).ToListAsync();
 
                 foreach (var item in list.Where(x => x.InstallationEmployeeId != null))
                 {
@@ -191,14 +159,14 @@ namespace InstallationChecking.Pn.Services
                     }
                 }
 
-                var listModel = new InstallationsListModel { Total = list.Count(), Installations = list };
+                listModel.Entities = list;
 
-                return new OperationDataResult<InstallationsListModel>(true, listModel);
+                return new OperationDataResult<Paged<InstallationModel>>(true, listModel);
             }
             catch (Exception e)
             {
                 Trace.TraceError(e.Message);
-                return new OperationDataResult<InstallationsListModel>(false, _localizationService.GetString("ErrorGettingInstallationsList"));
+                return new OperationDataResult<Paged<InstallationModel>>(false, _localizationService.GetString("ErrorGettingInstallationsList"));
             }
         }
 
@@ -231,8 +199,8 @@ namespace InstallationChecking.Pn.Services
                     LivingFloorsNumber = customer.FloorsWithLivingSpace,
                     // CadastralType = customer.CadastralType != null ? customer.CadastralType.ToString() : "",
                     CustomerId = customer.Id,
-                    CreatedByUserId = UserId,
-                    UpdatedByUserId = UserId,
+                    CreatedByUserId = _userService.UserId,
+                    UpdatedByUserId = _userService.UserId,
                 };
 
                 await installation.Create(_installationCheckingContext);
@@ -253,30 +221,11 @@ namespace InstallationChecking.Pn.Services
             try
             {
                 //var options = _options.Value;
-                var installationModel = await _installationCheckingContext.Installations.AsNoTracking()
-                    .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed && x.Id == id)
-                    .Select(x => new InstallationModel
-                    {
-                        Id = x.Id,
-                        CompanyName = x.CompanyName,
-                        CompanyAddress = x.CompanyAddress,
-                        CompanyAddress2 = x.CompanyAddress2,
-                        CityName = x.CityName,
-                        CountryCode = x.CountryCode,
-                        ZipCode = x.ZipCode,
-                        State = x.State,
-                        Type = x.Type,
-                        DateInstall = x.DateInstall,
-                        DateRemove = x.DateRemove,
-                        DateActRemove = x.DateActRemove,
-                        InstallationEmployeeId = x.InstallationEmployeeId,
-                        RemovalEmployeeId = x.RemovalEmployeeId,
-                        CustomerId = x.CustomerId,
-                        InstallationSdkCaseId = x.InstallationSdkCaseId,
-                        RemovalSdkCaseId = x.RemovalSdkCaseId,
-                        RemovalFormId = x.RemovalFormId,
-                    }
-                    ).FirstOrDefaultAsync();
+                var query = _installationCheckingContext.Installations
+                    .AsNoTracking()
+                    .Where(x => x.WorkflowState != Constants.WorkflowStates.Removed && x.Id == id);
+
+                var installationModel = await AddSelectToQuery(query).FirstOrDefaultAsync();
 
                 if (installationModel == null)
                 {
@@ -409,7 +358,7 @@ namespace InstallationChecking.Pn.Services
                             installation.InstallationEmployeeId = installationsAssignModel.EmployeeId;
                             installation.InstallationSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId, null);
                             installation.State = InstallationState.Assigned;
-                            installation.UpdatedByUserId = UserId;
+                            installation.UpdatedByUserId = _userService.UserId;
 
                             await installation.Update(_installationCheckingContext);
 
@@ -563,7 +512,7 @@ namespace InstallationChecking.Pn.Services
                             installation.RemovalEmployeeId = installationsAssignModel.EmployeeId;
                             installation.RemovalSdkCaseId = await core.CaseCreate(mainElement, "", installationsAssignModel.EmployeeId, null);
                             installation.State = InstallationState.Assigned;
-                            installation.UpdatedByUserId = UserId;
+                            installation.UpdatedByUserId = _userService.UserId;
 
                             await installation.Update(_installationCheckingContext);
                         }
@@ -604,26 +553,24 @@ namespace InstallationChecking.Pn.Services
                         installation.InstallationEmployeeId = null;
                         installation.InstallationSdkCaseId = null;
                         installation.State = InstallationState.NotAssigned;
-                        installation.UpdatedByUserId = UserId;
+                        installation.UpdatedByUserId = _userService.UserId;
                         await installation.Update(_installationCheckingContext);
 
                         transaction.Commit();
                         return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));
                     }
-                    else
-                    {
-                        await core.CaseDelete(installation.RemovalSdkCaseId.GetValueOrDefault());
+
+                    await core.CaseDelete(installation.RemovalSdkCaseId.GetValueOrDefault());
 
 
-                        installation.RemovalEmployeeId = null;
-                        installation.RemovalSdkCaseId = null;
-                        installation.State = InstallationState.NotAssigned;
-                        installation.UpdatedByUserId = UserId;
-                        await installation.Update(_installationCheckingContext);
+                    installation.RemovalEmployeeId = null;
+                    installation.RemovalSdkCaseId = null;
+                    installation.State = InstallationState.NotAssigned;
+                    installation.UpdatedByUserId = _userService.UserId;
+                    await installation.Update(_installationCheckingContext);
 
-                        transaction.Commit();
-                        return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));
-                    }
+                    transaction.Commit();
+                    return new OperationResult(true, _localizationService.GetString("InstallationRetractedSuccessfully"));
                 }
                 catch (Exception e)
                 {
@@ -648,7 +595,7 @@ namespace InstallationChecking.Pn.Services
                     }
 
                     installation.State = InstallationState.Archived;
-                    installation.UpdatedByUserId = UserId;
+                    installation.UpdatedByUserId = _userService.UserId;
                     await installation.Update(_installationCheckingContext);
 
                     transaction.Commit();
@@ -759,13 +706,30 @@ namespace InstallationChecking.Pn.Services
             }
         }
 
-        private int UserId
+        private static IQueryable<InstallationModel> AddSelectToQuery(IQueryable<Installation> query)
         {
-            get
+            return query.Select(x => new InstallationModel
             {
-                var value = _httpContextAccessor?.HttpContext.User?.FindFirstValue(ClaimTypes.NameIdentifier);
-                return value == null ? 0 : int.Parse(value);
+                Id = x.Id,
+                CompanyName = x.CompanyName,
+                CompanyAddress = x.CompanyAddress,
+                CompanyAddress2 = x.CompanyAddress2,
+                CityName = x.CityName,
+                CountryCode = x.CountryCode,
+                ZipCode = x.ZipCode,
+                State = x.State,
+                Type = x.Type,
+                DateInstall = x.DateInstall,
+                DateRemove = x.DateRemove,
+                DateActRemove = x.DateActRemove,
+                InstallationEmployeeId = x.InstallationEmployeeId,
+                RemovalEmployeeId = x.RemovalEmployeeId,
+                CustomerId = x.CustomerId,
+                InstallationSdkCaseId = x.InstallationSdkCaseId,
+                RemovalSdkCaseId = x.RemovalSdkCaseId,
+                RemovalFormId = x.RemovalFormId,
             }
+            );
         }
     }
 }

@@ -1,33 +1,35 @@
-<subheader-pn [title]="replyElement.label">
-
-</subheader-pn>
+<eform-subheader [title]="replyElement.label"> </eform-subheader>
 
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12 col-xs-12" role="main">
-      <app-installation-case-header [installationModel]="currentInstallation"></app-installation-case-header>
-      <app-installation-case-block [element]="elem"
-                                   *ngFor="let elem of replyElement.elementList"></app-installation-case-block>
+      <app-installation-case-header
+        [installationModel]="currentInstallation"
+      ></app-installation-case-header>
+      <app-installation-case-block
+        [element]="elem"
+        *ngFor="let elem of replyElement.elementList"
+      ></app-installation-case-block>
     </div>
-<!--    <div class="col-md-3">-->
-<!--      <mdb-card class="sticky-top mb-4 mt-4" style="width: 100%; z-index: 1">-->
-<!--        <div class="card-header text-center">-->
-<!--          {{replyElement.label}}-->
-<!--        </div>-->
-<!--        <div class="card-body">-->
-<!--          <ul class="list-group">-->
-<!--            <li *ngFor="let element of replyElement.elementList" style="cursor: pointer;"-->
-<!--                (click)="goToSection('#section' + element.id)"-->
-<!--                class="list-group-item list-group-item-action waves-light"-->
-<!--                routerLinkActive="active"-->
-<!--                mdbWavesEffect>-->
-<!--              <a>-->
-<!--                {{element.label}}-->
-<!--              </a>-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </div>-->
-<!--      </mdb-card>-->
-<!--    </div>-->
+    <!--    <div class="col-md-3">-->
+    <!--      <mdb-card class="sticky-top mb-4 mt-4" style="width: 100%; z-index: 1">-->
+    <!--        <div class="card-header text-center">-->
+    <!--          {{replyElement.label}}-->
+    <!--        </div>-->
+    <!--        <div class="card-body">-->
+    <!--          <ul class="list-group">-->
+    <!--            <li *ngFor="let element of replyElement.elementList" style="cursor: pointer;"-->
+    <!--                (click)="goToSection('#section' + element.id)"-->
+    <!--                class="list-group-item list-group-item-action waves-light"-->
+    <!--                routerLinkActive="active"-->
+    <!--                mdbWavesEffect>-->
+    <!--              <a>-->
+    <!--                {{element.label}}-->
+    <!--              </a>-->
+    <!--            </li>-->
+    <!--          </ul>-->
+    <!--        </div>-->
+    <!--      </mdb-card>-->
+    <!--    </div>-->
   </div>
 </div>
