@@ -6,7 +6,7 @@ if (( "$GIT_STATUS" > 0 )); then
 	cd eFormAPI/Plugins/InstallationChecking.Pn/InstallationChecking.Pn
   CURRENT_NUMBER_OF_COMMITS=`git log --oneline | wc -l`
 
-	PACKAGES=('Microting.eForm' 'Microting.eFormApi.BasePn' 'Microting.InstallationCheckingBase')
+	PACKAGES=('Microting.eForm' 'Microting.eFormApi.BasePn' 'Microting.InstallationCheckingBase', 'Magick.NET-Q16-x64')
 	PROJECT_NAME='InstallationChecking.Pn.csproj'
 	REPOSITORY='eform-angular-installationchecking-plugin'
 
