@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.0.69](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.69) (2021-05-02)
+
+[Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.68...v1.0.69)
+
+**Implemented enhancements:**
+
+- Bump Magick.NET-Q16-x64 from 7.23.2 to 7.23.4 [\#153](https://github.com/microting/eform-angular-installationchecking-plugin/issues/153)
+
 ## [v1.0.68](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.68) (2021-05-02)
 
 [Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.67...v1.0.68)
