@@ -1,0 +1,200 @@
+<eform-subheader>
+  <div class="p-3">
+    <button
+      *ngIf="
+        authStateService.checkClaim(
+          installationCheckingPnClaims.createInstallations
+        )
+      "
+      id="createInstallationBtn"
+      class="btn btn-success"
+      mdbTooltip="{{ 'New installation' | translate }}"
+      (click)="showNewInstallationModal()"
+    >
+      {{ 'New installation' | translate }}
+    </button>
+  </div>
+</eform-subheader>
+
+<div class="container-fluid">
+  <div class="row pl-1">
+    <div class="col-md-2">
+      <div class="md-form">
+        <input
+          mdbInput
+          type="text"
+          [ngModel]="installationsStateService.getNameFilter() | async"
+          (ngModelChange)="onSearchInputChanged($event)"
+          class="form-control input-sm"
+          id="searchInput"
+        />
+        <label for="searchInput">{{ 'Search' | translate }}</label>
+      </div>
+    </div>
+    <div class="col-md-2 ng-select-wrapper">
+      <ng-select
+        [items]="states"
+        bindLabel="label"
+        bindValue="id"
+        [placeholder]="'Select state' | translate"
+        (ngModelChange)="onSelectStateChanged($event)"
+        [ngModel]="installationsStateService.getStateFilter() | async"
+        id="stateFilter"
+      >
+      </ng-select>
+    </div>
+  </div>
+  <div
+    class="row p-1 mt-4 table-responsive no-gutters"
+    *ngIf="installationsListModel.total > 0"
+  >
+    <table
+      mdbTable
+      striped="true"
+      hover="true"
+      small="true"
+      class="z-depth-1 text-center"
+    >
+      <thead
+        table-headers
+        [tableHeaders]="tableHeaders"
+        [sort]="installationsStateService.getSort() | async"
+        (sortChanged)="sortTable($event)"
+      ></thead>
+      <tbody id="tableBody">
+        <tr
+          *ngFor="
+            let installation of installationsListModel?.entities;
+            let i = index
+          "
+        >
+          <td id="installationId">
+            {{ installation.id }}
+          </td>
+          <td id="installationCompanyName">
+            {{ installation.companyName }}
+          </td>
+          <td id="installationCompanyAddress">
+            {{ installation.companyAddress }}
+          </td>
+          <td id="installationCompanyAddress2">
+            {{ installation.companyAddress2 }}
+          </td>
+          <td id="installationZipCode">
+            {{ installation.zipCode }}
+          </td>
+          <td id="installationCityName">
+            {{ installation.cityName }}
+          </td>
+          <td id="installationCountryCode">
+            {{ installation.countryCode }}
+          </td>
+          <td id="installationDateInstall">
+            {{ installation.dateInstall | date: 'dd.MM.y HH:mm:ss' }}
+          </td>
+          <td id="installationAssignedTo">
+            {{ installation.assignedTo }}
+          </td>
+          <td
+            *ngIf="
+              authStateService.checkClaim(
+                installationCheckingPnClaims.assignInstallations
+              )
+            "
+          >
+            <div class="col" *ngIf="!installation.installationEmployeeId">
+              <div class="mat-checkbox">
+                <input
+                  id="checkbox_{{ i }}"
+                  name="assignCheckbox"
+                  type="checkbox"
+                  [(ngModel)]="installation.assign"
+                />
+                <label
+                  for="checkbox_{{ i }}"
+                  id="assignCheckbox_{{ i }}"
+                ></label>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex flex-row justify-content-center">
+              <!--              <button mdbBtn class="btn-success btn-icon mb-2"-->
+              <!--                      *ngIf="installation.state === installationStates.Completed && installation.installationSdkCaseDbId && installationFormId"-->
+              <!--                      [routerLink]="['/cases/edit/' + installation.installationSdkCaseDbId + '/' + installationFormId]"-->
+              <!--                      id="showCaseLink_{{i}}" mdbTooltip="{{ 'Show case' | translate }}">-->
+              <!--                <fa-icon icon="briefcase" [fixedWidth]="true" size="lg"></fa-icon>-->
+              <!--              </button>-->
+              <button
+                mdbBtn
+                class="btn-accent text-black-50 btn-icon mb-2"
+                mdbTooltip="{{ 'Retract installation' | translate }}"
+                id="installationRetractBtn"
+                *ngIf="
+                  installation.state === installationStates.Assigned &&
+                  authStateService.checkClaim(
+                    installationCheckingPnClaims.assignInstallations
+                  )
+                "
+                (click)="showRetractInstallationModal(installation)"
+              >
+                <fa-icon
+                  icon="times-circle"
+                  [fixedWidth]="true"
+                  size="lg"
+                ></fa-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row justify-content-start">
+    <div class="col-md-1">
+      <button
+        *ngIf="
+          authStateService.checkClaim(
+            installationCheckingPnClaims.assignInstallations
+          )
+        "
+        id="installationAssignBtn"
+        class="btn btn-success"
+        mdbTooltip="{{ 'Assign installation' | translate }}"
+        [disabled]="!someAssign"
+        (click)="showAssignInstallationModal()"
+      >
+        <fa-icon icon="user-plus" size="lg" [fixedWidth]="true"></fa-icon>
+        {{ 'Assign' | translate }}
+      </button>
+    </div>
+  </div>
+  <div class="row p-1 my-4 mx-2" *ngIf="installationsListModel.total === 0">
+    <span>{{ 'No installations found' | translate }}</span>
+  </div>
+  <div class="row justify-content-between mr-2 ml-2">
+    <div class="col-md-1">
+      <eform-page-size
+        [pageSize]="installationsStateService.getPageSize() | async"
+        (onPageSizeChanged)="onPageSizeChanged($event)"
+      ></eform-page-size>
+    </div>
+    <eform-pagination
+      [pagination]="installationsStateService.getPagination() | async"
+      (onPageChanged)="changePage($event)"
+    ></eform-pagination>
+  </div>
+</div>
+
+<app-installation-new
+  #newInstallationModal
+  (installationCreated)="getInstallationsList()"
+></app-installation-new>
+<app-installation-assign
+  #assignInstallationModal
+  (installationAssigned)="getInstallationsList()"
+></app-installation-assign>
+<app-installation-retract
+  #retractInstallationModal
+  (installationRetracted)="getInstallationsList()"
+></app-installation-retract>

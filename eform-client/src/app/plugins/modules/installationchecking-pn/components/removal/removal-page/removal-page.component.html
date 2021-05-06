@@ -1,0 +1,235 @@
+<eform-subheader></eform-subheader>
+
+<div class="container-fluid">
+  <div class="row pl-1">
+    <div class="col-md-2">
+      <div class="md-form">
+        <input
+          mdbInput
+          type="text"
+          [ngModel]="removalStateService.getNameFilter() | async"
+          (ngModelChange)="onSearchInputChanged($event)"
+          class="form-control input-sm"
+          id="searchInput"
+        />
+        <label for="searchInput">{{ 'Search' | translate }}</label>
+      </div>
+    </div>
+    <div class="col-md-2 ng-select-wrapper">
+      <ng-select
+        [items]="states"
+        bindLabel="label"
+        bindValue="id"
+        [placeholder]="'Select state' | translate"
+        (ngModelChange)="onSelectStateChanged($event)"
+        [ngModel]="removalStateService.getStateFilter() | async"
+        id="stateFilter"
+      >
+      </ng-select>
+    </div>
+  </div>
+  <div
+    class="row p-1 mt-4 table-responsive no-gutters"
+    *ngIf="installationsListModel.total > 0"
+  >
+    <table
+      mdbTable
+      striped="true"
+      hover="true"
+      small="true"
+      class="z-depth-1 text-center"
+    >
+      <thead
+        table-headers
+        [tableHeaders]="tableHeaders"
+        [sort]="removalStateService.getSort() | async"
+        (sortChanged)="sortTable($event)"
+      ></thead>
+      <tbody id="tableBody">
+        <tr
+          *ngFor="
+            let installation of installationsListModel?.entities;
+            let i = index
+          "
+        >
+          <td id="idCol_{{ i }}">
+            {{ installation.id }}
+          </td>
+          <td id="companyNameCol_{{ i }}">
+            {{ installation.companyName }}
+          </td>
+          <td id="companyAddressCol_{{ i }}">
+            {{ installation.companyAddress }}
+          </td>
+          <td id="companyAddress2Col_{{ i }}">
+            {{ installation.companyAddress2 }}
+          </td>
+          <td id="zipCodeCol_{{ i }}">
+            {{ installation.zipCode }}
+          </td>
+          <td id="cityNameCol_{{ i }}">
+            {{ installation.cityName }}
+          </td>
+          <td id="countryCodeCol_{{ i }}">
+            {{ installation.countryCode }}
+          </td>
+          <td id="dateInstallCol_{{ i }}">
+            {{ installation.dateInstall | date: 'dd.MM.y HH:mm:ss' }}
+          </td>
+          <td id="dateRemoveCol_{{ i }}">
+            {{ installation.dateRemove | date: 'dd.MM.y HH:mm:ss' }}
+          </td>
+          <td id="dateActRemoveCol_{{ i }}">
+            {{ installation.dateActRemove | date: 'dd.MM.y HH:mm:ss' }}
+          </td>
+          <td id="assignedToCol_{{ i }}">
+            {{ installation.assignedTo }}
+          </td>
+          <td
+            *ngIf="
+              pluginClaimsHelper.check(
+                installationCheckingPnClaims.assignInstallations
+              )
+            "
+          >
+            <div class="col" *ngIf="!installation.removalEmployeeId">
+              <div class="mat-checkbox">
+                <input
+                  id="assignCheckbox_{{ i }}"
+                  name="assignCheckbox_{{ i }}"
+                  type="checkbox"
+                  [(ngModel)]="installation.assign"
+                />
+                <label for="assignCheckbox_{{ i }}"></label>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex flex-row justify-content-center">
+              <button
+                mdbBtn
+                class="btn-success btn-icon mb-2"
+                *ngIf="
+                  installation.state === installationStates.Completed &&
+                  installation.removalSdkCaseDbId &&
+                  installation.removalFormId
+                "
+                [routerLink]="[
+                  '../case/' +
+                    installation.installationSdkCaseDbId +
+                    '/' +
+                    installation.installationFormId +
+                    '/' +
+                    installation.id
+                ]"
+                id="showCaseLink_{{ i }}"
+                mdbTooltip="{{ 'Show case' | translate }}"
+              >
+                <fa-icon
+                  icon="briefcase"
+                  [fixedWidth]="true"
+                  size="lg"
+                ></fa-icon>
+              </button>
+              <button
+                mdbBtn
+                class="btn-accent text-black-50 btn-icon mb-2"
+                mdbTooltip="{{ 'Retract installation' | translate }}"
+                id="installationRetractBtn_{{ i }}"
+                *ngIf="
+                  installation.state === installationStates.Assigned &&
+                  pluginClaimsHelper.check(
+                    installationCheckingPnClaims.assignInstallations
+                  )
+                "
+                (click)="showRetractInstallationModal(installation)"
+              >
+                <fa-icon
+                  icon="times-circle"
+                  [fixedWidth]="true"
+                  size="lg"
+                ></fa-icon>
+              </button>
+              <button
+                mdbBtn
+                class="btn-success btn-icon mb-2"
+                mdbTooltip="{{ 'Export to excel' | translate }}"
+                id="installationExcelBtn_{{ i }}"
+                *ngIf="
+                  installation.state === installationStates.Completed &&
+                  pluginClaimsHelper.check(
+                    installationCheckingPnClaims.exportInstallations
+                  )
+                "
+                (click)="saveExcel(installation.id)"
+              >
+                <fa-icon
+                  icon="file-excel"
+                  [fixedWidth]="true"
+                  size="lg"
+                ></fa-icon>
+              </button>
+              <button
+                mdbBtn
+                class="btn-danger btn-icon mb-2"
+                mdbTooltip="{{ 'Archive installation' | translate }}"
+                id="installationArchiveBtn_{{ i }}"
+                *ngIf="
+                  installation.state === installationStates.Completed &&
+                  pluginClaimsHelper.check(
+                    installationCheckingPnClaims.archiveInstallations
+                  )
+                "
+                (click)="archiveInstallation(installation.id)"
+              >
+                <fa-icon icon="archive" [fixedWidth]="true" size="lg"></fa-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row justify-content-start">
+    <div class="col-md-1">
+      <button
+        *ngIf="
+          pluginClaimsHelper.check(
+            installationCheckingPnClaims.assignInstallations
+          )
+        "
+        id="installationAssignBtn"
+        class="btn btn-success"
+        mdbTooltip="{{ 'Assign installation' | translate }}"
+        (click)="showAssignInstallationModal()"
+      >
+        <fa-icon icon="user-plus" size="lg" [fixedWidth]="true"></fa-icon>
+        {{ 'Assign' | translate }}
+      </button>
+    </div>
+  </div>
+  <div class="row p-1 my-4 mx-2" *ngIf="installationsListModel.total === 0">
+    <span>{{ 'No removals found' | translate }}</span>
+  </div>
+  <div class="row justify-content-between mr-2 ml-2">
+    <div class="col-md-1">
+      <eform-page-size
+        [pageSize]="removalStateService.getPageSize() | async"
+        (onPageSizeChanged)="onPageSizeChanged($event)"
+      ></eform-page-size>
+    </div>
+    <eform-pagination
+      [pagination]="removalStateService.getPagination() | async"
+      (onPageChanged)="changePage($event)"
+    ></eform-pagination>
+  </div>
+</div>
+
+<app-installation-assign
+  #assignInstallationModal
+  (installationAssigned)="getRemovalsList()"
+></app-installation-assign>
+<app-installation-retract
+  #retractInstallationModal
+  (installationRetracted)="getRemovalsList()"
+></app-installation-retract>

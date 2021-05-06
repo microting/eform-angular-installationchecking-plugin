@@ -1,0 +1,45 @@
+<div mdbModal class="modal fade" #frame>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>{{ 'Assign installation to:' | translate }}</h3>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <ng-select
+                [items]="sites"
+                bindLabel="label"
+                [placeholder]="'Select employee' | translate"
+                bindValue="id"
+                [(ngModel)]="selectedSiteId"
+                id="selectDeviceUser"
+              >
+              </ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          mdbBtn
+          class="btn-success"
+          [disabled]="!selectedSiteId"
+          (click)="assignInstallation()"
+          id="installationAssignBtnSave"
+        >
+          {{ 'Assign' | translate }}
+        </button>
+        <button
+          mdbBtn
+          class="btn-accent text-black-50"
+          (click)="frame.hide()"
+          id="installationAssignBtnSaveCancel"
+        >
+          {{ 'Cancel' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,13 +1,14 @@
-using System.Threading.Tasks;
-using InstallationChecking.Pn.Abstractions;
-using InstallationChecking.Pn.Infrastructure.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microting.eFormApi.BasePn.Infrastructure.Models.API;
-using Microting.InstallationCheckingBase.Infrastructure.Const;
-
 namespace InstallationChecking.Pn.Controllers
 {
+    using Microting.eFormApi.BasePn.Infrastructure.Models.Common;
+    using System.Threading.Tasks;
+    using Abstractions;
+    using Infrastructure.Models;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microting.eFormApi.BasePn.Infrastructure.Models.API;
+    using Microting.InstallationCheckingBase.Infrastructure.Const;
+
     [Authorize(Policy = InstallationCheckingClaims.AccessInstallationCheckingPlugin)]
     [Route("api/installationchecking-pn/installations")]
     public class InstallationsController : Controller
@@ -19,8 +20,8 @@ namespace InstallationChecking.Pn.Controllers
             _installationsService = installationsService;
         }
 
-        [HttpGet()]
-        public async Task<OperationDataResult<InstallationsListModel>> Index(InstallationsRequestModel requestModel)
+        [HttpPost("index")]
+        public async Task<OperationDataResult<Paged<InstallationModel>>> Index([FromBody] InstallationsRequestModel requestModel)
         {
             return await _installationsService.Index(requestModel);
         }
