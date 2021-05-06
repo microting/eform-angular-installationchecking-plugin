@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,5 +14,5 @@
     <ItemGroup>
       <ProjectReference Include="..\InstallationChecking.Pn\InstallationChecking.Pn.csproj" />
     </ItemGroup>
-    
+
 </Project>

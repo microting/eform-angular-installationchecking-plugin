@@ -58,7 +58,7 @@ namespace InstallationChecking.Pn
         public string PluginId => "eform-angular-installationchecking-plugin";
         public string PluginPath => PluginAssembly().Location;
         public string PluginBaseUrl => "installationchecking-pn";
-        
+
         public Assembly PluginAssembly()
         {
             return typeof(EformInstallationCheckingPlugin).GetTypeInfo().Assembly;
@@ -89,22 +89,21 @@ namespace InstallationChecking.Pn
             string customersConnectionString = connectionString.Replace(
                 "eform-angular-installationchecking-plugin",
                 "eform-angular-basecustomer-plugin");
-            if (connectionString.ToLower().Contains("convert zero datetime"))
+            services.AddDbContext<InstallationCheckingPnDbContext>(o =>
+                o.UseMySql(connectionString, new MariaDbServerVersion(
+                new Version(10, 4, 0)), mySqlOptionsAction: builder =>
             {
-                services.AddDbContext<InstallationCheckingPnDbContext>(o => o.UseMySql(connectionString,
-                    b => b.MigrationsAssembly(PluginAssembly().FullName)));
+                builder.EnableRetryOnFailure();
+                builder.MigrationsAssembly(PluginAssembly().FullName);
+            }));
 
-                services.AddDbContext<CustomersPnDbAnySql>(o => o.UseMySql(customersConnectionString,
-                    b => b.MigrationsAssembly(PluginAssembly().FullName)));
-            }
-            else
+            services.AddDbContext<CustomersPnDbAnySql>(o =>
+                o.UseMySql(connectionString, new MariaDbServerVersion(
+                new Version(10, 4, 0)), mySqlOptionsAction: builder =>
             {
-                services.AddDbContext<InstallationCheckingPnDbContext>(o => o.UseMySql(connectionString,
-                    b => b.MigrationsAssembly(PluginAssembly().FullName)));
-
-                services.AddDbContext<CustomersPnDbAnySql>(o => o.UseMySql(customersConnectionString,
-                    b => b.MigrationsAssembly(PluginAssembly().FullName)));
-            }
+                builder.EnableRetryOnFailure();
+                builder.MigrationsAssembly(PluginAssembly().FullName);
+            }));
 
             InstallationCheckingPnContextFactory contextFactory = new InstallationCheckingPnContextFactory();
             var context = contextFactory.CreateDbContext(new[] {connectionString});
@@ -316,8 +315,8 @@ namespace InstallationChecking.Pn
             var seedData = new InstallationCheckingConfigurationSeedData();
             var contextFactory = new InstallationCheckingPnContextFactory();
             builder.AddPluginConfiguration(
-                connectionString, 
-                seedData, 
+                connectionString,
+                seedData,
                 contextFactory);
         }
 

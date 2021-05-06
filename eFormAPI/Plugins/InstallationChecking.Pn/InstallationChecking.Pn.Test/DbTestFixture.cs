@@ -85,7 +85,7 @@ namespace InstallationChecking.Pn.Test
                     {
                         sqlCmd = $"DELETE FROM [{modelName}]";
                     }
-                    DbContext.Database.ExecuteSqlCommand(sqlCmd);
+                    DbContext.Database.ExecuteSqlRaw(sqlCmd);
                 }
                 catch (Exception ex)
                 {
