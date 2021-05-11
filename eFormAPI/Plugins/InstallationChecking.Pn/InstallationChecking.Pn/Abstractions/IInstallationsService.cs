@@ -4,9 +4,11 @@ using Microting.eFormApi.BasePn.Infrastructure.Models.API;
 
 namespace InstallationChecking.Pn.Abstractions
 {
+    using Microting.eFormApi.BasePn.Infrastructure.Models.Common;
+
     public interface IInstallationsService
     {
-        Task<OperationDataResult<InstallationsListModel>> Index(InstallationsRequestModel requestModel);
+        Task<OperationDataResult<Paged<InstallationModel>>> Index(InstallationsRequestModel requestModel);
         Task<OperationDataResult<InstallationModel>> Read(int id);
         Task<OperationResult> Create(int customerId);
         Task<OperationResult> AssignInstallations(InstallationsAssignModel installationsAssignModel);

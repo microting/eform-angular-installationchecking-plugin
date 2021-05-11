@@ -1,15 +1,21 @@
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {InstallationsService} from '../../services';
-import {DeviceUserService} from '../../../../../common/services/device-users';
-import {InstallationsAssignModel} from '../../models';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { InstallationsService } from '../../../services';
+import { DeviceUserService } from 'src/app/common/services';
+import { InstallationsAssignModel } from '../../../models';
 
 @Component({
   selector: 'app-installation-assign',
   templateUrl: './installation-assign.component.html',
-  styleUrls: ['./installation-assign.component.scss']
+  styleUrls: ['./installation-assign.component.scss'],
 })
 export class InstallationAssignComponent implements OnInit {
-  @ViewChild('frame', {static: false}) frame;
+  @ViewChild('frame', { static: false }) frame;
   @Output() installationAssigned: EventEmitter<void> = new EventEmitter<void>();
   sites = [];
   installationIds: number[];
@@ -18,14 +24,14 @@ export class InstallationAssignComponent implements OnInit {
   constructor(
     private installationsService: InstallationsService,
     private deviceUserService: DeviceUserService
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.deviceUserService.getAllDeviceUsers().subscribe(data => {
+    this.deviceUserService.getAllDeviceUsers().subscribe((data) => {
       if (data && data.success) {
-        this.sites = data.model.map(x => ({
+        this.sites = data.model.map((x) => ({
           id: x.siteId,
-          label: x.firstName + ' ' + x.lastName
+          label: x.firstName + ' ' + x.lastName,
         }));
       }
     });
@@ -37,7 +43,10 @@ export class InstallationAssignComponent implements OnInit {
   }
 
   assignInstallation() {
-    const assignModel = { employeeId: this.selectedSiteId, installationIds: this.installationIds } as InstallationsAssignModel;
+    const assignModel = {
+      employeeId: this.selectedSiteId,
+      installationIds: this.installationIds,
+    } as InstallationsAssignModel;
 
     this.installationsService.assign(assignModel).subscribe((data) => {
       if (data && data.success) {

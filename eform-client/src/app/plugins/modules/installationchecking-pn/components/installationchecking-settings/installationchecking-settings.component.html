@@ -1,40 +1,59 @@
-<subheader-pn [title]="'InstallationChecking plugin settings' | translate">
+<eform-subheader [title]="'InstallationChecking plugin settings' | translate">
   <div class="p-3">
-    <button mdbBtn class="btn-success" (click)="updateSettings()">{{ 'Save' | translate }}</button>
+    <button mdbBtn class="btn-success" (click)="updateSettings()">
+      {{ 'Save' | translate }}
+    </button>
   </div>
-</subheader-pn>
+</eform-subheader>
 
 <div class="container-fluid">
   <div class="row mt-4">
     <div class="col-md-12 col-xs-12 control-block">
-      <subheader-pn [title]="'Settings' | translate" [heandingSizeRem]="1">
-      </subheader-pn>
+      <eform-subheader [title]="'Settings' | translate" [heandingSizeRem]="1">
+      </eform-subheader>
       <div class="container-fluid">
         <div class="col-md-12">
           <div class="md-form input-group">
-            <input mdbInput
-                    [(ngModel)]="settingsModel.sdkConnectionString"
-                   type="text" name="sdkConnectionString" #sdkConnectionString="ngModel"
-                   id="sdkConnectionString" class="form-control">
-            <label for="sdkConnectionString">{{'SDK connection string' | translate}}</label>
+            <input
+              mdbInput
+              [(ngModel)]="settingsModel.sdkConnectionString"
+              type="text"
+              name="sdkConnectionString"
+              #sdkConnectionString="ngModel"
+              id="sdkConnectionString"
+              class="form-control"
+            />
+            <label for="sdkConnectionString">{{
+              'SDK connection string' | translate
+            }}</label>
           </div>
         </div>
         <div class="col-md-12">
           <div class="md-form input-group">
-            <input mdbInput
-                    [(ngModel)]="settingsModel.logLevel"
-                   type="text" name="logLevel" #loglevel="ngModel"
-                   id="logLevel" class="form-control">
-            <label for="logLevel">{{'Log Level' | translate}}</label>
+            <input
+              mdbInput
+              [(ngModel)]="settingsModel.logLevel"
+              type="text"
+              name="logLevel"
+              #loglevel="ngModel"
+              id="logLevel"
+              class="form-control"
+            />
+            <label for="logLevel">{{ 'Log Level' | translate }}</label>
           </div>
         </div>
         <div class="col-md-12">
           <div class="md-form input-group">
-            <input mdbInput
-                    [(ngModel)]="settingsModel.logLimit"
-                   type="text" name="logLimit" #loglimit="ngModel"
-                   id="logLimit" class="form-control">
-            <label for="logLimit">{{'Log Limit' | translate}}</label>
+            <input
+              mdbInput
+              [(ngModel)]="settingsModel.logLimit"
+              type="text"
+              name="logLimit"
+              #loglimit="ngModel"
+              id="logLimit"
+              class="form-control"
+            />
+            <label for="logLimit">{{ 'Log Limit' | translate }}</label>
           </div>
         </div>
       </div>

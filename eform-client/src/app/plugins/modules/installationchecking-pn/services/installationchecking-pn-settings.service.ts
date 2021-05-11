@@ -1,26 +1,32 @@
-import {Injectable} from '@angular/core';
-import {BaseService} from '../../../../common/services/base.service';
-import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
-import {Observable} from 'rxjs';
-import {OperationDataResult, OperationResult} from '../../../../common/models';
-import {InstallationCheckingBaseSettingsModel} from '../models';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import {
+  OperationDataResult,
+  OperationResult,
+} from '../../../../common/models';
+import { InstallationCheckingBaseSettingsModel } from '../models';
+import { ApiBaseService } from 'src/app/common/services';
 
 export let InstallationCheckingSettingsMethods = {
-  InstallationCheckingSettings: 'api/installationchecking-pn/settings'
+  InstallationCheckingSettings: 'api/installationchecking-pn/settings',
 };
+
 @Injectable()
-export class InstallationCheckingPnSettingsService extends BaseService {
-  constructor(private _http: HttpClient, router: Router, toastrService: ToastrService) {
-    super(_http, router, toastrService);
-  }
+export class InstallationCheckingPnSettingsService {
+  constructor(private apiBaseService: ApiBaseService) {}
 
   getAllSettings(): Observable<OperationDataResult<any>> {
-    return this.get(InstallationCheckingSettingsMethods.InstallationCheckingSettings);
+    return this.apiBaseService.get(
+      InstallationCheckingSettingsMethods.InstallationCheckingSettings
+    );
   }
 
-  updateSettings(model: InstallationCheckingBaseSettingsModel): Observable<OperationResult> {
-    return this.post(InstallationCheckingSettingsMethods.InstallationCheckingSettings, model);
+  updateSettings(
+    model: InstallationCheckingBaseSettingsModel
+  ): Observable<OperationResult> {
+    return this.apiBaseService.post(
+      InstallationCheckingSettingsMethods.InstallationCheckingSettings,
+      model
+    );
   }
 }

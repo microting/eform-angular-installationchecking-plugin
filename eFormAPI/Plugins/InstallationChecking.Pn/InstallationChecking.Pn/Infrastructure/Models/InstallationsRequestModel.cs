@@ -2,15 +2,19 @@ using Microting.InstallationCheckingBase.Infrastructure.Enums;
 
 namespace InstallationChecking.Pn.Infrastructure.Models
 {
-    public class InstallationsRequestModel
+    using Microting.eFormApi.BasePn.Infrastructure.Models.Common;
+
+    public class InstallationsRequestModel : PaginationModel
     {
-        public string SearchString { get; set; }
-        public InstallationType? Type { get; set; } = InstallationType.Installation;
+        public string NameFilter { get; set; }
+
+        public InstallationType? Type { get; set; }
+            = InstallationType.Installation;
+
         public InstallationState? State { get; set; }
 
         public string Sort { get; set; }
-        public int Offset { get; set; }
+
         public bool IsSortDsc { get; set; }
-        public int PageSize { get; set; }
     }
 }

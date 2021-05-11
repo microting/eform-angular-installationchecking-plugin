@@ -1,7 +1,7 @@
-import {InstallationStateEnum, InstallationTypeEnum} from '../const/enums';
+import { InstallationStateEnum, InstallationTypeEnum } from '../const/enums';
 
 export class InstallationsRequestModel {
-  searchString: string;
+  nameFilter: string;
   type: InstallationTypeEnum;
   state: InstallationStateEnum;
 

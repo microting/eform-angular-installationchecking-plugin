@@ -24,6 +24,7 @@ import {
   InstallationCaseSwitchComponent
 } from './components';
 import {InstallationCaseRoutingModule} from './installation-case-routing.module';
+import {SharedPnModule} from 'src/app/plugins/modules/shared/shared-pn.module';
 
 @NgModule({
   declarations: [
@@ -48,20 +49,21 @@ import {InstallationCaseRoutingModule} from './installation-case-routing.module'
     InstallationCasePageComponent,
     InstallationCaseSwitchComponent
   ],
-  imports: [
-    TranslateModule,
-    MDBBootstrapModule,
-    EformSharedModule,
-    InstallationCaseRoutingModule,
-    CommonModule,
-    NgSelectModule,
-    EformImportedModule,
-    GallerizeModule,
-    LightboxModule,
-    GalleryModule,
-    FormsModule,
-    FontAwesomeModule
-  ]
+    imports: [
+        TranslateModule,
+        MDBBootstrapModule,
+        EformSharedModule,
+        InstallationCaseRoutingModule,
+        CommonModule,
+        NgSelectModule,
+        EformImportedModule,
+        GallerizeModule,
+        LightboxModule,
+        GalleryModule,
+        FormsModule,
+        FontAwesomeModule,
+        SharedPnModule
+    ]
 })
 export class InstallationCaseModule {
 }
