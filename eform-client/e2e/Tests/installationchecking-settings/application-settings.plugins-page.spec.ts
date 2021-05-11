@@ -12,7 +12,6 @@ describe('Application settings page - site header section', function () {
     loginPage.login();
     myEformsPage.Navbar.goToPluginsPage();
     $('#spinner-animation').waitForDisplayed({timeout: 10000, reverse: true});
-    pluginPage.pluginOKBtn.waitForDisplayed({timeout: 50000});
 
     const pluginOne = pluginPage.getFirstPluginRowObj();
     // expect(plugin.id).equal(1);
