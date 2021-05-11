@@ -16,12 +16,20 @@ describe('Application settings page - site header section', function () {
 
     const pluginOne = pluginsPage.getFirstPluginRowObj();
     // expect(plugin.id).equal(1);
-    expect(pluginOne.name).equal('Microting Customers Plugin');
+    if (pluginOne.name === 'Microting InstallationChecking Plugin') {
+      expect(pluginOne.name).equal('Microting InstallationChecking Plugin');
+    } else {
+      expect(pluginOne.name).equal('Microting Customers Plugin');
+    }
     expect(pluginOne.version).equal('1.0.0.0');
 
+
     const pluginTwo = pluginsPage.getSecondPluginRowObj();
-    // expect(pluginTwo.id).equal(2);
-    expect(pluginTwo.name).equal('Microting InstallationChecking Plugin');
+    if (pluginTwo.name === 'Microting InstallationChecking Plugin') {
+      expect(pluginTwo.name).equal('Microting InstallationChecking Plugin');
+    } else {
+      expect(pluginTwo.name).equal('Microting Customers Plugin');
+    }
     expect(pluginTwo.version).equal('1.0.0.0');
 
   });
