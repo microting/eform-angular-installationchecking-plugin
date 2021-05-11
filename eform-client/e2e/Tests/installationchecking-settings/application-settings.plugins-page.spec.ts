@@ -54,7 +54,8 @@ describe('Application settings page - site header section', function () {
     firstPlugin = pluginsPage.getFirstPluginRowObj();
     secondPlugin = pluginsPage.getSecondPluginRowObj();
 
-    expect(firstPlugin.activateBtn.classList.contains('btn-success'), `${firstPlugin.name} plugin not activate`).eq(true);
-    expect(secondPlugin.activateBtn.classList.contains('btn-success'), `${secondPlugin.name} plugin not activate`).eq(true);
+
+    expect(firstPlugin.status, 'status is not equal').eq(true);
+    expect(secondPlugin.status, 'status is not equal').eq(true);
   });
 });
