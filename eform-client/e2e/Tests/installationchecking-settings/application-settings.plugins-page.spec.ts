@@ -37,7 +37,6 @@ describe('Application settings page - site header section', function () {
     let firstPlugin = pluginPage.getPluginRowObjByIndex(1);
     firstPlugin.enableOrDisablePlugin();
 
-    loginPage.login();
     myEformsPage.Navbar.goToPluginsPage();
     spinnerAnimation.waitForDisplayed({timeout: 10000, reverse: true});
     pluginPage.pluginName.waitForDisplayed({timeout: 50000});
@@ -45,7 +44,6 @@ describe('Application settings page - site header section', function () {
     let secondPlugin = pluginPage.getPluginRowObjByIndex(2);
     secondPlugin.enableOrDisablePlugin();
 
-    loginPage.login();
     myEformsPage.Navbar.goToPluginsPage();
     pluginPage.pluginName.waitForDisplayed({timeout: 50000});
     spinnerAnimation.waitForDisplayed({timeout: 10000, reverse: true});
