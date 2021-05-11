@@ -38,19 +38,14 @@ describe('Application settings page - site header section', function () {
     firstPlugin.enableOrDisablePlugin();
 
     myEformsPage.Navbar.goToPluginsPage();
-    spinnerAnimation.waitForDisplayed({timeout: 10000, reverse: true});
-    pluginPage.pluginName.waitForDisplayed({timeout: 50000});
 
     let secondPlugin = pluginPage.getPluginRowObjByIndex(2);
     secondPlugin.enableOrDisablePlugin();
 
     myEformsPage.Navbar.goToPluginsPage();
-    pluginPage.pluginName.waitForDisplayed({timeout: 50000});
-    spinnerAnimation.waitForDisplayed({timeout: 10000, reverse: true});
 
     firstPlugin = pluginPage.getPluginRowObjByIndex(1);
     secondPlugin = pluginPage.getPluginRowObjByIndex(2);
-
 
     expect(firstPlugin.status, 'status is not equal').eq(true);
     expect(secondPlugin.status, 'status is not equal').eq(true);
