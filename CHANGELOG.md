@@ -1,11 +1,31 @@
 # Changelog
 
+## [Unreleased](https://github.com/microting/eform-angular-installationchecking-plugin/tree/HEAD)
+
+[Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.78...HEAD)
+
+**Merged pull requests:**
+
+- Upgrade to GitHub-native Dependabot [\#145](https://github.com/microting/eform-angular-installationchecking-plugin/pull/145) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump NUnit from 3.13.1 to 3.13.2 in /eFormAPI/Plugins/InstallationChecking.Pn [\#143](https://github.com/microting/eform-angular-installationchecking-plugin/pull/143) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump Microsoft.NET.Test.Sdk from 16.8.3 to 16.9.4 in /eFormAPI/Plugins/InstallationChecking.Pn [\#83](https://github.com/microting/eform-angular-installationchecking-plugin/pull/83) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+
+## [v1.0.78](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.78) (2021-05-11)
+
+[Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.77...v1.0.78)
+
+**Merged pull requests:**
+
+- Refactoring [\#180](https://github.com/microting/eform-angular-installationchecking-plugin/pull/180) ([sanioooook](https://github.com/sanioooook))
+
 ## [v1.0.77](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.77) (2021-05-11)
 
 [Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.76...v1.0.77)
 
 **Implemented enhancements:**
 
+- Bump Magick.NET-Q16-x64 from 7.23.4 to 7.24.0 [\#201](https://github.com/microting/eform-angular-installationchecking-plugin/issues/201)
+- Bump Microting.eFormApi.BasePn from 3.0.8 to 3.0.9 [\#199](https://github.com/microting/eform-angular-installationchecking-plugin/issues/199)
 - Bump Microting.eForm from 5.1.4 to 5.1.5 [\#198](https://github.com/microting/eform-angular-installationchecking-plugin/issues/198)
 
 ## [v1.0.76](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.76) (2021-05-07)
