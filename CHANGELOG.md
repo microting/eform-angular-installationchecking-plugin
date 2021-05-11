@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.0.77](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.77) (2021-05-11)
+
+[Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.76...v1.0.77)
+
+**Implemented enhancements:**
+
+- Bump Microting.eForm from 5.1.4 to 5.1.5 [\#198](https://github.com/microting/eform-angular-installationchecking-plugin/issues/198)
+
 ## [v1.0.76](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.76) (2021-05-07)
 
 [Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.75...v1.0.76)
