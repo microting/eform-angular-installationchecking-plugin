@@ -1,5 +1,16 @@
 # Changelog
 
+## [v1.0.85](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.85) (2021-06-03)
+
+[Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.84...v1.0.85)
+
+**Implemented enhancements:**
+
+- Bump Microting.eFormBaseCustomerBase from 3.0.16 to 3.0.17 [\#250](https://github.com/microting/eform-angular-installationchecking-plugin/issues/250)
+- Bump Microting.InstallationCheckingBase from 3.0.16 to 3.0.17 [\#249](https://github.com/microting/eform-angular-installationchecking-plugin/issues/249)
+- Bump Microting.eFormApi.BasePn from 3.0.16 to 3.0.17 [\#248](https://github.com/microting/eform-angular-installationchecking-plugin/issues/248)
+- Bump Microting.eForm from 5.2.7 to 5.2.8 [\#247](https://github.com/microting/eform-angular-installationchecking-plugin/issues/247)
+
 ## [v1.0.84](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.84) (2021-06-01)
 
 [Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.83...v1.0.84)
