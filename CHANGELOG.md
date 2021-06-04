@@ -1,5 +1,19 @@
 # Changelog
 
+## [v1.0.86](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.86) (2021-06-04)
+
+[Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.85...v1.0.86)
+
+**Implemented enhancements:**
+
+- Bump Microting.eFormBaseCustomerBase from 3.0.17 to 3.0.18 [\#253](https://github.com/microting/eform-angular-installationchecking-plugin/issues/253)
+- Bump Microting.InstallationCheckingBase from 3.0.17 to 3.0.18 [\#252](https://github.com/microting/eform-angular-installationchecking-plugin/issues/252)
+- Bump Microting.eFormApi.BasePn from 3.0.17 to 3.0.18 [\#251](https://github.com/microting/eform-angular-installationchecking-plugin/issues/251)
+
+**Merged pull requests:**
+
+- Bump Microsoft.NET.Test.Sdk from 16.9.4 to 16.10.0 in /eFormAPI/Plugins/InstallationChecking.Pn [\#227](https://github.com/microting/eform-angular-installationchecking-plugin/pull/227) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v1.0.85](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.85) (2021-06-03)
 
 [Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.84...v1.0.85)
@@ -323,7 +337,6 @@
 **Merged pull requests:**
 
 - Changed subheader to use title from router [\#19](https://github.com/microting/eform-angular-installationchecking-plugin/pull/19) ([Gid733](https://github.com/Gid733))
-- Updates [\#18](https://github.com/microting/eform-angular-installationchecking-plugin/pull/18) ([Gid733](https://github.com/Gid733))
 
 ## [v1.0.35](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.35) (2020-11-03)
 
@@ -395,6 +408,7 @@
 
 **Merged pull requests:**
 
+- Updates [\#18](https://github.com/microting/eform-angular-installationchecking-plugin/pull/18) ([Gid733](https://github.com/Gid733))
 - Added special installation case first version [\#14](https://github.com/microting/eform-angular-installationchecking-plugin/pull/14) ([Gid733](https://github.com/Gid733))
 
 ## [v1.0.21](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.21) (2020-02-04)
