@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.0.91](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.91) (2021-07-08)
+
+[Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.90...v1.0.91)
+
+**Implemented enhancements:**
+
+- Bump Microting.eFormBaseCustomerBase from 3.0.27 to 3.0.28 [\#286](https://github.com/microting/eform-angular-installationchecking-plugin/issues/286)
+- Bump Microting.InstallationCheckingBase from 3.0.21 to 3.0.22 [\#285](https://github.com/microting/eform-angular-installationchecking-plugin/issues/285)
+- Bump Microting.eFormApi.BasePn from 3.0.27 to 3.0.28 [\#284](https://github.com/microting/eform-angular-installationchecking-plugin/issues/284)
+- Bump Microting.eForm from 5.2.14 to 5.2.15 [\#283](https://github.com/microting/eform-angular-installationchecking-plugin/issues/283)
+
+**Merged pull requests:**
+
+- Bump NUnit3TestAdapter from 3.17.0 to 4.0.0 in /eFormAPI/Plugins/InstallationChecking.Pn [\#260](https://github.com/microting/eform-angular-installationchecking-plugin/pull/260) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v1.0.90](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.90) (2021-07-05)
 
 [Full Changelog](https://github.com/microting/eform-angular-installationchecking-plugin/compare/v1.0.89...v1.0.90)
@@ -509,7 +524,6 @@
 
 - Updated buttons [\#12](https://github.com/microting/eform-angular-installationchecking-plugin/pull/12) ([Gid733](https://github.com/Gid733))
 - Checkbox fix [\#11](https://github.com/microting/eform-angular-installationchecking-plugin/pull/11) ([Gid733](https://github.com/Gid733))
-- Added plugin prototype [\#1](https://github.com/microting/eform-angular-installationchecking-plugin/pull/1) ([Gid733](https://github.com/Gid733))
 
 ## [v1.0.9](https://github.com/microting/eform-angular-installationchecking-plugin/tree/v1.0.9) (2019-12-18)
 
@@ -570,6 +584,7 @@
 **Merged pull requests:**
 
 - package references update [\#2](https://github.com/microting/eform-angular-installationchecking-plugin/pull/2) ([Gid733](https://github.com/Gid733))
+- Added plugin prototype [\#1](https://github.com/microting/eform-angular-installationchecking-plugin/pull/1) ([Gid733](https://github.com/Gid733))
 
 
 
