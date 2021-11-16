@@ -17,7 +17,7 @@ import { debounceTime } from 'rxjs/operators';
 import { PluginClaimsHelper } from 'src/app/common/helpers';
 import { RemovalStateService } from '../store';
 import { TranslateService } from '@ngx-translate/core';
-import moment = require('moment');
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-removal-page',
@@ -203,7 +203,7 @@ export class RemovalPageComponent implements OnInit {
       (data) => {
         saveAs(
           data,
-          moment().format('YYYY-MM-DD') + '_installation_' + id + '.xlsx'
+          format(Date.now(), 'yyyy-MM-dd') + '_installation_' + id + '.xlsx'
         );
       },
       (error) => {
