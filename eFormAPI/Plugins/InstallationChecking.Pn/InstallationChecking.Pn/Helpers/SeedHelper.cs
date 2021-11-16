@@ -32,6 +32,8 @@ namespace InstallationChecking.Pn.Helpers
     using Microsoft.EntityFrameworkCore;
     using Microting.eForm.Infrastructure.Constants;
     using Microting.eForm.Infrastructure.Models;
+    using EntityGroup = Microting.eForm.Infrastructure.Data.Entities.EntityGroup;
+
     public class SeedHelper
     {
         private static async Task<int> CreateCadastralTypeList(Core core)
@@ -47,9 +49,9 @@ namespace InstallationChecking.Pn.Helpers
             
             if (!model.EntityGroups.Any())
             {
-                group = await core.EntityGroupCreate(Constants.FieldTypes.EntitySelect, 
+                group = await core.EntityGroupCreate(Constants.FieldTypes.EntitySelect,
                     "eform-angular-installationchecking-plugin-editable-CadastralType",
-                    "");// TODO description is empty string
+                    "", false, false);// TODO description is empty string
 
                 var roomTypes = new List<string>()
                 {
@@ -70,7 +72,7 @@ namespace InstallationChecking.Pn.Helpers
                 group = model.EntityGroups.First();
             }
 
-            return int.Parse(group.MicrotingUUID);
+            return int.Parse(group.MicrotingUid);
         }
         
         private static async Task<int> CreateRoomTypeList(Core core)
@@ -88,7 +90,7 @@ namespace InstallationChecking.Pn.Helpers
             {
                 group = await core.EntityGroupCreate(Constants.FieldTypes.EntitySelect, 
                     "eform-angular-installationchecking-plugin-editable-RoomType",
-                    "");// TODO description is empty string
+                    "", false, false);// TODO description is empty string
 
                 var roomTypes = new List<string>()
                 {
@@ -106,7 +108,7 @@ namespace InstallationChecking.Pn.Helpers
                 group = model.EntityGroups.First();
             }
 
-            return int.Parse(group.MicrotingUUID);
+            return int.Parse(group.MicrotingUid);
         }
 
         public static async Task<int> CreateInstallationForm(Core core)
@@ -427,7 +429,7 @@ namespace InstallationChecking.Pn.Helpers
                 var entityGroup = await core.EntityGroupCreate(
                     Constants.FieldTypes.EntitySearch,
                     $"eform-angular-installationchecking-plugin_0",
-                    "");// TODO description is empty string
+                    "", false, false);// TODO description is empty string
                 
                 
                 var removalForm = new MainElement
@@ -479,7 +481,7 @@ namespace InstallationChecking.Pn.Helpers
                         i,
                         false,
                         0,
-                        int.Parse(entityGroup.MicrotingUUID),
+                        int.Parse(entityGroup.MicrotingUid),
                         false,
                         "",
                         3,

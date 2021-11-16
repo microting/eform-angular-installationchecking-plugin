@@ -48,6 +48,7 @@ namespace InstallationChecking.Pn.Services
     using Microting.eForm.Infrastructure.Constants;
     using ClosedXML.Excel;
     using Microting.eFormApi.BasePn.Infrastructure.Models.Common;
+    using EntityGroup = Microting.eForm.Infrastructure.Data.Entities.EntityGroup;
 
     public class InstallationsService : IInstallationsService
     {
@@ -401,7 +402,7 @@ namespace InstallationChecking.Pn.Services
                                 entityGroup = await core.EntityGroupCreate(
                                     Constants.FieldTypes.EntitySearch,
                                     $"eform-angular-installationchecking-plugin_{installation.Id}_hidden",
-                                    "");// TODO description is empty string
+                                    "", false, false);// TODO description is empty string
                             }
                             else
                             {
@@ -483,7 +484,7 @@ namespace InstallationChecking.Pn.Services
                                     i.ToString()
                                 );
                                 var entity = (EntitySearch)dataElement.DataItemList[i];
-                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUUID);
+                                entity.EntityTypeId = int.Parse(entityGroup.MicrotingUid);
                                 entity.DisplayOrder = i;
                                 i += 1;
                             }
