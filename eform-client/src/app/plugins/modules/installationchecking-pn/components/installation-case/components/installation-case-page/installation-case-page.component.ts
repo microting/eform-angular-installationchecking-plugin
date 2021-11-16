@@ -1,26 +1,33 @@
-import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CasesService} from 'src/app/common/services/cases';
-import {EFormService} from 'src/app/common/services/eform';
-import {CaseEditElementComponent} from '../../../../../../../modules/cases/components';
-import {TemplateDto} from '../../../../../../../common/models/dto';
-import {ReplyElementDto} from '../../../../../../../common/models/cases';
-import {AuthService} from '../../../../../../../common/services/auth';
-import {InstallationsService} from '../../../../services';
-import {InstallationModel} from '../../../../models';
+import {
+  Component,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CaseEditComponent } from 'src/app/modules/cases/components';
+import { ReplyElementDto, TemplateDto } from 'src/app/common/models';
+import {
+  AuthService,
+  CasesService,
+  EFormService,
+} from 'src/app/common/services';
+import { InstallationsService } from '../../../../services';
+import { InstallationModel } from '../../../../models';
 
 @Component({
   selector: 'app-installation-case-page',
   templateUrl: './installation-case-page.component.html',
-  styleUrls: ['./installation-case-page.component.scss']
+  styleUrls: ['./installation-case-page.component.scss'],
 })
 export class InstallationCasePageComponent implements OnInit {
-  @ViewChildren(CaseEditElementComponent) editElements: QueryList<CaseEditElementComponent>;
-  @ViewChild('caseConfirmation', {static: false}) caseConfirmation;
+  @ViewChildren(CaseEditComponent) editElements: QueryList<CaseEditComponent>;
+  @ViewChild('caseConfirmation', { static: false }) caseConfirmation;
   id: number;
   installationId: number;
   templateId: number;
-  currentTemplate: TemplateDto = new TemplateDto;
+  currentTemplate: TemplateDto = new TemplateDto();
   currentInstallation: InstallationModel = new InstallationModel();
   replyElement: ReplyElementDto = new ReplyElementDto();
   reverseRoute: string;
@@ -29,13 +36,15 @@ export class InstallationCasePageComponent implements OnInit {
     return this.authService.userClaims;
   }
 
-  constructor(private activateRoute: ActivatedRoute,
-              private casesService: CasesService,
-              private eFormService: EFormService,
-              private router: Router,
-              private authService: AuthService,
-              private installationsService: InstallationsService) {
-    this.activateRoute.params.subscribe(params => {
+  constructor(
+    private activateRoute: ActivatedRoute,
+    private casesService: CasesService,
+    private eFormService: EFormService,
+    private router: Router,
+    private authService: AuthService,
+    private installationsService: InstallationsService
+  ) {
+    this.activateRoute.params.subscribe((params) => {
       this.id = +params['id'];
       this.installationId = +params['installationId'];
       this.templateId = +params['templateId'];
@@ -51,16 +60,18 @@ export class InstallationCasePageComponent implements OnInit {
     if (!this.id || this.id === 0) {
       return;
     }
-    this.casesService.getById(this.id, this.currentTemplate.id).subscribe(operation => {
-      if (operation && operation.success) {
-        this.replyElement = operation.model;
-      }
-    });
+    this.casesService
+      .getById(this.id, this.currentTemplate.id)
+      .subscribe((operation) => {
+        if (operation && operation.success) {
+          this.replyElement = operation.model;
+        }
+      });
   }
 
   loadTemplateInfo() {
     if (this.templateId) {
-      this.eFormService.getSingle(this.templateId).subscribe(operation => {
+      this.eFormService.getSingle(this.templateId).subscribe((operation) => {
         if (operation && operation.success) {
           this.currentTemplate = operation.model;
           this.loadCase();
@@ -71,15 +82,16 @@ export class InstallationCasePageComponent implements OnInit {
 
   loadInstallationInfo() {
     if (this.installationId) {
-      this.installationsService.getSingle(this.installationId).subscribe(operation => {
-        if (operation && operation.success) {
-          this.currentInstallation = operation.model;
-          this.loadCase();
-        }
-      });
+      this.installationsService
+        .getSingle(this.installationId)
+        .subscribe((operation) => {
+          if (operation && operation.success) {
+            this.currentInstallation = operation.model;
+            this.loadCase();
+          }
+        });
     }
   }
-
 
   goToSection(location: string): void {
     window.location.hash = location;
